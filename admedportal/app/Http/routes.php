@@ -128,48 +128,32 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'sys.edit', 'uses' => 'AdminController@sys_edit']
     );
 
-    Route::post('/sys_edit/post',
-        ['as' => 'sys.edit.post', 'uses' => 'AdminController@sys_edit_post']
-    );
-
-    Route::post('/sys_edit/post/next',
-        ['as' => 'sys.edit.post.next', 'uses' => 'AdminController@sys_edit_post_next']
+    Route::post('/sys_edit/next',
+        ['as' => 'sys.edit.next', 'uses' => 'AdminController@sys_edit_next']
     );
 
     Route::get('/sys_edit_2',
         ['as' => 'sys.edit.2', 'uses' => 'AdminController@sys_edit_2']
     );
 
-    Route::post('/sys_edit_2/post',
-        ['as' => 'sys.edit.2.post', 'uses' => 'AdminController@sys_edit_2_post']
-    );
-
-    Route::post('/sys_edit_2/post/next',
-        ['as' => 'sys.edit.2.post.next', 'uses' => 'AdminController@sys_edit_2_post_next']
+    Route::post('/sys_edit_2/next',
+        ['as' => 'sys.edit.2.next', 'uses' => 'AdminController@sys_edit_2_next']
     );
 
     Route::get('/sys_edit_3',
         ['as' => 'sys.edit.3', 'uses' => 'AdminController@sys_edit_3']
     );
 
-    Route::post('/sys_edit_3/post',
-        ['as' => 'sys.edit.3.post', 'uses' => 'AdminController@sys_edit_3_post']
-    );
-
-    Route::post('/sys_edit_3/post/next',
-        ['as' => 'sys.edit.3.post.next', 'uses' => 'AdminController@sys_edit_3_post_next']
+    Route::post('/sys_edit_3/next',
+        ['as' => 'sys.edit.3.next', 'uses' => 'AdminController@sys_edit_3_next']
     );
 
     Route::get('/sys_edit_4',
         ['as' => 'sys.edit.4', 'uses' => 'AdminController@sys_edit_4']
     );
 
-    Route::post('/sys_edit_4/post',
-        ['as' => 'sys.edit.4.post', 'uses' => 'AdminController@sys_edit_4_post']
-    );
-
-    Route::post('/sys_edit_4/post/next',
-        ['as' => 'sys.edit.4.post.next', 'uses' => 'AdminController@sys_edit_4_post_next']
+    Route::post('/sys_edit_4/next',
+        ['as' => 'sys.edit.4.next', 'uses' => 'AdminController@sys_edit_4_next']
     );
 
     Route::get('/sys_edit_5',
@@ -192,14 +176,6 @@ Route::group(['middleware' => 'auth'], function() {
 //        ['as' => 'db.browser.id', 'uses' => 'AdminController@db_browser_id']
 //    );
 
-    Route::get('/db_edit/{id}',
-        ['as' => 'db.edit.id', 'uses' => 'AdminController@db_edit_id']
-    )->where('id', '[0-9]+');
-
-    Route::post('/db_edit',
-        ['as' => 'db.edit', 'uses' => 'AdminController@db_edit']
-    );
-
     Route::get('/db_add',
         ['as' => 'db.add', 'uses' => 'AdminController@db_add']
     );
@@ -207,6 +183,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('/db_add/post',
         ['as' => 'db.add.post', 'uses' => 'AdminController@db_add_post']
     );
+
+    Route::get('/db_edit/{id}',
+        ['as' => 'db.edit.id', 'uses' => 'AdminController@db_edit_id']
+    )->where('id', '[0-9]+');
+
+    Route::patch('/db_edit/{id}',
+        ['as' => 'db.edit.post', 'uses' => 'AdminController@db_edit_post']
+    )->where('id', '[0-9]+');
 
     Route::get('/books_browser',
         ['as' => 'books.browser', 'uses' => 'AdminController@books_browser']

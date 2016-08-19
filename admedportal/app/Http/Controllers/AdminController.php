@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Mail;
 use Log;
 use Auth;
@@ -931,109 +932,6 @@ class AdminController extends Controller
 
     }
 
-    public function db_add_post(Request $request)
-    {
-
-        $this->validate($request, [
-            'database_name' => 'required',
-            'syntax' => 'required'
-        ]);
-
-        $input_data = $request->all();
-        //   Log::info('data --------------------- ' . dump($input_data));
-
-        $database_name = trim($input_data['database_name']);
-
-        $syntax = trim($input_data['syntax']);
-
-        $view = trim($input_data['view']);
-
-        $rank_id = trim($input_data['rank_id']);
-
-        $note = trim($input_data['note']);
-
-        DB::table('querydatabase')->insert(
-            [
-                'database_name' => $database_name,
-                'syntax' => $syntax,
-                'view' => $view,
-                'rank_id' => $rank_id,
-                'note' => $note
-            ]
-        );
-
-        return redirect()->route('db.browser')
-            ->with('success', '新增資料成功');
-
-    }
-
-    public function db_add()
-    {
-
-        return view('db_add');
-
-    }
-
-    public function db_edit(Request $request)
-    {
-
-        $this->validate($request, [
-            'database_name' => 'required',
-            'syntax' => 'required'
-        ]);
-
-        $input_data = $request->all();
-
-        //   Log::info('data --------------------- ' . dump($input_data));
-
-        //   exit;
-
-        $database_name = trim($input_data['database_name']);
-
-        //        $syntax = preg_replace('/"/', '\"', trim($input_data['syntax']) );
-
-        $syntax = trim($input_data['syntax']);
-
-        $view = trim($input_data['view']);
-
-        $rank_id = trim($input_data['rank_id']);
-
-        $note = trim($input_data['note']);
-
-        $id = trim($input_data['id']);
-
-        $timedata = DB::select('select now() as timedata');
-
-
-        DB::table('querydatabase')
-            ->where('id', $id)
-            ->update([
-                'database_name' => $database_name,
-                'syntax' => $syntax,
-                'view' => $view,
-                'rank_id' => $rank_id,
-                'note' => $note,
-                'updated_at' => $timedata[0]->timedata
-            ]);
-
-
-        return redirect()->route('db.browser')
-            ->with('success', '更新資料成功');
-
-
-    }
-
-    public function db_edit_id($id)
-    {
-
-        $newid = trim($id);
-
-        $querydatabase = DB::table('querydatabase')->where('id', '=', $newid)->get();
-
-        return view('db_edit')->with('querydatabase', $querydatabase);
-
-    }
-
 //    public function db_browser_id($id)
 //    {
 //        $newid = trim($id);
@@ -1322,50 +1220,14 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_post(Request $request)
+    public function sys_edit_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
             $input_data = $request->all();
-            $cn_display = $input_data['cn_display'];
-            $en_display = $input_data['en_display'];
-            $jp_display = $input_data['jp_display'];
-            $kr_display = $input_data['kr_display'];
-            $ch_order = $input_data['ch_order'];
-            $cn_order = $input_data['cn_order'];
-            $en_order = $input_data['en_order'];
-            $jp_order = $input_data['jp_order'];
-            $kr_order = $input_data['kr_order'];
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'cn_display' => $cn_display,
-                    'en_display' => $en_display,
-                    'jp_display' => $jp_display,
-                    'kr_display' => $kr_display,
-                    'ch_order' => $ch_order,
-                    'cn_order' => $cn_order,
-                    'en_order' => $en_order,
-                    'jp_order' => $jp_order,
-                    'kr_order' => $kr_order,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
-
-            return redirect()->route('sys.edit')->with('success', '資料更新成功');
-        } else {
-            return view('errors.404');
-        }
-    }
-
-    public function sys_edit_post_next(Request $request)
-    {
-        if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $cn_display = $input_data['cn_display'];
-            $en_display = $input_data['en_display'];
-            $jp_display = $input_data['jp_display'];
-            $kr_display = $input_data['kr_display'];
+            $cn_display = isset($input_data['cn_display']) && $input_data['cn_display'];
+            $en_display = isset($input_data['en_display']) && $input_data['en_display'];
+            $jp_display = isset($input_data['jp_display']) && $input_data['jp_display'];
+            $kr_display = isset($input_data['kr_display']) && $input_data['kr_display'];
             $ch_order = $input_data['ch_order'];
             $cn_order = $input_data['cn_order'];
             $en_order = $input_data['en_order'];
@@ -1408,7 +1270,7 @@ class AdminController extends Controller
 
     }
 
-    public function sys_edit_2_post(Request $request)
+    public function sys_edit_2_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
             $input_data = $request->all();
@@ -1423,43 +1285,7 @@ class AdminController extends Controller
             );
 
             if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。');
-            }
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'site_name_ch' => $site_name_ch,
-                    'site_name_cn' => $site_name_cn,
-                    'site_name_en' => $site_name_en,
-                    'site_name_jp' => $site_name_jp,
-                    'site_name_kr' => $site_name_kr,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
-
-            return redirect()->route('sys.edit.2')->with('success', '資料更新成功');
-        } else {
-            return view('errors.404');
-        }
-    }
-
-    public function sys_edit_2_post_next(Request $request)
-    {
-        if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $site_name_ch = trim($input_data['site_name_ch']);
-            $site_name_cn = trim($input_data['site_name_cn']);
-            $site_name_en = trim($input_data['site_name_en']);
-            $site_name_jp = trim($input_data['site_name_jp']);
-            $site_name_kr = trim($input_data['site_name_kr']);
-
-            $rules = array(
-                'site_name_ch' => 'required'
-            );
-
-            if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。');
+                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。')->withInput($request->all());
             }
 
             $timedata = DB::select('select now() as timedata');
@@ -1492,92 +1318,7 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_3_post(Request $request)
-    {
-        if (Auth::user()->perm == 1) {
-            $imageName_ch = "logo_ch.png";
-            $imageName_cn = "logo_cn.png";
-            $imageName_en = "logo_en.png";
-            $imageName_jp = "logo_jp.png";
-            $imageName_kr = "logo_kr.png";
-
-            if ($request->hasFile('logo_ch')) {
-                $request->file('logo_ch')->move(
-                    base_path() . '/public/img/', $imageName_ch
-                );
-            }
-
-            if ($request->hasFile('logo_cn')) {
-                $request->file('logo_cn')->move(
-                    base_path() . '/public/img/', $imageName_cn
-                );
-            }
-
-            if ($request->hasFile('logo_en')) {
-                $request->file('logo_en')->move(
-                    base_path() . '/public/img/', $imageName_en
-                );
-            }
-
-            if ($request->hasFile('logo_jp')) {
-                $request->file('logo_jp')->move(
-                    base_path() . '/public/img/', $imageName_jp
-                );
-            }
-
-            if ($request->hasFile('logo_kr')) {
-                $request->file('logo_kr')->move(
-                    base_path() . '/public/img/', $imageName_kr
-                );
-            }
-
-            // width 固定
-
-            //$width = Image::make( base_path() . '/public/img/' . $imageName )->width();
-
-            //$height = Image::make( base_path() . '/public/img/' . $imageName )->height();
-
-            //$new_height = Config::get('app.logo_image_width') * $height / $width;
-
-            Image::make(base_path() . '/public/img/' . $imageName_ch)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_ch));
-
-            Image::make(base_path() . '/public/img/' . $imageName_cn)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_cn));
-
-            Image::make(base_path() . '/public/img/' . $imageName_en)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_en));
-
-            Image::make(base_path() . '/public/img/' . $imageName_jp)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_jp));
-
-            Image::make(base_path() . '/public/img/' . $imageName_kr)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_kr));
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'logo_ch' => $imageName_ch,
-                    'logo_cn' => $imageName_cn,
-                    'logo_en' => $imageName_en,
-                    'logo_jp' => $imageName_jp,
-                    'logo_kr' => $imageName_kr,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
-
-            return redirect()->route('sys.edit.3')->with('success', '資料更新成功');
-        } else {
-            return view('errors.404');
-        }
-    }
-
-    public function sys_edit_3_post_next(Request $request)
+    public function sys_edit_3_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
             $imageName_ch = "logo_ch.png";
@@ -1675,7 +1416,7 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_4_post(Request $request)
+    public function sys_edit_4_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
             $input_data = $request->all();
@@ -1690,43 +1431,7 @@ class AdminController extends Controller
             );
 
             if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。');
-            }
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'copyright_ch' => $copyright_ch,
-                    'copyright_cn' => $copyright_cn,
-                    'copyright_en' => $copyright_en,
-                    'copyright_jp' => $copyright_jp,
-                    'copyright_kr' => $copyright_kr,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
-
-            return redirect()->route('sys.edit.4')->with('success', '資料更新成功');
-        } else {
-            return view('errors.404');
-        }
-    }
-
-    public function sys_edit_4_post_next(Request $request)
-    {
-        if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $copyright_ch = trim($input_data['copyright_ch']);
-            $copyright_cn = trim($input_data['copyright_cn']);
-            $copyright_en = trim($input_data['copyright_en']);
-            $copyright_jp = trim($input_data['copyright_jp']);
-            $copyright_kr = trim($input_data['copyright_kr']);
-
-            $rules = array(
-                'copyright_ch' => 'required'
-            );
-
-            if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。');
+                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。')->withInput($request->all());
             }
 
             $timedata = DB::select('select now() as timedata');
@@ -1796,7 +1501,7 @@ class AdminController extends Controller
                 return redirect()->route('sys.edit.5')->with('success', '資料更新成功');
             } else {
                 return redirect()->route('sys.edit.5')
-                    ->with('error', $email . ' 格式不合法');
+                    ->with('error', $email . ' 格式不合法')->withInput($request->all());
             }
 
         } else {
@@ -1816,6 +1521,163 @@ class AdminController extends Controller
 
         return view('db_browser')->with('querydatabase', $querydatabase);
 
+    }
+
+    public function db_add()
+    {
+        return view('db_add');
+    }
+
+    public function db_add_post(Request $request)
+    {
+        $msg = '';
+        $rule1 = array(
+            'database_name_ch' => 'required'
+        );
+
+        $rule2 = array(
+            'syntax_ch' => 'required'
+        );
+
+        if (\Validator::make($request->all(), $rule1)->fails()) {
+            $msg .= '<p>．請輸入資料庫名稱。</p>';
+        }
+
+        if (\Validator::make($request->all(), $rule2)->fails()) {
+            $msg .= '<p>．請輸入嵌入語法。</p>';
+        }
+
+        if ($msg != '') {
+            return redirect()->route('db.add')->with('error', $msg)->withInput($request->all());
+
+        } else {
+
+            $input_data = $request->all();
+            //   Log::info('data --------------------- ' . dump($input_data));
+
+            $database_name_ch = trim($input_data['database_name_ch']);
+            $database_name_cn = trim($input_data['database_name_cn']);
+            $database_name_en = trim($input_data['database_name_en']);
+            $database_name_jp = trim($input_data['database_name_jp']);
+            $database_name_kr = trim($input_data['database_name_kr']);
+            $syntax_ch = trim($input_data['syntax_ch']);
+            $syntax_cn = trim($input_data['syntax_cn']);
+            $syntax_en = trim($input_data['syntax_en']);
+            $syntax_jp = trim($input_data['syntax_jp']);
+            $syntax_kr = trim($input_data['syntax_kr']);
+            $view = trim($input_data['view']);
+            $rank_id = trim($input_data['rank_id']);
+            $note = trim($input_data['note']);
+            $timedata = DB::select('select now() as timedata');
+
+            DB::table('querydatabase')->insert(
+                [
+                    'database_name_ch' => $database_name_ch,
+                    'database_name_cn' => $database_name_cn,
+                    'database_name_en' => $database_name_en,
+                    'database_name_jp' => $database_name_jp,
+                    'database_name_kr' => $database_name_kr,
+                    'syntax_ch' => $syntax_ch,
+                    'syntax_cn' => $syntax_cn,
+                    'syntax_en' => $syntax_en,
+                    'syntax_jp' => $syntax_jp,
+                    'syntax_kr' => $syntax_kr,
+                    'view' => $view,
+                    'rank_id' => $rank_id,
+                    'note' => $note,
+                    'created_at' => $timedata[0]->timedata,
+                    'updated_at' => $timedata[0]->timedata
+                ]
+            );
+
+            return redirect()->route('db.browser')
+                ->with('success', '新增資料成功');
+        }
+
+    }
+
+    public function db_edit_id($id)
+    {
+
+        $newid = trim($id);
+
+        $querydatabase = DB::table('querydatabase')->where('id', '=', $newid)->get();
+
+        return view('db_edit')->with('querydatabase', $querydatabase);
+
+    }
+
+    public function db_edit_post(Request $request, $id)
+    {
+
+        $msg = '';
+        $rule1 = array(
+            'database_name_ch' => 'required'
+        );
+
+        $rule2 = array(
+            'syntax_ch' => 'required'
+        );
+
+        if (\Validator::make($request->all(), $rule1)->fails()) {
+            $msg .= '<p>．請輸入資料庫名稱。</p>';
+        }
+
+        if (\Validator::make($request->all(), $rule2)->fails()) {
+            $msg .= '<p>．請輸入嵌入語法。</p>';
+        }
+
+        if ($msg != '') {
+            return redirect()->route('db.edit.id')->with('error', $msg)->withInput($request->all());
+
+        } else {
+
+            $input_data = $request->all();
+
+            //   Log::info('data --------------------- ' . dump($input_data));
+
+            //   exit;
+
+            $database_name_ch = trim($input_data['database_name_ch']);
+            $database_name_cn = trim($input_data['database_name_cn']);
+            $database_name_en = trim($input_data['database_name_en']);
+            $database_name_jp = trim($input_data['database_name_jp']);
+            $database_name_kr = trim($input_data['database_name_kr']);
+            $syntax_ch = trim($input_data['syntax_ch']);
+            $syntax_cn = trim($input_data['syntax_cn']);
+            $syntax_en = trim($input_data['syntax_en']);
+            $syntax_jp = trim($input_data['syntax_jp']);
+            $syntax_kr = trim($input_data['syntax_kr']);
+            $view = trim($input_data['view']);
+            $rank_id = trim($input_data['rank_id']);
+            $note = trim($input_data['note']);
+
+            $timedata = DB::select('select now() as timedata');
+
+            DB::table('querydatabase')
+                ->where('id', $id)
+                ->update([
+                    'database_name_ch' => $database_name_ch,
+                    'database_name_cn' => $database_name_cn,
+                    'database_name_en' => $database_name_en,
+                    'database_name_jp' => $database_name_jp,
+                    'database_name_kr' => $database_name_kr,
+                    'syntax_ch' => $syntax_ch,
+                    'syntax_cn' => $syntax_cn,
+                    'syntax_en' => $syntax_en,
+                    'syntax_jp' => $syntax_jp,
+                    'syntax_kr' => $syntax_kr,
+                    'view' => $view,
+                    'rank_id' => $rank_id,
+                    'note' => $note,
+                    'updated_at' => $timedata[0]->timedata
+                ]);
+
+
+            return redirect()->route('db.browser')
+                ->with('success', '更新資料成功');
+
+        }
     }
 
     public function books_browser()
