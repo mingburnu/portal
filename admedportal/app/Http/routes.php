@@ -84,11 +84,7 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'books.add.post', 'uses' => 'AdminController@books_add_post']
     );
 
-    Route::get('/books_add', 
-        ['as' => 'books.add', 'uses' => 'AdminController@books_add']
-    );
-
-    Route::get('/', 
+    Route::get('/',
         ['as' => 'admin.browser.index', 'uses' => 'AdminController@index']
     );
 
@@ -196,6 +192,10 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'books.browser', 'uses' => 'AdminController@books_browser']
     );
 
+    Route::get('/books_add',
+        ['as' => 'books.add', 'uses' => 'AdminController@books_add']
+    );
+
     Route::get('/books_browser/{id}/delete',
         ['as' => 'books.browser.id.delete', 'uses' => 'AdminController@books_browser_id_delete']
     )->where('id', '[0-9]+');
@@ -208,7 +208,7 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'books.edit.id', 'uses' => 'AdminController@books_edit_id']
     )->where('id', '[0-9]+');
 
-    Route::post('/books_edit/post',
+    Route::patch('/books_edit/{id}',
         ['as' => 'books.edit.post', 'uses' => 'AdminController@books_edit_post']
     );
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Support\Facades\Input;
 use Mail;
 use Log;
 use Auth;
@@ -637,48 +638,247 @@ class AdminController extends Controller
 
     }
 
-    public function books_add_post(Request $request)
+    public function books_add()
     {
+        return view('books_add');
+    }
 
-        $input_data = $request->all();
+    public function books_add_post()
+    {
+        $msg = '';
+        $rule1 = array(
+            'book_name_ch' => 'required'
+        );
+
+        $rule2 = array(
+            'url' => 'required'
+        );
+
+        $rule3 = array(
+            'url' => 'regex:/^http([s]?):\/\/.*/'
+        );
+
+        $rule4 = null;
+        $upload_option = (boolean)\Input::get('upload_option');
+        if ($upload_option) {
+            $rule4 = array(
+                'upload_file' => 'required|mimes:png,jpeg,gif'
+            );
+        } else {
+            $rule4 = array(
+                'cover' => 'required'
+            );
+        }
+
+        $rule5 = array(
+            'cover' => 'regex:/^http([s]?):\/\/.*/'
+        );
+
+        if (\Validator::make(\Input::all(), $rule1)->fails()) {
+            $msg .= '<p>．請輸入書名。</p>';
+        }
+
+        if (\Validator::make(\Input::all(), $rule2)->fails()) {
+            $msg .= '<p>．請輸入連結。</p>';
+        } else {
+            if (\Validator::make(\Input::all(), $rule3)->fails()) {
+                $msg .= '<p>．連結格式必須為網址(含http://)。</p>';
+            }
+        }
+
+        if (\Validator::make(\Input::all(), $rule4)->fails()) {
+            if ($upload_option) {
+                $msg .= '<p>．請上傳書封。</p>';
+
+            } else {
+                $msg .= '<p>．請輸入書封。</p>';
+            }
+        } else {
+            if (!$upload_option) {
+                if (\Validator::make(\Input::all(), $rule5)->fails()) {
+                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
+                }
+            }
+        }
+
+        if ($msg != '') {
+            return redirect()->route('books.add')->with('error', $msg)->withInput();
+
+        }
 
         //Log::info("data --------------------------- " . dump($request));
 
-        $upload_option = trim($input_data['upload_option']);
-
-        // upload_option 2 = url , 1 = upload_file public/books
         // 2 不用處理檔案 copy , 1 要處理檔案 copy
 
         $cover = '';
 
-        if ($upload_option == 2) {
+        if (\Input::hasFile('upload_file')) {
 
-            $this->validate($request, [
-                'cover' => 'required',
-                'book_name' => 'required',
-                'url' => 'required'
+            $imageName = \Input::file('upload_file');
 
-            ]);
+            $imageName = time() . "-" . $imageName->getClientOriginalName();
+
+            \Input::file('upload_file')->move(
+                base_path() . '/public/books/', $imageName
+            );
+
+            // width 固定
+
+            $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
+
+            $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
+
+            $new_height = Config::get('app.books_image_width') * $height / $width;
+
+//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
+
+            Image::make(base_path() . '/public/books/' . $imageName)
+                ->resize(Config::get('app.books_image_width'), $new_height)
+                ->save(public_path('books/' . $imageName));
 
 
-            $cover = trim($input_data['cover']);
+            $cover = "books/$imageName";
 
-        } elseif ($upload_option == 1) {
+        } else {
+            $cover = trim(\Input::get('cover'));
+        }
 
-            $this->validate($request, [
-                'upload_file' => 'required|mimes:png,jpeg,gif',
-                'book_name' => 'required',
-                'url' => 'required'
+        $timedata = DB::select('select now() as timedata');
+        DB::table('book')->insert(
+            [
+                'cover' => $cover,
+                'upload_option' => $upload_option,
+                'book_name_ch' => \Input::get('book_name_ch'),
+                'book_name_cn' => \Input::get('book_name_cn'),
+                'book_name_en' => \Input::get('book_name_en'),
+                'book_name_jp' => \Input::get('book_name_jp'),
+                'book_name_kr' => \Input::get('book_name_kr'),
+                'url' => \Input::get('url'),
+                'view' => \Input::get('view'),
+                'rand_id' => \Input::get('rand_id'),
+                'note' => \Input::get('note'),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
+            ]
+        );
 
-            ]);
+        return redirect()->route('books.browser')
+            ->with('success', '新增資料成功');
+    }
 
-            if ($request->hasFile('upload_file')) {
+    public function books_edit_id($id)
+    {
 
-                $imageName = $input_data['upload_file'];
+        $newid = trim($id);
+
+        $book = DB::table('book')->where('id', '=', $newid)->get();
+
+        $match = preg_match('/Http/i', $book[0]->cover);
+
+//        return view('books_edit', ['book' => $book, 'match' => $match]);
+        return view('books_edit')->with('book', $book);
+
+    }
+
+    public function books_edit_post($id)
+    {
+        $book = DB::table('book')->where('id', '=', $id)->get();
+        $db_upload_option = (boolean)$book[0]->upload_option;
+        $upload_option = (boolean)\Input::get('upload_option');
+        $msg = '';
+
+        $rule1 = array(
+            'book_name_ch' => 'required'
+        );
+
+        $rule2 = array(
+            'url' => 'required'
+        );
+
+        $rule3 = array(
+            'url' => 'regex:/^http([s]?):\/\/.*/'
+        );
+
+        $rule4 = null;
+        if ($db_upload_option && $upload_option) {
+            $rule4 = array(
+                'upload_file' => 'mimes:png,jpeg,gif'
+            );
+        } elseif ($db_upload_option && !$upload_option) {
+            $rule4 = array(
+                'cover' => 'required'
+            );
+        } elseif (!$db_upload_option && $upload_option) {
+            $rule4 = array(
+                'upload_file' => 'required|mimes:png,jpeg,gif'
+            );
+        } else {
+            $rule4 = array(
+                'cover' => 'required'
+            );
+        }
+
+        $rule5 = array(
+            'cover' => 'regex:/^http([s]?):\/\/.*/'
+        );
+
+        if (\Validator::make(\Input::all(), $rule1)->fails()) {
+            $msg .= '<p>．請輸入書名。</p>';
+        }
+
+        if (\Validator::make(\Input::all(), $rule2)->fails()) {
+            $msg .= '<p>．請輸入連結。</p>';
+        } else {
+            if (\Validator::make(\Input::all(), $rule3)->fails()) {
+                $msg .= '<p>．連結格式必須為網址(含http://)。</p>';
+            }
+        }
+
+        if ($db_upload_option && $upload_option) {
+            if (\Validator::make(\Input::all(), $rule4)->fails()) {
+                $msg .= '<p>．請上傳書封。</p>';
+            }
+
+        } elseif ($db_upload_option && !$upload_option) {
+            if (\Validator::make(\Input::all(), $rule4)->fails()) {
+                $msg .= '<p>．請輸入書封。</p>';
+            } else {
+                if (\Validator::make(\Input::all(), $rule5)->fails()) {
+                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
+                }
+            }
+        } elseif (!$db_upload_option && $upload_option) {
+            if (\Validator::make(\Input::all(), $rule4)->fails()) {
+                $msg .= '<p>．請上傳書封。</p>';
+            }
+        } else {
+            if (\Validator::make(\Input::all(), $rule4)->fails()) {
+                $msg .= '<p>．請輸入書封。</p>';
+            } else {
+                if (\Validator::make(\Input::all(), $rule5)->fails()) {
+                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
+                }
+            }
+        }
+
+        if ($msg != '') {
+            return redirect()->route('books.edit.post', $id)->with('error', $msg)->withInput();
+        }
+
+        //Log::info("data --------------------------- " . dump($request));
+
+        // 2 不用處理檔案 copy , 1 要處理檔案 copy
+
+        $cover = '';
+
+        if ($db_upload_option && $upload_option) {
+            if (\Input::hasFile('upload_file')) {
+
+                $imageName = \Input::file('upload_file');
 
                 $imageName = time() . "-" . $imageName->getClientOriginalName();
 
-                $request->file('upload_file')->move(
+                \Input::file('upload_file')->move(
                     base_path() . '/public/books/', $imageName
                 );
 
@@ -699,212 +899,73 @@ class AdminController extends Controller
 
                 $cover = "books/$imageName";
 
+                // 需要刪除舊有 image 檔案
+
+                File::delete(Config::get('app.books_image_folder') . $book[0]->cover);
+            } else {
+                $cover = $book[0]->cover;
             }
 
-        }
+        } elseif ($db_upload_option && !$upload_option) {
 
+            $cover = \Input::get('cover');
 
-        $book_name = trim($input_data['book_name']);
-
-        /*        $this->validate($request, [
-                        'book_name'     => 'required',
-                        'url'           => 'required'
-                ]);
-        */
-
-        $url = trim($input_data['url']);
-
-        $view = trim($input_data['view']);
-
-        $rand_id = trim($input_data['rand_id']);
-
-        $note = trim($input_data['note']);
-
-        DB::table('book')->insert(
-            [
-                'cover' => $cover,
-                'upload_option' => $upload_option,
-                'book_name' => $book_name,
-                'url' => $url,
-                'view' => $view,
-                'rand_id' => $rand_id,
-                'note' => $note
-            ]
-        );
-
-        return redirect()->route('books.browser')
-            ->with('success', '新增資料成功');
-
-
-    }
-
-    public function books_add()
-    {
-        return view('books_add');
-    }
-
-    public function books_edit_post(Request $request)
-    {
-
-        $input_data = $request->all();
-
-        // Log::info('data .......................' . date("s") );
-        // Log::info('data .......................... ' . dump($input_data));
-        // exit;
-
-        $id = trim($input_data['id']);
-
-        $upload_option = trim($input_data['upload_option']);
-
-        // upload_option 2 = url , 1 = upload_file public/books
-        // 2 不用處理檔案 copy , 1 要處理檔案 copy
-
-        $cover = '';
-
-        if ($upload_option == 2) {
-
-
-            $this->validate($request, [
-                'cover' => 'required',
-                'book_name' => 'required',
-                'url' => 'required'
-            ]);
-
-            $cover = trim($input_data['cover']);
-
-            // 如果之前是 upload files, 需要刪除 image 檔案
-
-            $book = DB::table('book')->where('id', '=', $id)->get();
+            // 需要刪除舊有 image 檔案
 
             File::delete(Config::get('app.books_image_folder') . $book[0]->cover);
 
-        } elseif ($upload_option == 1) {
+        } elseif (!$db_upload_option && $upload_option) {
+
+            $imageName = \Input::file('upload_file');
+
+            $imageName = time() . "-" . $imageName->getClientOriginalName();
+
+            \Input::file('upload_file')->move(
+                base_path() . '/public/books/', $imageName
+            );
+
+            // width 固定
+
+            $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
+
+            $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
+
+            $new_height = Config::get('app.books_image_width') * $height / $width;
+
+//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
+
+            Image::make(base_path() . '/public/books/' . $imageName)
+                ->resize(Config::get('app.books_image_width'), $new_height)
+                ->save(public_path('books/' . $imageName));
 
 
-            $fdata = $request->file('upload_file');
-
-            if ($fdata) {
-
-                $this->validate($request, [
-                    'book_name' => 'required',
-                    'url' => 'required',
-                    'upload_file' => 'required|mimes:png,jpeg,gif'
-                ]);
-
-                $imageName = $input_data['upload_file'];
-
-                $imageName = time() . "-" . $imageName->getClientOriginalName();
-
-                $request->file('upload_file')->move(
-                    base_path() . '/public/books/', $imageName
-                );
-
-                // width 固定
-
-                $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
-
-                $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
-
-                $new_height = Config::get('app.books_image_width') * $height / $width;
-
-                Image::make(base_path() . '/public/books/' . $imageName)
-                    ->resize(Config::get('app.books_image_width'), $new_height)
-                    ->save(public_path('books/' . $imageName));
-
-                $cover = "books/$imageName";
-
-                // 需要刪除舊有 image 檔案
-
-                $book = DB::table('book')->where('id', '=', $id)->get();
-
-                File::delete(Config::get('app.books_image_folder') . $book[0]->cover);
-
-            } else {
-
-                // 沒上傳 image 檔案, 維持原狀
-
-                $cover = "N";
-
-                $this->validate($request, [
-                    'book_name' => 'required',
-                    'url' => 'required'
-                ]);
-
-
-            }
-
-
-        }
-
-        $book_name = trim($input_data['book_name']);
-
-        $url = trim($input_data['url']);
-
-        /*        $this->validate($request, [
-                        'book_name'         => 'required',
-                        'url'               => 'required'
-                ]);
-        */
-
-        $view = trim($input_data['view']);
-
-        $rand_id = trim($input_data['rand_id']);
-
-        $note = trim($input_data['note']);
-
-        $timedata = DB::select('select now() as timedata');
-
-        // N 沒有選上傳檔案
-
-        if ($cover == 'N') {
-
-            DB::table('book')
-                ->where('id', $id)
-                ->update([
-                    'upload_option' => $upload_option,
-                    'book_name' => $book_name,
-                    'url' => $url,
-                    'view' => $view,
-                    'rand_id' => $rand_id,
-                    'note' => $note,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
-
+            $cover = "books/$imageName";
 
         } else {
+            $cover = \Input::get('cover');
+        }
 
-            DB::table('book')
-                ->where('id', $id)
-                ->update([
+        $timedata = DB::select('select now() as timedata');
+        DB::table('book')
+            ->where('id', $id)
+            ->update([
                     'cover' => $cover,
                     'upload_option' => $upload_option,
-                    'book_name' => $book_name,
-                    'url' => $url,
-                    'view' => $view,
-                    'rand_id' => $rand_id,
-                    'note' => $note,
+                    'book_name_ch' => \Input::get('book_name_ch'),
+                    'book_name_cn' => \Input::get('book_name_cn'),
+                    'book_name_en' => \Input::get('book_name_en'),
+                    'book_name_jp' => \Input::get('book_name_jp'),
+                    'book_name_kr' => \Input::get('book_name_kr'),
+                    'url' => \Input::get('url'),
+                    'view' => \Input::get('view'),
+                    'rand_id' => \Input::get('rand_id'),
+                    'note' => \Input::get('note'),
                     'updated_at' => $timedata[0]->timedata
-                ]);
-
-        }
+                ]
+            );
 
         return redirect()->route('books.browser')
             ->with('success', '更新資料成功');
-
-
-    }
-
-    public function books_edit_id($id)
-    {
-
-        $newid = trim($id);
-
-        $book = DB::table('book')->where('id', '=', $newid)->get();
-
-        $match = preg_match('/Http/i', $book[0]->cover);
-
-        return view('books_edit', ['book' => $book, 'match' => $match]);
-
     }
 
 //    public function books_view_id($id)
@@ -1220,33 +1281,23 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_next(Request $request)
+    public function sys_edit_next()
     {
         if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $cn_display = isset($input_data['cn_display']) && $input_data['cn_display'];
-            $en_display = isset($input_data['en_display']) && $input_data['en_display'];
-            $jp_display = isset($input_data['jp_display']) && $input_data['jp_display'];
-            $kr_display = isset($input_data['kr_display']) && $input_data['kr_display'];
-            $ch_order = $input_data['ch_order'];
-            $cn_order = $input_data['cn_order'];
-            $en_order = $input_data['en_order'];
-            $jp_order = $input_data['jp_order'];
-            $kr_order = $input_data['kr_order'];
 
             $timedata = DB::select('select now() as timedata');
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'cn_display' => $cn_display,
-                    'en_display' => $en_display,
-                    'jp_display' => $jp_display,
-                    'kr_display' => $kr_display,
-                    'ch_order' => $ch_order,
-                    'cn_order' => $cn_order,
-                    'en_order' => $en_order,
-                    'jp_order' => $jp_order,
-                    'kr_order' => $kr_order,
+                    'cn_display' => \Input::get('cn_display'),
+                    'en_display' => \Input::get('en_display'),
+                    'jp_display' => \Input::get('jp_display'),
+                    'kr_display' => \Input::get('kr_display'),
+                    'ch_order' => \Input::get('ch_order'),
+                    'cn_order' => \Input::get('cn_order'),
+                    'en_order' => \Input::get('en_order'),
+                    'jp_order' => \Input::get('jp_order'),
+                    'kr_order' => \Input::get('kr_order'),
                     'updated_at' => $timedata[0]->timedata
                 ]);
 
@@ -1270,33 +1321,27 @@ class AdminController extends Controller
 
     }
 
-    public function sys_edit_2_next(Request $request)
+    public function sys_edit_2_next()
     {
         if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $site_name_ch = trim($input_data['site_name_ch']);
-            $site_name_cn = trim($input_data['site_name_cn']);
-            $site_name_en = trim($input_data['site_name_en']);
-            $site_name_jp = trim($input_data['site_name_jp']);
-            $site_name_kr = trim($input_data['site_name_kr']);
 
             $rules = array(
                 'site_name_ch' => 'required'
             );
 
-            if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。')->withInput($request->all());
+            if (\Validator::make(\Input::all(), $rules)->fails()) {
+                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。')->withInput();
             }
 
             $timedata = DB::select('select now() as timedata');
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'site_name_ch' => $site_name_ch,
-                    'site_name_cn' => $site_name_cn,
-                    'site_name_en' => $site_name_en,
-                    'site_name_jp' => $site_name_jp,
-                    'site_name_kr' => $site_name_kr,
+                    'site_name_ch' => trim(\Input::get('site_name_ch')),
+                    'site_name_cn' => trim(\Input::get('site_name_cn')),
+                    'site_name_en' => trim(\Input::get('site_name_en')),
+                    'site_name_jp' => trim(\Input::get('site_name_jp')),
+                    'site_name_kr' => trim(\Input::get('site_name_kr')),
                     'updated_at' => $timedata[0]->timedata
                 ]);
 
@@ -1318,7 +1363,7 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_3_next(Request $request)
+    public function sys_edit_3_next()
     {
         if (Auth::user()->perm == 1) {
             $imageName_ch = "logo_ch.png";
@@ -1327,32 +1372,32 @@ class AdminController extends Controller
             $imageName_jp = "logo_jp.png";
             $imageName_kr = "logo_kr.png";
 
-            if ($request->hasFile('logo_ch')) {
-                $request->file('logo_ch')->move(
+            if (\Input::hasFile('logo_ch')) {
+                \Input::file('logo_ch')->move(
                     base_path() . '/public/img/', $imageName_ch
                 );
             }
 
-            if ($request->hasFile('logo_cn')) {
-                $request->file('logo_cn')->move(
+            if (\Input::hasFile('logo_cn')) {
+                \Input::file('logo_ch')->move(
                     base_path() . '/public/img/', $imageName_cn
                 );
             }
 
-            if ($request->hasFile('logo_en')) {
-                $request->file('logo_en')->move(
+            if (\Input::hasFile('logo_en')) {
+                \Input::file('logo_en')->move(
                     base_path() . '/public/img/', $imageName_en
                 );
             }
 
-            if ($request->hasFile('logo_jp')) {
-                $request->file('logo_jp')->move(
+            if (\Input::hasFile('logo_jp')) {
+                \Input::file('logo_jp')->move(
                     base_path() . '/public/img/', $imageName_jp
                 );
             }
 
-            if ($request->hasFile('logo_kr')) {
-                $request->file('logo_kr')->move(
+            if (\Input::hasFile('logo_kr')) {
+                \Input::file('logo_kr')->move(
                     base_path() . '/public/img/', $imageName_kr
                 );
             }
@@ -1416,33 +1461,27 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_4_next(Request $request)
+    public function sys_edit_4_next()
     {
         if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $copyright_ch = trim($input_data['copyright_ch']);
-            $copyright_cn = trim($input_data['copyright_cn']);
-            $copyright_en = trim($input_data['copyright_en']);
-            $copyright_jp = trim($input_data['copyright_jp']);
-            $copyright_kr = trim($input_data['copyright_kr']);
 
             $rules = array(
                 'copyright_ch' => 'required'
             );
 
-            if (\Validator::make($request->all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。')->withInput($request->all());
+            if (\Validator::make(\Input::all(), $rules)->fails()) {
+                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。')->withInput();
             }
 
             $timedata = DB::select('select now() as timedata');
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'copyright_ch' => $copyright_ch,
-                    'copyright_cn' => $copyright_cn,
-                    'copyright_en' => $copyright_en,
-                    'copyright_jp' => $copyright_jp,
-                    'copyright_kr' => $copyright_kr,
+                    'copyright_ch' => \Input::get('copyright_ch'),
+                    'copyright_cn' => \Input::get('copyright_cn'),
+                    'copyright_en' => \Input::get('copyright_en'),
+                    'copyright_jp' => \Input::get('copyright_jp'),
+                    'copyright_kr' => \Input::get('copyright_kr'),
                     'updated_at' => $timedata[0]->timedata
                 ]);
 
@@ -1465,18 +1504,15 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_5_post(Request $request)
+    public function sys_edit_5_post()
     {
         if (Auth::user()->perm == 1) {
-            $input_data = $request->all();
-            $email = trim($input_data['email']);
+            $email = trim(\Input::get('email'));
             $icoName = "favicon.ico";
-            $color = trim($input_data['color']);
-            $note = trim($input_data['note']);
 
-            if ($request->hasFile('ico')) {
+            if (\Input::hasFile('ico')) {
 
-                $request->file('ico')->move(
+                \Input::file('ico')->move(
                     base_path() . '/public/img/', $icoName
                 );
 
@@ -1493,15 +1529,15 @@ class AdminController extends Controller
                     ->update([
                         'email' => $email,
                         'ico' => $icoName,
-                        'color' => $color,
-                        'note' => $note,
+                        'color' => trim(\Input::get('color')),
+                        'note' => trim(\Input::get('note')),
                         'updated_at' => $timedata[0]->timedata
                     ]);
 
                 return redirect()->route('sys.edit.5')->with('success', '資料更新成功');
             } else {
                 return redirect()->route('sys.edit.5')
-                    ->with('error', $email . ' 格式不合法')->withInput($request->all());
+                    ->with('error', $email . ' 格式不合法')->withInput();
             }
 
         } else {
@@ -1528,7 +1564,7 @@ class AdminController extends Controller
         return view('db_add');
     }
 
-    public function db_add_post(Request $request)
+    public function db_add_post()
     {
         $msg = '';
         $rule1 = array(
@@ -1539,52 +1575,38 @@ class AdminController extends Controller
             'syntax_ch' => 'required'
         );
 
-        if (\Validator::make($request->all(), $rule1)->fails()) {
+        if (\Validator::make(\Input::all(), $rule1)->fails()) {
             $msg .= '<p>．請輸入資料庫名稱。</p>';
         }
 
-        if (\Validator::make($request->all(), $rule2)->fails()) {
+        if (\Validator::make(\Input::all(), $rule2)->fails()) {
             $msg .= '<p>．請輸入嵌入語法。</p>';
         }
 
         if ($msg != '') {
-            return redirect()->route('db.add')->with('error', $msg)->withInput($request->all());
+            return redirect()->route('db.add')->with('error', $msg)->withInput();
 
         } else {
 
-            $input_data = $request->all();
             //   Log::info('data --------------------- ' . dump($input_data));
 
-            $database_name_ch = trim($input_data['database_name_ch']);
-            $database_name_cn = trim($input_data['database_name_cn']);
-            $database_name_en = trim($input_data['database_name_en']);
-            $database_name_jp = trim($input_data['database_name_jp']);
-            $database_name_kr = trim($input_data['database_name_kr']);
-            $syntax_ch = trim($input_data['syntax_ch']);
-            $syntax_cn = trim($input_data['syntax_cn']);
-            $syntax_en = trim($input_data['syntax_en']);
-            $syntax_jp = trim($input_data['syntax_jp']);
-            $syntax_kr = trim($input_data['syntax_kr']);
-            $view = trim($input_data['view']);
-            $rank_id = trim($input_data['rank_id']);
-            $note = trim($input_data['note']);
             $timedata = DB::select('select now() as timedata');
 
             DB::table('querydatabase')->insert(
                 [
-                    'database_name_ch' => $database_name_ch,
-                    'database_name_cn' => $database_name_cn,
-                    'database_name_en' => $database_name_en,
-                    'database_name_jp' => $database_name_jp,
-                    'database_name_kr' => $database_name_kr,
-                    'syntax_ch' => $syntax_ch,
-                    'syntax_cn' => $syntax_cn,
-                    'syntax_en' => $syntax_en,
-                    'syntax_jp' => $syntax_jp,
-                    'syntax_kr' => $syntax_kr,
-                    'view' => $view,
-                    'rank_id' => $rank_id,
-                    'note' => $note,
+                    'database_name_ch' => trim(\Input::get('database_name_ch')),
+                    'database_name_cn' => trim(\Input::get('database_name_cn')),
+                    'database_name_en' => trim(\Input::get('database_name_en')),
+                    'database_name_jp' => trim(\Input::get('database_name_jp')),
+                    'database_name_kr' => trim(\Input::get('database_name_kr')),
+                    'syntax_ch' => trim(\Input::get('syntax_ch')),
+                    'syntax_cn' => trim(\Input::get('syntax_cn')),
+                    'syntax_en' => trim(\Input::get('syntax_en')),
+                    'syntax_jp' => trim(\Input::get('syntax_jp')),
+                    'syntax_kr' => trim(\Input::get('syntax_kr')),
+                    'view' => trim(\Input::get('view')),
+                    'rank_id' => trim(\Input::get('rank_id')),
+                    'note' => trim(\Input::get('note')),
                     'created_at' => $timedata[0]->timedata,
                     'updated_at' => $timedata[0]->timedata
                 ]
@@ -1607,7 +1629,7 @@ class AdminController extends Controller
 
     }
 
-    public function db_edit_post(Request $request, $id)
+    public function db_edit_post($id)
     {
 
         $msg = '';
@@ -1619,57 +1641,41 @@ class AdminController extends Controller
             'syntax_ch' => 'required'
         );
 
-        if (\Validator::make($request->all(), $rule1)->fails()) {
+        if (\Validator::make(\Input::all(), $rule1)->fails()) {
             $msg .= '<p>．請輸入資料庫名稱。</p>';
         }
 
-        if (\Validator::make($request->all(), $rule2)->fails()) {
+        if (\Validator::make(\Input::all(), $rule2)->fails()) {
             $msg .= '<p>．請輸入嵌入語法。</p>';
         }
 
         if ($msg != '') {
-            return redirect()->route('db.edit.id')->with('error', $msg)->withInput($request->all());
+            return redirect()->route('db.edit.id', $id)->with('error', $msg)->withInput();
 
         } else {
-
-            $input_data = $request->all();
 
             //   Log::info('data --------------------- ' . dump($input_data));
 
             //   exit;
-
-            $database_name_ch = trim($input_data['database_name_ch']);
-            $database_name_cn = trim($input_data['database_name_cn']);
-            $database_name_en = trim($input_data['database_name_en']);
-            $database_name_jp = trim($input_data['database_name_jp']);
-            $database_name_kr = trim($input_data['database_name_kr']);
-            $syntax_ch = trim($input_data['syntax_ch']);
-            $syntax_cn = trim($input_data['syntax_cn']);
-            $syntax_en = trim($input_data['syntax_en']);
-            $syntax_jp = trim($input_data['syntax_jp']);
-            $syntax_kr = trim($input_data['syntax_kr']);
-            $view = trim($input_data['view']);
-            $rank_id = trim($input_data['rank_id']);
-            $note = trim($input_data['note']);
 
             $timedata = DB::select('select now() as timedata');
 
             DB::table('querydatabase')
                 ->where('id', $id)
                 ->update([
-                    'database_name_ch' => $database_name_ch,
-                    'database_name_cn' => $database_name_cn,
-                    'database_name_en' => $database_name_en,
-                    'database_name_jp' => $database_name_jp,
-                    'database_name_kr' => $database_name_kr,
-                    'syntax_ch' => $syntax_ch,
-                    'syntax_cn' => $syntax_cn,
-                    'syntax_en' => $syntax_en,
-                    'syntax_jp' => $syntax_jp,
-                    'syntax_kr' => $syntax_kr,
-                    'view' => $view,
-                    'rank_id' => $rank_id,
-                    'note' => $note,
+                    'database_name_ch' => trim(\Input::get('database_name_ch')),
+                    'database_name_cn' => trim(\Input::get('database_name_cn')),
+                    'database_name_en' => trim(\Input::get('database_name_en')),
+                    'database_name_jp' => trim(\Input::get('database_name_jp')),
+                    'database_name_kr' => trim(\Input::get('database_name_kr')),
+                    'syntax_ch' => trim(\Input::get('syntax_ch')),
+                    'syntax_cn' => trim(\Input::get('syntax_cn')),
+                    'syntax_en' => trim(\Input::get('syntax_en')),
+                    'syntax_jp' => trim(\Input::get('syntax_jp')),
+                    'syntax_kr' => trim(\Input::get('syntax_kr')),
+                    'view' => trim(\Input::get('view')),
+                    'rank_id' => trim(\Input::get('rank_id')),
+                    'note' => trim(\Input::get('note')),
                     'updated_at' => $timedata[0]->timedata
                 ]);
 

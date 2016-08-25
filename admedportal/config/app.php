@@ -32,7 +32,7 @@ return [
 
     // image
 
-    'books_image_folder' => '/var/www/laravel/public/',
+    'books_image_folder' => '/var/www/admedportal/public/',
 
     'books_image_width' => 130,
 

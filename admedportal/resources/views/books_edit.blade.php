@@ -1,177 +1,278 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="expires" content="0">
-<title>圖書館管理後台</title>
-<link rel="stylesheet" href="{{ asset('templates/art.css') }}">
-</head>
-
+@include('layout.head')
 <body>
 <div class="wrapper">
 
-<div class="header">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr valign="middle">
-    <td width="170" style="background:#ed6c44;"><img src="{{ asset('templates/images/logo.png') }}" width="170" height="60"></td>
-    <td align="right">
-    <div class="header_func"><span>
-    <a href="{{ route('my.info') }}">我的個人資訊</a>
-    <a href="{{ route('logout.process') }}">登出</a>
-    </span></div>
-    </td>
-  </tr>
-</table>
-</div>
+    @include('layout.header')
 
-<div class="box">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr valign="top">
-    <td class="td_1">
-<!-- menu 區塊 Begin -->
-<div class="menu">
+    <div class="box">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr valign="top">
+                <td class="td_1">
+                    <!-- menu 區塊 Begin -->
+                    @include('layout.menu')
+                            <!-- menu 區塊 End -->
+                </td>
+                <td class="td_2">
+                    <!-- 內容 區塊 Begin -->
 
-<div class="menu_box">
-<div class="title">平台設定</div>
-@if(Auth::user()->perm == 1)
-    <a class="menu_A" href="{{ route('admin.browser') }}">帳號管理</a>
-    <a class="menu_B" href="{{ route('sys.edit') }}">網站設定</a>
-@endif
-<a class="menu_C" href="{{ route('db.browser') }}">查詢資料庫管理</a>
-<a class="menu_D" href="{{ route('books.browser') }}">書籍管理</a>
-<a class="menu_E" href="{{ route('news.browser') }}">公告管理</a>
-<a class="menu_F" href="{{ route('paper.browser') }}">網頁管理</a>
-</div>
-
-<div class="menu_box">
-<div class="title">統計資訊</div>
-<a class="menu_list" href="{{ route('state.A') }}">後台登入次數統計</a>
-<a class="menu_list" href="{{ route('state.C') }}">各網頁登入次數統計</a>
-</div>
-
-</div>
-<!-- menu 區塊 End -->
-    </td>
-    <td class="td_2">
-<!-- 內容 區塊 Begin -->
-
-<!-- message 區塊 Begin -->
-<div class="message">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr valign="top">
-    <td class="message_text"></td>
-    <td class="message_close" valign="middle"><a href="javascript:void(0);" onClick="message_hide();">關閉</a></td>
-  </tr>
-</table>
-</div>
-<!-- message 區塊 End -->
+                    <!-- message 區塊 Begin -->
+                    @include('layout.message')
+                            <!-- message 區塊 End -->
 
 
+                    <!-- detail 區塊 Begin -->
+                    <div class="detail_box">
+                        <div class="steps_box">
+                            <span class="title">步驟</span>
+                            <span class="active">1</span>
+                            <span>2</span>
+                        </div>
+                        <form id="book_id" method="POST" action="/books_edit/{{$book[0]->id}}"
+                              enctype="multipart/form-data">
+                            {!! Form::model($book[0],['method' => 'PATCH','route'=>['books.edit.post',$book[0]->id]]) !!}
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <th>書名</th>
+                                    <td>
+                                        <h3>繁體中文 (&#8226;)</h3>
 
+                                        <div>
+                                            {!! Form::text('book_name_ch',null,['class'=>'v_01']) !!}
+                                        </div>
+                                        <h3>简体中文</h3>
 
-<!-- detail 區塊 Begin -->
-<div class="detail_box">
-<form id="books_edit" method="POST" enctype="multipart/form-data" action="/books_edit/post">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <th>書封(&#8226;)</th>
-    <td>
-    <img class="bookcover" src="{{ asset($book[0]->cover) }}"><BR />
-    <div>
-    使用方式：
+                                        <div>
+                                            {!! Form::text('book_name_cn',null) !!}
+                                        </div>
+                                        <h3>English</h3>
 
-    @if( $book[0]->upload_option == 1) 
-        <label><input type="radio" name="upload_option" value="1" onClick="chgShowField('url','pic');" checked>上傳圖檔</label>
-        <label><input type="radio" name="upload_option" value="2" onClick="chgShowField('pic','url');">圖檔網址</label>
-    @elseif( $book[0]->upload_option == 2)
-        <label><input type="radio" name="upload_option" value="2" onClick="chgShowField('pic','url');" checked>圖檔網址</label>
-        <label><input type="radio" name="upload_option" value="1" onClick="chgShowField('url','pic');">上傳圖檔</label>
-    @endif
+                                        <div>
+                                            {!! Form::text('book_name_en',null) !!}
+                                        </div>
+                                        <h3>日本語</h3>
 
+                                        <div>
+                                            {!! Form::text('book_name_jp',null) !!}
+                                        </div>
+                                        <h3>한국어</h3>
+
+                                        <div>
+                                            {!! Form::text('book_name_kr',null) !!}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>書封(&#8226;)</th>
+                                    <td>
+                                        <img class="bookcover" src="{{ asset($book[0]->cover) }}"><BR/>
+
+                                        <div>
+                                            使用方式：
+                                            <label>{!! Form::radio('upload_option',true,true,['onclick'=>'chgShowField("group_02","pic");']) !!}
+                                                上傳圖檔</label>
+                                            <label>{!! Form::radio('upload_option',false,false,['onclick'=>'chgShowField("group_02","url");']) !!}
+                                                圖檔網址</label>
+                                        </div>
+
+                                        <div class="group_02 pic">上傳圖檔：{!! Form::file('upload_file') !!}</div>
+                                        <div class="group_02 url" style="display:none;">
+                                            圖檔網址： {!! Form::text('cover',null) !!}</div>
+                                        <div class="note_txt">圖檔尺寸大小不限制，前台會自動調整尺寸。</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>連結(&#8226;)</th>
+                                    <td>{!! Form::text('url',null) !!}
+
+                                        <div class="note_txt">格式必須為網址(含http://)，例如:http://www.google.com.tw</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>是否顯示</th>
+                                    <td>
+                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}是</label>
+                                        <label>{!! Form::radio('view',false) !!}否</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>排序</th>
+                                    <td>{!! Form::text('rand_id',null,['class'=>'v_00']) !!}
+
+                                        <div class="note_txt">數字愈大，順序愈前面。</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>備註</th>
+                                    <td>{!! Form::textarea('note',null,['rows'=>'5']) !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <td>
+                                        <a class="btn_02"
+                                           onClick="step(parseInt($('span.active').html())-1)">上一步</a>
+                                        <a class="btn_02"
+                                           onClick="step(parseInt($('span.active').html())+1)">下一步</a>
+                                        <a class="btn_02"
+                                           onClick="submit()">完成</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            {!! Form::close() !!}
+                        </form>
+                    </div>
+                    <!-- detail 區塊 End -->
+
+                    <!-- Note 區塊 Begin -->
+                    <div class="detail_note">
+                        <div class="detail_note_title">Note</div>
+                        <div class="detail_note_content">
+                            <span class="required">(&#8226;)</span>為必填欄位
+                        </div>
+                    </div>
+                    <!-- Note 區塊 End -->
+
+                    <!-- 內容 區塊 End -->
+                </td>
+            </tr>
+        </table>
     </div>
-    
 
-    @if($book[0]->upload_option == 1)
-        <div class="pic">上傳圖檔：<input type="file" name="upload_file"></div>
-        <div class="url" style="display:none;">圖檔網址：<input type="text" name="cover"></div>        
-    @elseif( $book[0]->upload_option == 2)
-        <div class="url">圖檔網址：<input type="text" name="cover" value="{{ $book[0]->cover }}"></div>
-        <div class="pic" style="display:none;">上傳圖檔：<input type="file" name="upload_file"></div>        
-    @endif
-
-    <div class="note_txt">圖檔尺寸大小不限制，前台會自動調整尺寸。</div>
-    </td>
- </tr>
-  <tr>
-    <th>書名(&#8226;)</th>
-    <td><input type="text" name="book_name" value="{{ $book[0]->book_name }}">
-    </td>
-  </tr>
-  <tr>
-    <th>連結(&#8226;)</th>
-    <td><input type="text" name="url" value="{{ $book[0]->url }}">
-    <div class="note_txt">格式必須為網址，例如http://www.google.com.tw</div>
-    </td>
-  </tr>
-  <tr>
-    <th>是否顯示</th>
-    <td>
-        @if( $book[0]->view == 1)    
-            <label><input type="radio" name="view" value="1" checked>是</label>
-            <label><input type="radio" name="view" value="0">否</label>
-        @elseif( $book[0]->view == 0)
-            <label><input type="radio" name="view" value="0" checked>否</label>
-            <label><input type="radio" name="view" value="1">是</label>
-        @endif
-    </td>
-  </tr>
-  <tr>
-    <th>排序</th>
-    <td><input class="v_00" type="text" name="rand_id" value={{ $book[0]->rand_id }}>
-    <div class="note_txt">數字愈大，順序愈前面。</div>
-    </td>
-  </tr>
-  <tr>
-    <th>備註</th>
-    <td><textarea rows="5" name="note">{{ $book[0]->note }}</textarea></td>
-  </tr>
-  <tr>
-    <th>&nbsp;</th>
-    <td>
-    <a class="btn_02" href="javascript:history.go(-1);">返回</a>
-    <a class="btn_02" onClick="document.getElementById('books_edit').submit();">送出</a>
-    </td>
-  </tr>
-</table>
-
-<input type="hidden" name="_token" value="{{ csrf_token() }}">
-<input type="hidden" name="id" value="{{ $book[0]->id }}">
-
-</form>
-</div>
-<!-- detail 區塊 End -->
-
-<!-- Note 區塊 Begin -->
-<div class="detail_note">
-    <div class="detail_note_title">Note</div>
-    <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
-</div>
-<!-- Note 區塊 End -->
-
-<!-- 內容 區塊 End -->
-    </td>
-  </tr>
-</table>
-</div>
-
-<div class="footer">本系統由碩陽數位科技有限公司 版權所有  Copyright &copy; Shou Yang Technology Co., Ltd.</div>
+    @include('layout.footer')
 
 </div>
-
 
 <!-- 執行javascript 區塊 Begin -->
-<script src="{{ asset('templates/jquery-1.11.3.min.js') }}"></script>
-<script src="{{ asset('templates/art.js') }}"></script>
-<!-- 執行javascript 區塊 End -->
+@include('layout.javascript')
+        <!-- 執行javascript 區塊 End -->
+@if(Session::get('error'))
+    <script>
+        message_show("{!! Session::get('error') !!}");
+    </script>
+@endif
+<script>
+    init();
+
+    function init() {
+        for (var i = 1; i <= 5; i++) {
+            $("form table tr:eq(" + i + ")").hide();
+        }
+
+        var value = $("input[name='upload_option']:checked").val();
+        var option = value != null && value.trim() != "" && value != "0" && value != 0;
+        if (option) {
+            chgShowField("group_02", "pic");
+        } else {
+            chgShowField("group_02", "url");
+        }
+
+        $("a.btn_02:eq(0)").hide();
+        $("a.btn_02:eq(2)").hide();
+    }
+
+    function step(i) {
+        switch (i) {
+            case 1 :
+                $("span.active").removeClass();
+                $("div.steps_box span:eq(" + i + ")").addClass("active");
+                $("form table tr:eq(0)").show();
+                for (var i = 1; i <= 5; i++) {
+                    $("form table tr:eq(" + i + ")").hide();
+                }
+
+                $("div.message").hide();
+                $("a.btn_02:eq(0)").hide();
+                $("a.btn_02:eq(1)").show();
+                $("a.btn_02:eq(2)").hide();
+                break;
+
+            case 2:
+                if ($("span.active").html() == "1") {
+                    var book_name_ch = $("input[name='book_name_ch']").val()
+                    if (book_name_ch == null || book_name_ch.trim() == "") {
+                        message_show("<p>．請輸入書名。</p>");
+                        break;
+                    }
+                }
+
+                $("span.active").removeClass();
+                $("div.steps_box span:eq(" + i + ")").addClass("active");
+                for (var i = 0; i <= 0; i++) {
+                    $("form table tr:eq(" + i + ")").hide();
+                }
+
+                for (var i = 1; i <= 5; i++) {
+                    $("form table tr:eq(" + i + ")").show();
+                }
+
+                message_hide();
+                $("a.btn_02:eq(0)").show();
+                $("a.btn_02:eq(1)").hide();
+                $("a.btn_02:eq(2)").show();
+                break;
+        }
+    }
+
+    function submit() {
+        var msg = "";
+        var value = $("input[name='upload_option']:checked").val();
+        var option = value != null && value.trim() != "" && value != "0" && value != 0;
+        var db_option = "{{$book[0]->upload_option}}" == "1";
+
+        if (db_option && option) {
+            if ($("input[name='upload_file']").val() != null && $("input[name='upload_file']").val() != "") {
+                if (window.FileReader && window.Blob) {
+                    var mime = document.getElementsByName('upload_file')[0].files[0].type;
+                    if (mime != "image/png" && mime != "image/jpeg" && mime != "image/gif") {
+                        msg = msg.concat("<p>．請上傳書封。</p>");
+                    }
+                }
+            }
+
+        } else if (db_option && !option) {
+            if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
+                msg = msg.concat("<p>．請輸入書封。</p>");
+            } else {
+                if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
+                    msg = msg.concat("<p>．圖檔網址格式必須為網址(含http://)。</p>");
+                }
+            }
+        } else if (!db_option && option) {
+            if ($("input[name='upload_file']").val() == null || $("input[name='upload_file']").val() == "") {
+                msg = msg.concat("<p>．請上傳書封。</p>");
+            } else {
+                if (window.FileReader && window.Blob) {
+                    var mime = document.getElementsByName('upload_file')[0].files[0].type;
+                    if (mime != "image/png" && mime != "image/jpeg" && mime != "image/gif") {
+                        msg = msg.concat("<p>．請上傳書封。</p>");
+                    }
+                }
+            }
+        } else {
+            if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
+                msg = msg.concat("<p>．請輸入書封。</p>");
+            } else {
+                if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
+                    msg = msg.concat("<p>．圖檔網址格式必須為網址(含http://)。</p>");
+                }
+            }
+        }
+
+        if ($('input[name="url"]').val() == null || $('input[name="url"]').val().trim() == "") {
+            msg = msg.concat("<p>．請輸入連結。</p>");
+        } else {
+            if (!$('input[name="url"]').val().match(/^http([s]?):\/\/.*/)) {
+                msg = msg.concat("<p>．連結格式必須為網址(含http://)。</p>");
+            }
+        }
+
+        if (msg != "") {
+            message_show(msg);
+        } else {
+            document.getElementById('book_id').submit();
+        }
+    }
+</script>
 </body>
 </html>
