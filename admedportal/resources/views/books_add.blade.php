@@ -142,11 +142,6 @@
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
-@if(Session::get('error'))
-    <script>
-        message_show("{!! Session::get('error') !!}");
-    </script>
-@endif
 <script>
     init();
 

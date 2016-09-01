@@ -462,96 +462,61 @@ class AdminController extends Controller
 
     }
 
+    public function news_add()
+    {
+        $hours = array();
+        $minuteSeconds = array();
+        for ($i = 0; $i < 60; $i++) {
+            $num = sprintf("%02d", $i);
+            if ($i < 24) {
+                $hours[$num] = $num;
+            }
+
+            $minuteSeconds[$num] = $num;
+        }
+        return view('news_add')->with('hours', $hours)->with('minuteSeconds', $minuteSeconds);
+    }
+
     public function news_add_post(Request $request)
     {
-
-
-        $input_data = $request->all();
-
         //Log::info('data -----------------------' . dump($input_data));
-
-        $this->validate($request, [
+        $rules = array(
             'publish_time' => 'required',
-            'title' => 'required'
-        ]);
+            'title_ch' => 'required'
+        );
 
-        $publish_time = trim($input_data['publish_time']) . " " . trim($input_data['hh']) . ":" . trim($input_data['mm']) . ":" . trim($input_data['ss']);
+        $messages = array(
+            'publish_time.required' => '<p>．請輸入公告時間。</p>',
+            'title_ch.required' => '<p>．請輸入標題。</p>'
+        );
 
-        $title = trim($input_data['title']);
+        $this->validate($request, $rules, $messages);
 
-        $content = trim($input_data['content']);
-
-        $view = trim($input_data['view']);
-
-        //$rank_id = trim($input_data['rank_id']);
-
-        $note = trim($input_data['note']);
+        $publish_time = trim(\Input::get('publish_time')) . " " . trim(\Input::get('hh')) . ":" . trim(\Input::get('mm')) . ":" . trim(\Input::get('ss'));
+        $timedata = DB::select('select now() as timedata');
 
         DB::table('news')->insert(
             [
                 'publish_time' => $publish_time,
-                'title' => $title,
-                'content' => $content,
-                'view' => $view,
-                //    'rank_id'               => $rank_id,
-                'note' => $note
+                'title_ch' => trim(\Input::get('title_ch')),
+                'title_cn' => trim(\Input::get('title_cn')),
+                'title_en' => trim(\Input::get('title_en')),
+                'title_jp' => trim(\Input::get('title_jp')),
+                'title_kr' => trim(\Input::get('title_kr')),
+                'content_ch' => trim(\Input::get('content_ch')),
+                'content_cn' => trim(\Input::get('content_cn')),
+                'content_en' => trim(\Input::get('content_en')),
+                'content_jp' => trim(\Input::get('content_jp')),
+                'content_kr' => trim(\Input::get('content_kr')),
+                'view' => (boolean)\Input::get('view'),
+                'note' => trim(\Input::get('note')),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
             ]
         );
 
         return redirect()->route('news.browser')
             ->with('success', '新增資料成功');
-
-
-    }
-
-    public function news_add()
-    {
-        return view('news_add');
-    }
-
-    public function news_edit_post(Request $request)
-    {
-
-        $input_data = $request->all();
-
-        $this->validate($request, [
-            'publish_time' => 'required',
-            'title' => 'required'
-        ]);
-
-
-        //Log::info('data -----------------------' . dump($input_data));
-
-        $publish_time = trim($input_data['publish_time']) . " " . trim($input_data['hh']) . ":" . trim($input_data['mm']) . ":" . trim($input_data['ss']);
-
-        $title = trim($input_data['title']);
-
-        $content = trim($input_data['content']);
-
-        $view = trim($input_data['view']);
-
-        //$rank_id = trim($input_data['rank_id']);
-
-        $note = trim($input_data['note']);
-
-        $id = trim($input_data['id']);
-
-        $timedata = DB::select('select now() as timedata');
-
-        DB::table('news')
-            ->where('id', $id)
-            ->update([
-                'publish_time' => $publish_time,
-                'title' => $title,
-                'content' => $content,
-                'view' => $view,
-                //'rank_id' => $rank_id,
-                'note' => $note,
-                'updated_at' => $timedata[0]->timedata
-            ]);
-
-        return redirect()->route('news.browser')
-            ->with('success', '更新資料成功');
 
 
     }
@@ -566,53 +531,74 @@ class AdminController extends Controller
 
         $newt = explode(" ", $news[0]->publish_time);
 
+
         list($hh, $mm, $ss) = explode(":", $newt[1]);
+        $hh = sprintf("%02d", $hh);
+        $mm = sprintf("%02d", $mm);
+        $ss = sprintf("%02d", $ss);
 
-        $hh_a = [
-            0 => "00", 1 => "01", 2 => "02", 3 => "03", 4 => "04", 5 => "05",
-            6 => "06", 7 => "07", 8 => "08", 9 => "09", 10 => "10", 11 => "11",
-            12 => "12", 13 => "13", 14 => "14", 15 => "15", 16 => "16", 17 => "17",
-            18 => "18", 19 => "19", 20 => "20", 21 => "21", 22 => "22", 23 => "23",
-        ];
+        $hours = array();
+        $minuteSeconds = array();
+        for ($i = 0; $i < 60; $i++) {
+            $num = sprintf("%02d", $i);
+            if ($i < 24) {
+                $hours[$num] = $num;
+            }
 
-        $mm_a = [
-            0 => "00", 1 => "01", 2 => "02", 3 => "03", 4 => "04", 5 => "05",
-            6 => "06", 7 => "07", 8 => "08", 9 => "09", 10 => "10", 11 => "11",
-            12 => "12", 13 => "13", 14 => "14", 15 => "15", 16 => "16", 17 => "17",
-            18 => "18", 19 => "19", 20 => "20", 21 => "21", 22 => "22", 23 => "23",
-            24 => "24", 25 => "25", 26 => "26", 27 => "27", 28 => "28", 29 => "29",
-            30 => "30", 31 => "31", 32 => "32", 33 => "33", 34 => "34", 35 => "35",
-            36 => "36", 37 => "37", 38 => "38", 39 => "39", 40 => "40", 41 => "41",
-            42 => "42", 43 => "43", 44 => "44", 45 => "45", 46 => "46", 47 => "47",
-            48 => "48", 49 => "49", 50 => "50", 51 => "51", 52 => "52", 53 => "53",
-            54 => "54", 55 => "55", 56 => "56", 57 => "57", 58 => "58", 59 => "59"
-        ];
+            $minuteSeconds[$num] = $num;
+        }
 
-        $ss_a = [
-            0 => "00", 1 => "01", 2 => "02", 3 => "03", 4 => "04", 5 => "05",
-            6 => "06", 7 => "07", 8 => "08", 9 => "09", 10 => "10", 11 => "11",
-            12 => "12", 13 => "13", 14 => "14", 15 => "15", 16 => "16", 17 => "17",
-            18 => "18", 19 => "19", 20 => "20", 21 => "21", 22 => "22", 23 => "23",
-            24 => "24", 25 => "25", 26 => "26", 27 => "27", 28 => "28", 29 => "29",
-            30 => "30", 31 => "31", 32 => "32", 33 => "33", 34 => "34", 35 => "35",
-            36 => "36", 37 => "37", 38 => "38", 39 => "39", 40 => "40", 41 => "41",
-            42 => "42", 43 => "43", 44 => "44", 45 => "45", 46 => "46", 47 => "47",
-            48 => "48", 49 => "49", 50 => "50", 51 => "51", 52 => "52", 53 => "53",
-            54 => "54", 55 => "55", 56 => "56", 57 => "57", 58 => "58", 59 => "59"
-        ];
+        $news[0]->publish_time = $newt[0];
+        $news[0]->hh = $hh;
+        $news[0]->mm = $mm;
+        $news[0]->ss = $ss;
 
         return view('news_edit', [
             'news' => $news,
-            'publish_time' => $newt[0],
-            'hh_a' => $hh_a,
-            'hh' => $hh,
-            'mm_a' => $mm_a,
-            'mm' => $mm,
-            'ss_a' => $ss_a,
-            'ss' => $ss
+            'hours' => $hours,
+            'minuteSeconds' => $minuteSeconds,
         ]);
+    }
 
+    public function news_edit_post(Request $request, $id)
+    {
+        $rules = array(
+            'publish_time' => 'required',
+            'title_ch' => 'required'
+        );
 
+        $messages = array(
+            'publish_time.required' => '<p>．請輸入公告時間。</p>',
+            'title_ch.required' => '<p>．請輸入標題。</p>'
+        );
+
+        $this->validate($request, $rules, $messages);
+
+        $publish_time = trim(\Input::get('publish_time')) . " " . trim(\Input::get('hh')) . ":" . trim(\Input::get('mm')) . ":" . trim(\Input::get('ss'));
+        $timedata = DB::select('select now() as timedata');
+
+        DB::table('news')
+            ->where('id', $id)
+            ->update([
+                'publish_time' => $publish_time,
+                'title_ch' => trim(\Input::get('title_ch')),
+                'title_cn' => trim(\Input::get('title_cn')),
+                'title_en' => trim(\Input::get('title_en')),
+                'title_jp' => trim(\Input::get('title_jp')),
+                'title_kr' => trim(\Input::get('title_kr')),
+                'content_ch' => trim(\Input::get('content_ch')),
+                'content_cn' => trim(\Input::get('content_cn')),
+                'content_en' => trim(\Input::get('content_en')),
+                'content_jp' => trim(\Input::get('content_jp')),
+                'content_kr' => trim(\Input::get('content_kr')),
+                'view' => (boolean)\Input::get('view'),
+                'note' => trim(\Input::get('note')),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
+            ]);
+
+        return redirect()->route('news.browser')
+            ->with('success', '更新資料成功');
     }
 
 //    public function news_view_id($id)
@@ -643,74 +629,48 @@ class AdminController extends Controller
         return view('books_add');
     }
 
-    public function books_add_post()
+    public function books_add_post(Request $request)
     {
-        $msg = '';
-        $rule1 = array(
-            'book_name_ch' => 'required'
-        );
-
-        $rule2 = array(
-            'url' => 'required'
-        );
-
-        $rule3 = array(
-            'url' => 'regex:/^http([s]?):\/\/.*/'
-        );
-
-        $rule4 = null;
+        $rules = null;
+        $messages = null;
         $upload_option = (boolean)\Input::get('upload_option');
         if ($upload_option) {
-            $rule4 = array(
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'required|mimes:png,jpeg,gif'
             );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'upload_file.required' => '<p>．請上傳書封。</p>',
+                'upload_file.mimes' => '<p>．請上傳書封。</p>'
+            );
         } else {
-            $rule4 = array(
-                'cover' => 'required'
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
+            );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'cover.required' => '<p>．請輸入書封。</p>',
+                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
             );
         }
 
-        $rule5 = array(
-            'cover' => 'regex:/^http([s]?):\/\/.*/'
-        );
-
-        if (\Validator::make(\Input::all(), $rule1)->fails()) {
-            $msg .= '<p>．請輸入書名。</p>';
-        }
-
-        if (\Validator::make(\Input::all(), $rule2)->fails()) {
-            $msg .= '<p>．請輸入連結。</p>';
-        } else {
-            if (\Validator::make(\Input::all(), $rule3)->fails()) {
-                $msg .= '<p>．連結格式必須為網址(含http://)。</p>';
-            }
-        }
-
-        if (\Validator::make(\Input::all(), $rule4)->fails()) {
-            if ($upload_option) {
-                $msg .= '<p>．請上傳書封。</p>';
-
-            } else {
-                $msg .= '<p>．請輸入書封。</p>';
-            }
-        } else {
-            if (!$upload_option) {
-                if (\Validator::make(\Input::all(), $rule5)->fails()) {
-                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
-                }
-            }
-        }
-
-        if ($msg != '') {
-            return redirect()->route('books.add')->with('error', $msg)->withInput();
-
-        }
+        $this->validate($request, $rules, $messages);
 
         //Log::info("data --------------------------- " . dump($request));
 
         // 2 不用處理檔案 copy , 1 要處理檔案 copy
 
-        $cover = '';
+        $cover = null;
 
         if (\Input::hasFile('upload_file')) {
 
@@ -780,90 +740,72 @@ class AdminController extends Controller
 
     }
 
-    public function books_edit_post($id)
+    public function books_edit_post(Request $request, $id)
     {
         $book = DB::table('book')->where('id', '=', $id)->get();
         $db_upload_option = (boolean)$book[0]->upload_option;
         $upload_option = (boolean)\Input::get('upload_option');
-        $msg = '';
 
-        $rule1 = array(
-            'book_name_ch' => 'required'
-        );
-
-        $rule2 = array(
-            'url' => 'required'
-        );
-
-        $rule3 = array(
-            'url' => 'regex:/^http([s]?):\/\/.*/'
-        );
-
-        $rule4 = null;
+        $rules = null;
+        $messages = null;
         if ($db_upload_option && $upload_option) {
-            $rule4 = array(
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'mimes:png,jpeg,gif'
             );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'upload_file.mimes' => '<p>．請上傳書封。</p>'
+            );
         } elseif ($db_upload_option && !$upload_option) {
-            $rule4 = array(
-                'cover' => 'required'
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
+            );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'cover.required' => '<p>．請輸入書封。</p>',
+                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
             );
         } elseif (!$db_upload_option && $upload_option) {
-            $rule4 = array(
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'required|mimes:png,jpeg,gif'
             );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'upload_file.required' => '<p>．請上傳書封。</p>',
+                'upload_file.mimes' => '<p>．請上傳書封。</p>'
+            );
         } else {
-            $rule4 = array(
-                'cover' => 'required'
+            $rules = array(
+                'book_name_ch' => 'required',
+                'url' => 'required|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
+            );
+
+            $messages = array(
+                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                'url.required' => '<p>．請輸入連結。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'cover.required' => '<p>．請輸入書封。</p>',
+                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
             );
         }
 
-        $rule5 = array(
-            'cover' => 'regex:/^http([s]?):\/\/.*/'
-        );
-
-        if (\Validator::make(\Input::all(), $rule1)->fails()) {
-            $msg .= '<p>．請輸入書名。</p>';
-        }
-
-        if (\Validator::make(\Input::all(), $rule2)->fails()) {
-            $msg .= '<p>．請輸入連結。</p>';
-        } else {
-            if (\Validator::make(\Input::all(), $rule3)->fails()) {
-                $msg .= '<p>．連結格式必須為網址(含http://)。</p>';
-            }
-        }
-
-        if ($db_upload_option && $upload_option) {
-            if (\Validator::make(\Input::all(), $rule4)->fails()) {
-                $msg .= '<p>．請上傳書封。</p>';
-            }
-
-        } elseif ($db_upload_option && !$upload_option) {
-            if (\Validator::make(\Input::all(), $rule4)->fails()) {
-                $msg .= '<p>．請輸入書封。</p>';
-            } else {
-                if (\Validator::make(\Input::all(), $rule5)->fails()) {
-                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
-                }
-            }
-        } elseif (!$db_upload_option && $upload_option) {
-            if (\Validator::make(\Input::all(), $rule4)->fails()) {
-                $msg .= '<p>．請上傳書封。</p>';
-            }
-        } else {
-            if (\Validator::make(\Input::all(), $rule4)->fails()) {
-                $msg .= '<p>．請輸入書封。</p>';
-            } else {
-                if (\Validator::make(\Input::all(), $rule5)->fails()) {
-                    $msg .= '<p>．圖檔網址格式必須為網址(含http://)。</p>';
-                }
-            }
-        }
-
-        if ($msg != '') {
-            return redirect()->route('books.edit.post', $id)->with('error', $msg)->withInput();
-        }
+        $this->validate($request, $rules, $messages);
 
         //Log::info("data --------------------------- " . dump($request));
 
@@ -1289,10 +1231,10 @@ class AdminController extends Controller
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'cn_display' => \Input::get('cn_display'),
-                    'en_display' => \Input::get('en_display'),
-                    'jp_display' => \Input::get('jp_display'),
-                    'kr_display' => \Input::get('kr_display'),
+                    'cn_display' => (boolean)\Input::get('cn_display'),
+                    'en_display' => (boolean)\Input::get('en_display'),
+                    'jp_display' => (boolean)\Input::get('jp_display'),
+                    'kr_display' => (boolean)\Input::get('kr_display'),
                     'ch_order' => \Input::get('ch_order'),
                     'cn_order' => \Input::get('cn_order'),
                     'en_order' => \Input::get('en_order'),
@@ -1321,7 +1263,7 @@ class AdminController extends Controller
 
     }
 
-    public function sys_edit_2_next()
+    public function sys_edit_2_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
 
@@ -1329,9 +1271,11 @@ class AdminController extends Controller
                 'site_name_ch' => 'required'
             );
 
-            if (\Validator::make(\Input::all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.2')->with('error', '．請輸入網站名稱。')->withInput();
-            }
+            $messages = array(
+                'site_name_ch.required' => '．請輸入網站名稱。'
+            );
+
+            $this->validate($request, $rules, $messages);
 
             $timedata = DB::select('select now() as timedata');
             DB::table('webconfig')
@@ -1461,7 +1405,7 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_4_next()
+    public function sys_edit_4_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
 
@@ -1469,9 +1413,11 @@ class AdminController extends Controller
                 'copyright_ch' => 'required'
             );
 
-            if (\Validator::make(\Input::all(), $rules)->fails()) {
-                return redirect()->route('sys.edit.4')->with('error', '．請輸入版權宣告。')->withInput();
-            }
+            $messages = array(
+                'copyright_ch.required' => '．請輸入版權宣告。'
+            );
+
+            $this->validate($request, $rules, $messages);
 
             $timedata = DB::select('select now() as timedata');
             DB::table('webconfig')
@@ -1564,58 +1510,46 @@ class AdminController extends Controller
         return view('db_add');
     }
 
-    public function db_add_post()
+    public function db_add_post(Request $request)
     {
-        $msg = '';
-        $rule1 = array(
-            'database_name_ch' => 'required'
-        );
-
-        $rule2 = array(
+        $rules = array(
+            'database_name_ch' => 'required',
             'syntax_ch' => 'required'
         );
 
-        if (\Validator::make(\Input::all(), $rule1)->fails()) {
-            $msg .= '<p>．請輸入資料庫名稱。</p>';
-        }
+        $messages = array(
+            'database_name_ch.required' => '<p>．請輸入資料庫名稱。</p>',
+            'syntax_ch.required' => '<p>．請輸入嵌入語法。</p>'
+        );
 
-        if (\Validator::make(\Input::all(), $rule2)->fails()) {
-            $msg .= '<p>．請輸入嵌入語法。</p>';
-        }
+        $this->validate($request, $rules, $messages);
 
-        if ($msg != '') {
-            return redirect()->route('db.add')->with('error', $msg)->withInput();
+        //   Log::info('data --------------------- ' . dump($input_data));
 
-        } else {
+        $timedata = DB::select('select now() as timedata');
 
-            //   Log::info('data --------------------- ' . dump($input_data));
+        DB::table('querydatabase')->insert(
+            [
+                'database_name_ch' => trim(\Input::get('database_name_ch')),
+                'database_name_cn' => trim(\Input::get('database_name_cn')),
+                'database_name_en' => trim(\Input::get('database_name_en')),
+                'database_name_jp' => trim(\Input::get('database_name_jp')),
+                'database_name_kr' => trim(\Input::get('database_name_kr')),
+                'syntax_ch' => trim(\Input::get('syntax_ch')),
+                'syntax_cn' => trim(\Input::get('syntax_cn')),
+                'syntax_en' => trim(\Input::get('syntax_en')),
+                'syntax_jp' => trim(\Input::get('syntax_jp')),
+                'syntax_kr' => trim(\Input::get('syntax_kr')),
+                'view' => trim(\Input::get('view')),
+                'rank_id' => trim(\Input::get('rank_id')),
+                'note' => trim(\Input::get('note')),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
+            ]
+        );
 
-            $timedata = DB::select('select now() as timedata');
-
-            DB::table('querydatabase')->insert(
-                [
-                    'database_name_ch' => trim(\Input::get('database_name_ch')),
-                    'database_name_cn' => trim(\Input::get('database_name_cn')),
-                    'database_name_en' => trim(\Input::get('database_name_en')),
-                    'database_name_jp' => trim(\Input::get('database_name_jp')),
-                    'database_name_kr' => trim(\Input::get('database_name_kr')),
-                    'syntax_ch' => trim(\Input::get('syntax_ch')),
-                    'syntax_cn' => trim(\Input::get('syntax_cn')),
-                    'syntax_en' => trim(\Input::get('syntax_en')),
-                    'syntax_jp' => trim(\Input::get('syntax_jp')),
-                    'syntax_kr' => trim(\Input::get('syntax_kr')),
-                    'view' => trim(\Input::get('view')),
-                    'rank_id' => trim(\Input::get('rank_id')),
-                    'note' => trim(\Input::get('note')),
-                    'created_at' => $timedata[0]->timedata,
-                    'updated_at' => $timedata[0]->timedata
-                ]
-            );
-
-            return redirect()->route('db.browser')
-                ->with('success', '新增資料成功');
-        }
-
+        return redirect()->route('db.browser')
+            ->with('success', '新增資料成功');
     }
 
     public function db_edit_id($id)
@@ -1629,61 +1563,49 @@ class AdminController extends Controller
 
     }
 
-    public function db_edit_post($id)
+    public function db_edit_post(Request $request, $id)
     {
-
-        $msg = '';
-        $rule1 = array(
-            'database_name_ch' => 'required'
-        );
-
-        $rule2 = array(
+        $rules = array(
+            'database_name_ch' => 'required',
             'syntax_ch' => 'required'
         );
 
-        if (\Validator::make(\Input::all(), $rule1)->fails()) {
-            $msg .= '<p>．請輸入資料庫名稱。</p>';
-        }
+        $messages = array(
+            'database_name_ch.required' => '<p>．請輸入資料庫名稱。</p>',
+            'syntax_ch.required' => '<p>．請輸入嵌入語法。</p>'
+        );
 
-        if (\Validator::make(\Input::all(), $rule2)->fails()) {
-            $msg .= '<p>．請輸入嵌入語法。</p>';
-        }
+        $this->validate($request, $rules, $messages);
 
-        if ($msg != '') {
-            return redirect()->route('db.edit.id', $id)->with('error', $msg)->withInput();
+        //   Log::info('data --------------------- ' . dump($input_data));
 
-        } else {
+        //   exit;
 
-            //   Log::info('data --------------------- ' . dump($input_data));
+        $timedata = DB::select('select now() as timedata');
 
-            //   exit;
-
-            $timedata = DB::select('select now() as timedata');
-
-            DB::table('querydatabase')
-                ->where('id', $id)
-                ->update([
-                    'database_name_ch' => trim(\Input::get('database_name_ch')),
-                    'database_name_cn' => trim(\Input::get('database_name_cn')),
-                    'database_name_en' => trim(\Input::get('database_name_en')),
-                    'database_name_jp' => trim(\Input::get('database_name_jp')),
-                    'database_name_kr' => trim(\Input::get('database_name_kr')),
-                    'syntax_ch' => trim(\Input::get('syntax_ch')),
-                    'syntax_cn' => trim(\Input::get('syntax_cn')),
-                    'syntax_en' => trim(\Input::get('syntax_en')),
-                    'syntax_jp' => trim(\Input::get('syntax_jp')),
-                    'syntax_kr' => trim(\Input::get('syntax_kr')),
-                    'view' => trim(\Input::get('view')),
-                    'rank_id' => trim(\Input::get('rank_id')),
-                    'note' => trim(\Input::get('note')),
-                    'updated_at' => $timedata[0]->timedata
-                ]);
+        DB::table('querydatabase')
+            ->where('id', $id)
+            ->update([
+                'database_name_ch' => trim(\Input::get('database_name_ch')),
+                'database_name_cn' => trim(\Input::get('database_name_cn')),
+                'database_name_en' => trim(\Input::get('database_name_en')),
+                'database_name_jp' => trim(\Input::get('database_name_jp')),
+                'database_name_kr' => trim(\Input::get('database_name_kr')),
+                'syntax_ch' => trim(\Input::get('syntax_ch')),
+                'syntax_cn' => trim(\Input::get('syntax_cn')),
+                'syntax_en' => trim(\Input::get('syntax_en')),
+                'syntax_jp' => trim(\Input::get('syntax_jp')),
+                'syntax_kr' => trim(\Input::get('syntax_kr')),
+                'view' => trim(\Input::get('view')),
+                'rank_id' => trim(\Input::get('rank_id')),
+                'note' => trim(\Input::get('note')),
+                'updated_at' => $timedata[0]->timedata
+            ]);
 
 
-            return redirect()->route('db.browser')
-                ->with('success', '更新資料成功');
+        return redirect()->route('db.browser')
+            ->with('success', '更新資料成功');
 
-        }
     }
 
     public function books_browser()

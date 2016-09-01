@@ -15,12 +15,12 @@
 Route::post('/forget/post',
     ['as' => 'forget.post', 'uses' => 'AdminController@forget_post']
 );
-    
+
 Route::get('/forget',
     ['as' => 'forget', 'uses' => 'AdminController@forget']
 );
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'auth'], function () {
 
 
     Route::post('/state_C/post',
@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'paper.add', 'uses' => 'AdminController@paper_add']
     );
 
-    Route::post('/paper_edit/post',    
+    Route::post('/paper_edit/post',
         ['as' => 'paper.edit.post', 'uses' => 'AdminController@paper_edit_post']
     );
 
@@ -56,20 +56,20 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'paper.browser.id.delete', 'uses' => 'AdminController@paper_browser_id_delete']
     )->where('id', '[0-9]+');
 
-    Route::post('/news_add/post',
-        ['as' => 'news.add.post', 'uses' => 'AdminController@news_add_post']
-    );
-
     Route::get('/news_add',
         ['as' => 'news.add', 'uses' => 'AdminController@news_add']
     );
 
-    Route::post('/news_edit/post',
-        ['as' => 'news.edit.post', 'uses' => 'AdminController@news_edit_post']
+    Route::post('/news_add/post',
+        ['as' => 'news.add.post', 'uses' => 'AdminController@news_add_post']
     );
 
     Route::get('/news_edit/{id}',
         ['as' => 'news.edit.id', 'uses' => 'AdminController@news_edit_id']
+    )->where('id', '[0-9]+');
+
+    Route::patch('/news_edit/{id}',
+        ['as' => 'news.edit.post', 'uses' => 'AdminController@news_edit_post']
     )->where('id', '[0-9]+');
 
 //    Route::get('/news_view/{id}',
@@ -89,7 +89,7 @@ Route::group(['middleware' => 'auth'], function() {
     );
 
     Route::get('/admin_browser',
-            ['as' => 'admin.browser', 'uses' => 'AdminController@admin_browser']
+        ['as' => 'admin.browser', 'uses' => 'AdminController@admin_browser']
     );
 
     Route::get('/admin_browser/{id}/delete',
@@ -116,7 +116,7 @@ Route::group(['middleware' => 'auth'], function() {
         ['as' => 'admin.add.post', 'uses' => 'AdminController@admin_add_post']
     );
 
-    Route::get('/auth/logout', 
+    Route::get('/auth/logout',
         ['as' => 'logout.process', 'uses' => 'Auth\AuthController@getLogout']
     );
 
@@ -210,7 +210,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::patch('/books_edit/{id}',
         ['as' => 'books.edit.post', 'uses' => 'AdminController@books_edit_post']
-    );
+    )->where('id', '[0-9]+');
 
     Route::get('/news_browser',
         ['as' => 'news.browser', 'uses' => 'AdminController@news_browser']
@@ -234,11 +234,11 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/state_A_output/{Year}/{Month}',
         ['as' => 'state.A.output', 'uses' => 'AdminController@state_A_output']
-    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+'] );
+    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+']);
 
     Route::get('/state_A_output_csv/{Year}/{Month}',
         ['as' => 'state.A.output.csv', 'uses' => 'AdminController@state_A_output_csv']
-    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+'] );    
+    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+']);
 
     Route::get('/state_C',
         ['as' => 'state.C', 'uses' => 'AdminController@state_C']
@@ -246,11 +246,11 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/state_C_output/{Year}/{Month}',
         ['as' => 'state.C.output', 'uses' => 'AdminController@state_C_output']
-    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+'] );
+    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+']);
 
     Route::get('/state_C_output_csv/{Year}/{Month}',
         ['as' => 'state.C.output.csv', 'uses' => 'AdminController@state_C_output_csv']
-    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+'] );
+    )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+']);
 
 
 });
@@ -258,7 +258,7 @@ Route::group(['middleware' => 'auth'], function() {
 
 // vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php
 
-Route::get('/auth/login' , ['as' => 'login.index'  , 'uses' => 'Auth\AuthController@getLogin']);
+Route::get('/auth/login', ['as' => 'login.index', 'uses' => 'Auth\AuthController@getLogin']);
 Route::post('/auth/login', ['as' => 'login.process', 'uses' => 'Auth\AuthController@postLogin']);
 
 

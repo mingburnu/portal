@@ -1,4 +1,18 @@
-@if(Session::get('error'))
+@if(count($errors) > 0)
+    <div class="message_print_errer">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr valign="top">
+                <td class="message_text">
+                    @foreach ($errors->all() as $error)
+                        {!! $error !!}
+                    @endforeach</td>
+                <td class="message_close" valign="middle"><a href="javascript:void(0);"
+                                                             onClick="message_print_errer_hide();">關閉</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+@elseif(Session::get('error'))
     <div class="message_print_errer">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
@@ -9,7 +23,7 @@
             </tr>
         </table>
     </div>
-    @else
+@else
     <div class="message_print_errer" style="display: none">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
