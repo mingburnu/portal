@@ -308,63 +308,97 @@ class AdminController extends Controller
 
     }
 
+    public function paper_add()
+    {
+        $languages = DB::table('languages')->get();
+        return view('paper_add')->with('languages', $languages);
+
+    }
+
     public function paper_add_post(Request $request)
     {
-        $paper = $request->all();
+        $type = (boolean)\Input::get('type');
+        if (type) {
+            $rules = array(
+                '0_title' => 'required'
+            );
 
-        $this->validate($request, [
-            'title' => 'required'
-        ]);
+            $messages = array(
+                '0_title.required' => '<p>．請輸入項目名稱。</p>'
+            );
+        } else {
+            $rules = array(
+                '0_title' => 'required',
+                'url' => 'regex:/^http([s]?):\/\/.*/',
+            );
+
+            $messages = array(
+                '0_title.required' => '<p>．請輸入項目名稱。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>'
+            );
+        }
+
+        $this->validate($request, $rules, $messages);
 
         //    Log::info('data ------------------ ' . dump($paper));
 
-        $title = trim($paper['title']);
+        $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
 
-        $type = trim($paper['type']);
+        if (type) {
+            $id = DB::table('pages')->insertGetId([
+                'title' => trim(\Input::get('0_title')),
+                'type' => $type,
+                'content' => trim(Input::get('0_content')),
+                'url' => null,
+                'view' => (boolean)\Input::get('view'),
+                'rank_id' => \Input::get('rank_id'),
+                'note' => trim(\Input::get('note')),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
+            ]);
 
-        $content = '';
+            for ($i = 1; $i < $total; $i++) {
+                DB::table('news_i18n')->insert(
+                    [
+                        'page_id' => $id,
+                        'language' => $i,
+                        'title' => trim(\Input::get($i . '_title')),
+                        'content' => trim(\Input::get($i . '_content')),
+                        'url' => null
+                    ]
+                );
+            }
+        } else {
+            $id = DB::table('pages')->insertGetId([
+                'title' => trim(\Input::get('0_title')),
+                'type' => $type,
+                'content' => null,
+                'url' => trim(Input::get('0_url')),
+                'view' => (boolean)\Input::get('view'),
+                'rank_id' => \Input::get('rank_id'),
+                'note' => trim(\Input::get('note')),
+                'created_at' => $timedata[0]->timedata,
+                'updated_at' => $timedata[0]->timedata
+            ]);
 
-        $url = '';
-
-        if ($type == 1) {
-
-            $content = trim($paper['content']);
-
-        } elseif ($type == 2) {
-
-            $url = trim($paper['url']);
-
+            for ($i = 1; $i < $total; $i++) {
+                DB::table('news_i18n')->insert(
+                    [
+                        'page_id' => $id,
+                        'language' => $i,
+                        'title' => trim(\Input::get($i . '_title')),
+                        'content' => null,
+                        'url' => trim(\Input::get($i . '_url'))
+                    ]
+                );
+            }
         }
 
-
-        $view = trim($paper['view']);
-
-        $rank_id = trim($paper['rank_id']);
-
-        $note = trim($paper['note']);
-
-        DB::table('pages')->insert(
-            [
-                'title' => $title,
-                'type' => $type,
-                'content' => $content,
-                'url' => $url,
-                'view' => $view,
-                'rank_id' => $rank_id,
-                'note' => $note
-            ]
-        );
 
         return redirect()->route('paper.browser')
             ->with('success', '新增資料成功');
 
-
-    }
-
-    public function paper_add()
-    {
-
-        return view('paper_add');
 
     }
 
@@ -464,6 +498,7 @@ class AdminController extends Controller
 
     public function news_add()
     {
+        $languages = DB::table('languages')->get();
         $hours = array();
         $minuteSeconds = array();
         for ($i = 0; $i < 60; $i++) {
@@ -474,7 +509,7 @@ class AdminController extends Controller
 
             $minuteSeconds[$num] = $num;
         }
-        return view('news_add')->with('hours', $hours)->with('minuteSeconds', $minuteSeconds);
+        return view('news_add')->with('hours', $hours)->with('minuteSeconds', $minuteSeconds)->with('languages', $languages);
     }
 
     public function news_add_post(Request $request)
@@ -482,38 +517,42 @@ class AdminController extends Controller
         //Log::info('data -----------------------' . dump($input_data));
         $rules = array(
             'publish_time' => 'required',
-            'title_ch' => 'required'
+            '0_title' => 'required'
         );
 
         $messages = array(
             'publish_time.required' => '<p>．請輸入公告時間。</p>',
-            'title_ch.required' => '<p>．請輸入標題。</p>'
+            '0_title.required' => '<p>．請輸入標題。</p>'
         );
 
         $this->validate($request, $rules, $messages);
 
         $publish_time = trim(\Input::get('publish_time')) . " " . trim(\Input::get('hh')) . ":" . trim(\Input::get('mm')) . ":" . trim(\Input::get('ss'));
         $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
 
-        DB::table('news')->insert(
+        $id = DB::table('news')->insertGetId(
             [
                 'publish_time' => $publish_time,
-                'title_ch' => trim(\Input::get('title_ch')),
-                'title_cn' => trim(\Input::get('title_cn')),
-                'title_en' => trim(\Input::get('title_en')),
-                'title_jp' => trim(\Input::get('title_jp')),
-                'title_kr' => trim(\Input::get('title_kr')),
-                'content_ch' => trim(\Input::get('content_ch')),
-                'content_cn' => trim(\Input::get('content_cn')),
-                'content_en' => trim(\Input::get('content_en')),
-                'content_jp' => trim(\Input::get('content_jp')),
-                'content_kr' => trim(\Input::get('content_kr')),
+                'title' => trim(\Input::get('0_title')),
+                'content' => trim(\Input::get('0_content')),
                 'view' => (boolean)\Input::get('view'),
                 'note' => trim(\Input::get('note')),
                 'created_at' => $timedata[0]->timedata,
                 'updated_at' => $timedata[0]->timedata
             ]
         );
+
+        for ($i = 1; $i < $total; $i++) {
+            DB::table('news_i18n')->insert(
+                [
+                    'news_id' => $id,
+                    'language' => $i,
+                    'title' => trim(\Input::get($i . '_title')),
+                    'content' => trim(\Input::get($i . '_content'))
+                ]
+            );
+        }
 
         return redirect()->route('news.browser')
             ->with('success', '新增資料成功');
@@ -523,9 +562,13 @@ class AdminController extends Controller
 
     public function news_edit_id($id)
     {
-        $newid = trim($id);
+        if (DB::table('news')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $news = DB::table('news')->where('id', '=', $newid)->get();
+        $news = DB::table('news')->where('id', '=', $id)->get();
+        $news_i18n = DB::table('news_i18n')->where('news_id', '=', $id)->get();
+        $languages = DB::table('languages')->get();
 
         // 2016-03-20 11:30:33
 
@@ -555,47 +598,69 @@ class AdminController extends Controller
 
         return view('news_edit', [
             'news' => $news,
+            'news_i18n' => $news_i18n,
+            'languages' => $languages,
             'hours' => $hours,
-            'minuteSeconds' => $minuteSeconds,
+            'minuteSeconds' => $minuteSeconds
         ]);
     }
 
     public function news_edit_post(Request $request, $id)
     {
+        if (DB::table('news')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
+
         $rules = array(
             'publish_time' => 'required',
-            'title_ch' => 'required'
+            '0_title' => 'required'
         );
 
         $messages = array(
             'publish_time.required' => '<p>．請輸入公告時間。</p>',
-            'title_ch.required' => '<p>．請輸入標題。</p>'
+            '0_title.required' => '<p>．請輸入標題。</p>'
         );
 
         $this->validate($request, $rules, $messages);
 
         $publish_time = trim(\Input::get('publish_time')) . " " . trim(\Input::get('hh')) . ":" . trim(\Input::get('mm')) . ":" . trim(\Input::get('ss'));
         $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
 
         DB::table('news')
             ->where('id', $id)
             ->update([
                 'publish_time' => $publish_time,
-                'title_ch' => trim(\Input::get('title_ch')),
-                'title_cn' => trim(\Input::get('title_cn')),
-                'title_en' => trim(\Input::get('title_en')),
-                'title_jp' => trim(\Input::get('title_jp')),
-                'title_kr' => trim(\Input::get('title_kr')),
-                'content_ch' => trim(\Input::get('content_ch')),
-                'content_cn' => trim(\Input::get('content_cn')),
-                'content_en' => trim(\Input::get('content_en')),
-                'content_jp' => trim(\Input::get('content_jp')),
-                'content_kr' => trim(\Input::get('content_kr')),
+                'title' => trim(\Input::get('0_title')),
+                'content' => trim(\Input::get('0_content')),
                 'view' => (boolean)\Input::get('view'),
                 'note' => trim(\Input::get('note')),
                 'created_at' => $timedata[0]->timedata,
                 'updated_at' => $timedata[0]->timedata
             ]);
+
+        for ($i = 1; $i < $total; $i++) {
+            if (DB::table('news_i18n')->where('news_id', '=', $id)->where('language', '=', $i)->count() == 0) {
+                DB::table('news_i18n')->insert(
+                    [
+                        'news_id' => $id,
+                        'language' => $i,
+                        'title' => trim(\Input::get($i . '_title')),
+                        'content' => trim(\Input::get($i . '_content'))
+                    ]
+                );
+            } else {
+                DB::table('news_i18n')
+                    ->where('news_id', '=', $id)
+                    ->where('language', '=', $i)
+                    ->update([
+                        'news_id' => $id,
+                        'language' => $i,
+                        'title' => trim(\Input::get($i . '_title')),
+                        'content' => trim(\Input::get($i . '_content'))
+                    ]);
+            }
+        }
 
         return redirect()->route('news.browser')
             ->with('success', '更新資料成功');
@@ -615,18 +680,21 @@ class AdminController extends Controller
 
     public function news_browser_id_delete($id)
     {
-        $newid = trim($id);
+        if (DB::table('news')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        DB::table('news')->where('id', '=', $newid)->delete();
+        DB::table('news_i18n')->where('news_id', '=', $id)->delete();
+        DB::table('news')->where('id', '=', $id)->delete();
 
         return redirect()->route('news.browser')
             ->with('success', '刪除資料成功');
-
     }
 
     public function books_add()
     {
-        return view('books_add');
+        $languages = DB::table('languages')->get();
+        return view('books_add')->with('languages', $languages);
     }
 
     public function books_add_post(Request $request)
@@ -636,13 +704,13 @@ class AdminController extends Controller
         $upload_option = (boolean)\Input::get('upload_option');
         if ($upload_option) {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'required|mimes:png,jpeg,gif'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'upload_file.required' => '<p>．請上傳書封。</p>',
@@ -650,13 +718,13 @@ class AdminController extends Controller
             );
         } else {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'cover' => 'required|regex:/^http([s]?):\/\/.*/'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'cover.required' => '<p>．請輸入書封。</p>',
@@ -704,15 +772,13 @@ class AdminController extends Controller
         }
 
         $timedata = DB::select('select now() as timedata');
-        DB::table('book')->insert(
+        $total = DB::table('languages')->count();
+
+        $id = DB::table('book')->insertGetId(
             [
                 'cover' => $cover,
                 'upload_option' => $upload_option,
-                'book_name_ch' => \Input::get('book_name_ch'),
-                'book_name_cn' => \Input::get('book_name_cn'),
-                'book_name_en' => \Input::get('book_name_en'),
-                'book_name_jp' => \Input::get('book_name_jp'),
-                'book_name_kr' => \Input::get('book_name_kr'),
+                'book_name' => \Input::get('0_book_name'),
                 'url' => \Input::get('url'),
                 'view' => \Input::get('view'),
                 'rand_id' => \Input::get('rand_id'),
@@ -722,26 +788,40 @@ class AdminController extends Controller
             ]
         );
 
+        for ($i = 1; $i < $total; $i++) {
+            DB::table('book_i18n')->insert(
+                [
+                    'book_id' => $id,
+                    'language' => $i,
+                    'book_name' => trim(\Input::get($i . '_book_name'))
+                ]
+            );
+        }
+
         return redirect()->route('books.browser')
             ->with('success', '新增資料成功');
     }
 
     public function books_edit_id($id)
     {
+        if (DB::table('book')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $newid = trim($id);
+        $book = DB::table('book')->where('id', '=', $id)->get();
 
-        $book = DB::table('book')->where('id', '=', $newid)->get();
+        $book_i18n = DB::table('book_i18n')->where('book_id', '=', $id)->get();
+        $languages = DB::table('languages')->get();
 
-        $match = preg_match('/Http/i', $book[0]->cover);
-
-//        return view('books_edit', ['book' => $book, 'match' => $match]);
-        return view('books_edit')->with('book', $book);
-
+        return view('books_edit')->with('book', $book)->with('book_i18n', $book_i18n)->with('languages', $languages);
     }
 
     public function books_edit_post(Request $request, $id)
     {
+        if (DB::table('book')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
+
         $book = DB::table('book')->where('id', '=', $id)->get();
         $db_upload_option = (boolean)$book[0]->upload_option;
         $upload_option = (boolean)\Input::get('upload_option');
@@ -750,26 +830,26 @@ class AdminController extends Controller
         $messages = null;
         if ($db_upload_option && $upload_option) {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'mimes:png,jpeg,gif'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'upload_file.mimes' => '<p>．請上傳書封。</p>'
             );
         } elseif ($db_upload_option && !$upload_option) {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'cover' => 'required|regex:/^http([s]?):\/\/.*/'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'cover.required' => '<p>．請輸入書封。</p>',
@@ -777,13 +857,13 @@ class AdminController extends Controller
             );
         } elseif (!$db_upload_option && $upload_option) {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'upload_file' => 'required|mimes:png,jpeg,gif'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'upload_file.required' => '<p>．請上傳書封。</p>',
@@ -791,13 +871,13 @@ class AdminController extends Controller
             );
         } else {
             $rules = array(
-                'book_name_ch' => 'required',
+                '0_book_name' => 'required',
                 'url' => 'required|regex:/^http([s]?):\/\/.*/',
                 'cover' => 'required|regex:/^http([s]?):\/\/.*/'
             );
 
             $messages = array(
-                'book_name_ch.required' => '<p>．請輸入書名。</p>',
+                '0_book_name.required' => '<p>．請輸入書名。</p>',
                 'url.required' => '<p>．請輸入連結。</p>',
                 'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
                 'cover.required' => '<p>．請輸入書封。</p>',
@@ -888,16 +968,14 @@ class AdminController extends Controller
         }
 
         $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
+
         DB::table('book')
             ->where('id', $id)
             ->update([
                     'cover' => $cover,
                     'upload_option' => $upload_option,
-                    'book_name_ch' => \Input::get('book_name_ch'),
-                    'book_name_cn' => \Input::get('book_name_cn'),
-                    'book_name_en' => \Input::get('book_name_en'),
-                    'book_name_jp' => \Input::get('book_name_jp'),
-                    'book_name_kr' => \Input::get('book_name_kr'),
+                    'book_name' => \Input::get('0_book_name'),
                     'url' => \Input::get('url'),
                     'view' => \Input::get('view'),
                     'rand_id' => \Input::get('rand_id'),
@@ -905,6 +983,27 @@ class AdminController extends Controller
                     'updated_at' => $timedata[0]->timedata
                 ]
             );
+
+        for ($i = 1; $i < $total; $i++) {
+            if (DB::table('book_i18n')->where('book_id', '=', $id)->where('language', '=', $i)->count() == 0) {
+                DB::table('book_i18n')->insert(
+                    [
+                        'book_id' => $id,
+                        'language' => $i,
+                        'book_name' => trim(\Input::get($i . '_book_name'))
+                    ]
+                );
+            } else {
+                DB::table('book_i18n')
+                    ->where('book_id', '=', $id)
+                    ->where('language', '=', $i)
+                    ->update([
+                        'book_id' => $id,
+                        'language' => $i,
+                        'book_name' => trim(\Input::get($i . '_book_name'))
+                    ]);
+            }
+        }
 
         return redirect()->route('books.browser')
             ->with('success', '更新資料成功');
@@ -922,17 +1021,18 @@ class AdminController extends Controller
 
     public function books_browser_id_delete($id)
     {
-        $newid = trim($id);
+        if (DB::table('book')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $book = DB::table('book')->where('id', '=', $newid)->get();
-
-        DB::table('book')->where('id', '=', $newid)->delete();
-
+        $book = DB::table('book')->where('id', '=', $id)->get();
         File::delete(Config::get('app.books_image_folder') . $book[0]->cover);
+
+        DB::table('book_i18n')->where('book_id', '=', $id)->delete();
+        DB::table('book')->where('id', '=', $id)->delete();
 
         return redirect()->route('books.browser')
             ->with('success', '刪除資料成功');
-
     }
 
 //    public function db_browser_id($id)
@@ -945,18 +1045,6 @@ class AdminController extends Controller
 //        //        return view('db_view');
 //
 //    }
-
-    public function db_browser_id_delete($id)
-    {
-
-        $newid = trim($id);
-
-        DB::table('querydatabase')->where('id', '=', $newid)->delete();
-
-        return redirect()->route('db.browser')
-            ->with('success', '刪除資料成功');
-
-    }
 
     public function admin_add_post(Request $request)
     {
@@ -1213,11 +1301,11 @@ class AdminController extends Controller
     public function sys_edit()
     {
         if (Auth::user()->perm == 1) {
-            $webconfig = DB::table('webconfig')->get();
+            $languages = DB::table('languages')->get();
 
             //Log::info('sys data --------------------------- ' . dump($webconfig));
 
-            return view('sys_edit')->with('webconfig', $webconfig);
+            return view('sys_edit')->with('languages', $languages);
         } else {
             return view('errors.404');
         }
@@ -1226,22 +1314,23 @@ class AdminController extends Controller
     public function sys_edit_next()
     {
         if (Auth::user()->perm == 1) {
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'cn_display' => (boolean)\Input::get('cn_display'),
-                    'en_display' => (boolean)\Input::get('en_display'),
-                    'jp_display' => (boolean)\Input::get('jp_display'),
-                    'kr_display' => (boolean)\Input::get('kr_display'),
-                    'ch_order' => \Input::get('ch_order'),
-                    'cn_order' => \Input::get('cn_order'),
-                    'en_order' => \Input::get('en_order'),
-                    'jp_order' => \Input::get('jp_order'),
-                    'kr_order' => \Input::get('kr_order'),
-                    'updated_at' => $timedata[0]->timedata
-                ]);
+            $total = DB::table('languages')->count();
+            for ($i = 0; $i <= $total; $i++) {
+                if ($i == 0) {
+                    DB::table('languages')
+                        ->where('id', $i)
+                        ->update([
+                            'sort' => \Input::get($i . '_sort')
+                        ]);
+                } else {
+                    DB::table('languages')
+                        ->where('id', $i)
+                        ->update([
+                            'display' => (boolean)\Input::get($i . '_display'),
+                            'sort' => \Input::get($i . '_sort')
+                        ]);
+                }
+            }
 
             return redirect()->route('sys.edit.2');
         } else {
@@ -1253,10 +1342,11 @@ class AdminController extends Controller
     {
         if (Auth::user()->perm == 1) {
             $webconfig = DB::table('webconfig')->get();
-
+            $webconfig_i18n = DB::table('webconfig_i18n')->get();
+            $languages = DB::table('languages')->get();
             //Log::info('sys data --------------------------- ' . dump($webconfig));
 
-            return view('sys_edit_2')->with('webconfig', $webconfig);
+            return view('sys_edit_2')->with('webconfig', $webconfig)->with('webconfig_i18n', $webconfig_i18n)->with('languages', $languages);
         } else {
             return view('errors.404');
         }
@@ -1268,26 +1358,33 @@ class AdminController extends Controller
         if (Auth::user()->perm == 1) {
 
             $rules = array(
-                'site_name_ch' => 'required'
+                '0_site_name' => 'required'
             );
 
             $messages = array(
-                'site_name_ch.required' => '．請輸入網站名稱。'
+                '0_site_name.required' => '．請輸入網站名稱。'
             );
 
             $this->validate($request, $rules, $messages);
 
+            $total = DB::table('languages')->count();
             $timedata = DB::select('select now() as timedata');
+
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'site_name_ch' => trim(\Input::get('site_name_ch')),
-                    'site_name_cn' => trim(\Input::get('site_name_cn')),
-                    'site_name_en' => trim(\Input::get('site_name_en')),
-                    'site_name_jp' => trim(\Input::get('site_name_jp')),
-                    'site_name_kr' => trim(\Input::get('site_name_kr')),
+                    'site_name' => trim(\Input::get('0_site_name')),
                     'updated_at' => $timedata[0]->timedata
                 ]);
+
+            for ($i = 1; $i <= $total; $i++) {
+                DB::table('webconfig_i18n')
+                    ->where('language', $i)
+                    ->update([
+                        'site_name' => trim(\Input::get($i . '_site_name')),
+                    ]);
+
+            }
 
             return redirect()->route('sys.edit.3');
         } else {
@@ -1298,10 +1395,10 @@ class AdminController extends Controller
     public function sys_edit_3()
     {
         if (Auth::user()->perm == 1) {
-
+            $languages = DB::table('languages')->get();
             //Log::info('sys data --------------------------- ' . dump($webconfig));
 
-            return view('sys_edit_3');
+            return view('sys_edit_3')->with('languages', $languages);
         } else {
             return view('errors.404');
         }
@@ -1310,40 +1407,42 @@ class AdminController extends Controller
     public function sys_edit_3_next()
     {
         if (Auth::user()->perm == 1) {
-            $imageName_ch = "logo_ch.png";
-            $imageName_cn = "logo_cn.png";
-            $imageName_en = "logo_en.png";
-            $imageName_jp = "logo_jp.png";
-            $imageName_kr = "logo_kr.png";
+            $total = DB::table('languages')->count();
+            $timedata = DB::select('select now() as timedata');
 
-            if (\Input::hasFile('logo_ch')) {
-                \Input::file('logo_ch')->move(
-                    base_path() . '/public/img/', $imageName_ch
+            if (\Input::hasFile('0_logo')) {
+                \Input::file('0_logo')->move(
+                    base_path() . '/public/img/', "logo.png"
                 );
+
+                Image::make(base_path() . '/public/img/' . "logo.png")
+                    ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
+                    ->save(public_path('img/' . "logo.png"));
             }
 
-            if (\Input::hasFile('logo_cn')) {
-                \Input::file('logo_ch')->move(
-                    base_path() . '/public/img/', $imageName_cn
-                );
-            }
+            DB::table('webconfig')
+                ->where('id', 1)
+                ->update([
+                    'logo' => "logo.png",
+                    'updated_at' => $timedata[0]->timedata
+                ]);
 
-            if (\Input::hasFile('logo_en')) {
-                \Input::file('logo_en')->move(
-                    base_path() . '/public/img/', $imageName_en
-                );
-            }
+            for ($i = 1; $i <= $total; $i++) {
+                if (\Input::hasFile($i . '_logo')) {
+                    \Input::file($i . '_logo')->move(
+                        base_path() . '/public/img/', "logo_" . $i . ".png"
+                    );
 
-            if (\Input::hasFile('logo_jp')) {
-                \Input::file('logo_jp')->move(
-                    base_path() . '/public/img/', $imageName_jp
-                );
-            }
+                    Image::make(base_path() . '/public/img/' . "logo_" . $i . ".png")
+                        ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
+                        ->save(public_path('img/' . "logo_" . $i . ".png"));
+                }
 
-            if (\Input::hasFile('logo_kr')) {
-                \Input::file('logo_kr')->move(
-                    base_path() . '/public/img/', $imageName_kr
-                );
+                DB::table('webconfig_i18n')
+                    ->where('language', $i)
+                    ->update([
+                        'logo' => "logo_" . $i . ".png"
+                    ]);
             }
 
             // width 固定
@@ -1353,38 +1452,6 @@ class AdminController extends Controller
             //$height = Image::make( base_path() . '/public/img/' . $imageName )->height();
 
             //$new_height = Config::get('app.logo_image_width') * $height / $width;
-
-            Image::make(base_path() . '/public/img/' . $imageName_ch)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_ch));
-
-            Image::make(base_path() . '/public/img/' . $imageName_cn)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_cn));
-
-            Image::make(base_path() . '/public/img/' . $imageName_en)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_en));
-
-            Image::make(base_path() . '/public/img/' . $imageName_jp)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_jp));
-
-            Image::make(base_path() . '/public/img/' . $imageName_kr)
-                ->resize(Config::get('app.logo_image_width'), Config::get('app.logo_image_height'))
-                ->save(public_path('img/' . $imageName_kr));
-
-            $timedata = DB::select('select now() as timedata');
-            DB::table('webconfig')
-                ->where('id', 1)
-                ->update([
-                    'logo_ch' => $imageName_ch,
-                    'logo_cn' => $imageName_cn,
-                    'logo_en' => $imageName_en,
-                    'logo_jp' => $imageName_jp,
-                    'logo_kr' => $imageName_kr,
-                    'updated_at' => $timedata[0]->timedata
-                ]);
 
             return redirect()->route('sys.edit.4');
         } else {
@@ -1396,10 +1463,11 @@ class AdminController extends Controller
     {
         if (Auth::user()->perm == 1) {
             $webconfig = DB::table('webconfig')->get();
-
+            $webconfig_i18n = DB::table('webconfig_i18n')->get();
+            $languages = DB::table('languages')->get();
             //Log::info('sys data --------------------------- ' . dump($webconfig));
 
-            return view('sys_edit_4')->with('webconfig', $webconfig);
+            return view('sys_edit_4')->with('webconfig', $webconfig)->with('webconfig_i18n', $webconfig_i18n)->with('languages', $languages);
         } else {
             return view('errors.404');
         }
@@ -1410,27 +1478,31 @@ class AdminController extends Controller
         if (Auth::user()->perm == 1) {
 
             $rules = array(
-                'copyright_ch' => 'required'
+                '0_copyright' => 'required'
             );
 
             $messages = array(
-                'copyright_ch.required' => '．請輸入版權宣告。'
+                '0_copyright.required' => '．請輸入版權宣告。'
             );
 
             $this->validate($request, $rules, $messages);
-
+            $total = DB::table('languages')->count();
             $timedata = DB::select('select now() as timedata');
+
             DB::table('webconfig')
                 ->where('id', 1)
                 ->update([
-                    'copyright_ch' => \Input::get('copyright_ch'),
-                    'copyright_cn' => \Input::get('copyright_cn'),
-                    'copyright_en' => \Input::get('copyright_en'),
-                    'copyright_jp' => \Input::get('copyright_jp'),
-                    'copyright_kr' => \Input::get('copyright_kr'),
+                    'copyright' => \Input::get('0_copyright'),
                     'updated_at' => $timedata[0]->timedata
                 ]);
 
+            for ($i = 0; $i <= $total; $i++) {
+                DB::table('webconfig_i18n')
+                    ->where('language', $i)
+                    ->update([
+                        'copyright' => \Input::get($i . '_copyright')
+                    ]);
+            }
             return redirect()->route('sys.edit.5');
         } else {
             return view('errors.404');
@@ -1505,21 +1577,36 @@ class AdminController extends Controller
 
     }
 
+    public function db_browser_id_delete($id)
+    {
+        if (DB::table('querydatabase')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
+
+        DB::table('querydatabase_i18n')->where('db_id', '=', $id)->delete();
+        DB::table('querydatabase')->where('id', '=', $id)->delete();
+
+        return redirect()->route('db.browser')
+            ->with('success', '刪除資料成功');
+
+    }
+
     public function db_add()
     {
-        return view('db_add');
+        $languages = DB::table('languages')->get();
+        return view('db_add')->with('languages', $languages);
     }
 
     public function db_add_post(Request $request)
     {
         $rules = array(
-            'database_name_ch' => 'required',
-            'syntax_ch' => 'required'
+            '0_database_name' => 'required',
+            '0_syntax' => 'required'
         );
 
         $messages = array(
-            'database_name_ch.required' => '<p>．請輸入資料庫名稱。</p>',
-            'syntax_ch.required' => '<p>．請輸入嵌入語法。</p>'
+            '0_database_name.required' => '<p>．請輸入資料庫名稱。</p>',
+            '0_syntax.required' => '<p>．請輸入嵌入語法。</p>'
         );
 
         $this->validate($request, $rules, $messages);
@@ -1527,19 +1614,12 @@ class AdminController extends Controller
         //   Log::info('data --------------------- ' . dump($input_data));
 
         $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
 
-        DB::table('querydatabase')->insert(
+        $id = DB::table('querydatabase')->insertGetId(
             [
-                'database_name_ch' => trim(\Input::get('database_name_ch')),
-                'database_name_cn' => trim(\Input::get('database_name_cn')),
-                'database_name_en' => trim(\Input::get('database_name_en')),
-                'database_name_jp' => trim(\Input::get('database_name_jp')),
-                'database_name_kr' => trim(\Input::get('database_name_kr')),
-                'syntax_ch' => trim(\Input::get('syntax_ch')),
-                'syntax_cn' => trim(\Input::get('syntax_cn')),
-                'syntax_en' => trim(\Input::get('syntax_en')),
-                'syntax_jp' => trim(\Input::get('syntax_jp')),
-                'syntax_kr' => trim(\Input::get('syntax_kr')),
+                'database_name' => trim(\Input::get('0_database_name')),
+                'syntax' => trim(\Input::get('0_syntax')),
                 'view' => trim(\Input::get('view')),
                 'rank_id' => trim(\Input::get('rank_id')),
                 'note' => trim(\Input::get('note')),
@@ -1548,31 +1628,50 @@ class AdminController extends Controller
             ]
         );
 
+        for ($i = 1; $i < $total; $i++) {
+            DB::table('querydatabase_i18n')->insert(
+                [
+                    'db_id' => $id,
+                    'language' => $i,
+                    'database_name' => trim(\Input::get($i . '_database_name')),
+                    'syntax' => trim(\Input::get($i . '_syntax'))
+
+                ]
+            );
+        }
+
         return redirect()->route('db.browser')
             ->with('success', '新增資料成功');
     }
 
     public function db_edit_id($id)
     {
+        if (DB::table('querydatabase')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $newid = trim($id);
+        $querydatabase = DB::table('querydatabase')->where('id', '=', $id)->get();
+        $querydatabase_i18n = DB::table('querydatabase_i18n')->where('db_id', '=', $id)->get();
+        $languages = DB::table('languages')->get();
 
-        $querydatabase = DB::table('querydatabase')->where('id', '=', $newid)->get();
-
-        return view('db_edit')->with('querydatabase', $querydatabase);
+        return view('db_edit')->with('querydatabase', $querydatabase)->with('querydatabase_i18n', $querydatabase_i18n)->with('languages', $languages);
 
     }
 
     public function db_edit_post(Request $request, $id)
     {
+        if (DB::table('querydatabase')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
+
         $rules = array(
-            'database_name_ch' => 'required',
-            'syntax_ch' => 'required'
+            '0_database_name' => 'required',
+            '0_syntax' => 'required'
         );
 
         $messages = array(
-            'database_name_ch.required' => '<p>．請輸入資料庫名稱。</p>',
-            'syntax_ch.required' => '<p>．請輸入嵌入語法。</p>'
+            '0_database_name.required' => '<p>．請輸入資料庫名稱。</p>',
+            '0_syntax.required' => '<p>．請輸入嵌入語法。</p>'
         );
 
         $this->validate($request, $rules, $messages);
@@ -1582,26 +1681,41 @@ class AdminController extends Controller
         //   exit;
 
         $timedata = DB::select('select now() as timedata');
+        $total = DB::table('languages')->count();
 
         DB::table('querydatabase')
             ->where('id', $id)
             ->update([
-                'database_name_ch' => trim(\Input::get('database_name_ch')),
-                'database_name_cn' => trim(\Input::get('database_name_cn')),
-                'database_name_en' => trim(\Input::get('database_name_en')),
-                'database_name_jp' => trim(\Input::get('database_name_jp')),
-                'database_name_kr' => trim(\Input::get('database_name_kr')),
-                'syntax_ch' => trim(\Input::get('syntax_ch')),
-                'syntax_cn' => trim(\Input::get('syntax_cn')),
-                'syntax_en' => trim(\Input::get('syntax_en')),
-                'syntax_jp' => trim(\Input::get('syntax_jp')),
-                'syntax_kr' => trim(\Input::get('syntax_kr')),
+                'database_name' => trim(\Input::get('0_database_name')),
+                'syntax' => trim(\Input::get('0_syntax')),
                 'view' => trim(\Input::get('view')),
                 'rank_id' => trim(\Input::get('rank_id')),
                 'note' => trim(\Input::get('note')),
                 'updated_at' => $timedata[0]->timedata
             ]);
 
+        for ($i = 1; $i < $total; $i++) {
+            if (DB::table('querydatabase_i18n')->where('db_id', '=', $id)->where('language', '=', $i)->count() == 0) {
+                DB::table('querydatabase_i18n')->insert(
+                    [
+                        'db_id' => $id,
+                        'language' => $i,
+                        'database_name' => trim(\Input::get($i . '_database_name')),
+                        'syntax' => trim(\Input::get($i . '_syntax'))
+                    ]
+                );
+            } else {
+                DB::table('querydatabase_i18n')
+                    ->where('db_id', '=', $id)
+                    ->where('language', '=', $i)
+                    ->update([
+                        'db_id' => $id,
+                        'language' => $i,
+                        'database_name' => trim(\Input::get($i . '_database_name')),
+                        'syntax' => trim(\Input::get($i . '_syntax'))
+                    ]);
+            }
+        }
 
         return redirect()->route('db.browser')
             ->with('success', '更新資料成功');
@@ -1631,7 +1745,8 @@ class AdminController extends Controller
 
     }
 
-    public function paper_browser()
+    public
+    function paper_browser()
     {
 
         $pages = DB::table('pages')
@@ -1644,7 +1759,8 @@ class AdminController extends Controller
 
     }
 
-    public function my_info()
+    public
+    function my_info()
     {
         $user = Auth::user();
 
@@ -1656,7 +1772,8 @@ class AdminController extends Controller
 
     }
 
-    public function state_A()
+    public
+    function state_A()
     {
 
 
@@ -1725,7 +1842,8 @@ class AdminController extends Controller
     }
 
 
-    public function state_C()
+    public
+    function state_C()
     {
 
         $results = DB::select('select date_format(date_add( now(), interval -1 month), \'%Y\') as Year');
@@ -1737,7 +1855,7 @@ class AdminController extends Controller
         $Month = $results[0]->Month;
 
 
-        $report = DB::select('SELECT * 
+        $report = DB::select('SELECT *
             FROM month_login_pages_stat
             WHERE yearmonth like ?', ['%' . $Year . '-' . $Month . '%']
         );
@@ -1755,7 +1873,8 @@ class AdminController extends Controller
     }
 
 
-    public function my_info_edit(Request $request)
+    public
+    function my_info_edit(Request $request)
     {
         $user = Auth::user();
 

@@ -47,7 +47,7 @@
 
                                     <tr>
                                         <td><img class="browser_img" src="{{ asset($book[$i]->cover) }}"></td>
-                                        <td>{{ $book[$i]->book_name_ch }}</td>
+                                        <td>{{ $book[$i]->book_name }}</td>
                                         <td><a target="_blank" href="{{ $book[$i]->url }}">連結</a></td>
 
                                         @if($book[$i]->view == 1 )

@@ -37,62 +37,26 @@
                                 <tr>
                                     <th>標題</th>
                                     <td>
-                                        <h3>繁體中文 (•)</h3>
+                                        @foreach($languages as $language)
+                                            <h3>{{$language->language}}</h3>
 
-                                        <div>
-                                            {!! Form::text('title_ch',null) !!}
-                                        </div>
-                                        <h3>简体中文</h3>
-
-                                        <div>
-                                            {!! Form::text('title_cn',null) !!}
-                                        </div>
-                                        <h3>English</h3>
-
-                                        <div>
-                                            {!! Form::text('title_en',null) !!}
-                                        </div>
-                                        <h3>日本語</h3>
-
-                                        <div>
-                                            {!! Form::text('title_jp',null) !!}
-                                        </div>
-                                        <h3>한국어</h3>
-
-                                        <div>
-                                            {!! Form::text('title_kr',null) !!}
-                                        </div>
+                                            <div>
+                                                {!! Form::text($language->id.'_title',null) !!}
+                                            </div>
+                                        @endforeach
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>內容</th>
                                     <td>
                                         <div class="accordion_01">
-                                            <h3>繁體中文 (&#8226;)</h3>
+                                            @foreach($languages as $language)
+                                                <h3>{{$language->language}}</h3>
 
-                                            <div>
-                                                {!! Form::textarea('editor1',null,['id'=>'editor1','cols'=>'80','rows'=>'10']) !!}
-                                            </div>
-                                            <h3>简体中文</h3>
-
-                                            <div>
-                                                {!! Form::textarea('editor2',null,['id'=>'editor2','cols'=>'80','rows'=>'10']) !!}
-                                            </div>
-                                            <h3>English</h3>
-
-                                            <div>
-                                                {!! Form::textarea('editor3',null,['id'=>'editor2','cols'=>'80','rows'=>'10']) !!}
-                                            </div>
-                                            <h3>日本語</h3>
-
-                                            <div>
-                                                {!! Form::textarea('editor4',null,['id'=>'editor4','cols'=>'80','rows'=>'10']) !!}
-                                            </div>
-                                            <h3>한국어</h3>
-
-                                            <div>
-                                                {!! Form::textarea('editor5',null,['id'=>'editor5','cols'=>'80','rows'=>'10']) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::textarea($language->id.'_content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                </div>
+                                            @endforeach
                                         </div>
 
                                         <div class="note_txt">
@@ -172,11 +136,11 @@
     $("a.btn_02:eq(0)").hide();
     $("a.btn_02:eq(2)").hide();
 
-    CKEDITOR.replace('editor1');
-    CKEDITOR.replace('editor2');
-    CKEDITOR.replace('editor3');
-    CKEDITOR.replace('editor4');
-    CKEDITOR.replace('editor5');
+    var total = parseInt('<?=sizeof($languages) ?>');
+    for (var i = 0; i < total; i++) {
+        CKEDITOR.replace(i + '_editor');
+    }
+
     //
     $(".accordion_01").accordion({heightStyle: "content"});
 
@@ -201,7 +165,7 @@
                 break;
             case 2 :
                 if ($("span.active").html() == "1") {
-                    var title_ch = $("input[name='title_ch']").val()
+                    var title_ch = $("input[name='0_title']").val()
                     if (title_ch == null || title_ch.trim() == "") {
                         message_show("<p>．請輸入標題。</p>");
                         break;

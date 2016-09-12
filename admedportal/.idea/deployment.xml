@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="192.168.21.138 admedportal">
+  <component name="PublishConfigData" serverName="192.168.21.101 admedportal">
     <serverData>
+      <paths name="192.168.21.101 admedportal">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/var/www/admedportal" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="192.168.21.128">
         <serverdata>
           <mappings>
@@ -13,13 +20,6 @@
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="192.168.21.138 admedportal">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/var/www/admedportal" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

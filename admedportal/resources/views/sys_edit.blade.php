@@ -32,7 +32,7 @@
                             <span>5</span>
                         </div>
                         <form id="webconfig" method="POST" action="/sys_edit/next">
-                            {!! Form::model($webconfig[0],['method' => 'POST','route'=>['sys.edit.next']]) !!}
+                            {!! Form::open(['method' => 'POST','route'=>['sys.edit.next']]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <th>語言設定</th>
@@ -43,31 +43,23 @@
                                                 <th>前端顯示</th>
                                                 <th>排序</th>
                                             </tr>
-                                            <tr>
-                                                <td>繁體中文(必選)</td>
-                                                <td><input type="checkbox" checked disabled></td>
-                                                <td>{!! Form::text('ch_order',null,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>簡體中文(简体中文)</td>
-                                                <td>{!! Form::checkbox('cn_display', true) !!}</td>
-                                                <td>{!! Form::text('cn_order',null,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>英文(English)</td>
-                                                <td>{!! Form::checkbox('en_display', true) !!}</td>
-                                                <td>{!! Form::text('en_order',null,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>日文(日本語)</td>
-                                                <td>{!! Form::checkbox('jp_display', true) !!}</td>
-                                                <td>{!! Form::text('jp_order',null,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>韓文(한국어)</td>
-                                                <td>{!! Form::checkbox('kr_display', true) !!}</td>
-                                                <td>{!! Form::text('kr_order',null,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                            </tr>
+                                            @foreach($languages as $language)
+                                                @if($language==$languages[0])
+                                                    <tr>
+                                                        <td>
+                                                            <?=str_replace(' (&#8226;)', '(必選)', $language->language)?>
+                                                        </td>
+                                                        <td><input type="checkbox" checked disabled></td>
+                                                        <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                    </tr>
+                                                @else
+                                                    <tr>
+                                                        <td>{{$language->language}}</td>
+                                                        <td>{!! Form::checkbox($language->id.'_display', true , (boolean)$language->display) !!}</td>
+                                                        <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
                                         </table>
                                         <div class="note_txt">
                                             前台顯示欄位：如欲顯示則需打勾選。<BR>

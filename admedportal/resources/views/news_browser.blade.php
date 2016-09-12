@@ -44,7 +44,7 @@
 
                                     <tr>
                                         <td>{{ $news[$i]->publish_time }}</td>
-                                        <td>{{ $news[$i]->title_ch }}</td>
+                                        <td>{{ $news[$i]->title }}</td>
 
                                         @if( $news[$i]->view == 1)
                                             <td>是</td>

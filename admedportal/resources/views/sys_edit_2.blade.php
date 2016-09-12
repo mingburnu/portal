@@ -34,37 +34,27 @@
                         </div>
 
                         <form id="webconfig" method="POST" action="/sys_edit_2/next">
-                            {!! Form::model($webconfig[0],['method' => 'POST','route'=>['sys.edit.2.next']]) !!}
+                            {!! Form::open(['method' => 'POST','route'=>['sys.edit.2.next']]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
                                     <th>網站名稱</th>
                                     <td>
-                                        <h3>繁體中文 (•)</h3>
+                                        @foreach($languages as $language)
+                                            @if($language==$languages[0])
+                                                <h3>{{$language->language}}</h3>
 
-                                        <div>
-                                            {!! Form::text('site_name_ch',null,['class'=>'v_01']) !!}
-                                        </div>
-                                        <h3>简体中文</h3>
+                                                <div>
+                                                    {!! Form::text($language->id.'_site_name',$webconfig[0]->site_name,['class'=>'v_01']) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
 
-                                        <div>
-                                            {!! Form::text('site_name_cn',null,['class'=>'v_01']) !!}
-                                        </div>
-                                        <h3>English</h3>
-
-                                        <div>
-                                            {!! Form::text('site_name_en',null,['class'=>'v_01']) !!}
-                                        </div>
-                                        <h3>日本語</h3>
-
-                                        <div>
-                                            {!! Form::text('site_name_jp',null,['class'=>'v_01']) !!}
-                                        </div>
-                                        <h3>한국어</h3>
-
-                                        <div>
-                                            {!! Form::text('site_name_kr',null,['class'=>'v_01']) !!}
-                                        </div>
+                                                <div>
+                                                    {!! Form::text($language->id.'_site_name',$webconfig_i18n[$language->id-1]->site_name,['class'=>'v_01']) !!}
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </td>
                                 </tr>
                                 <tr>

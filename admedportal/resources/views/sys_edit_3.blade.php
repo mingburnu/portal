@@ -32,41 +32,30 @@
                             <span>5</span>
                         </div>
                         <form id="webconfig" method="POST" enctype="multipart/form-data" action="/sys_edit_3/next">
+                            {!! Form::open(['method' => 'POST','route'=>['sys.edit.3.next']]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
                                     <th>Logo圖檔</th>
                                     <td>
-                                        <h3>繁體中文</h3>
+                                        @foreach($languages as $language)
+                                            @if($language==$languages[0])
+                                                <h3><?=str_replace(' (&#8226;)', '', $language->language)?></h3>
 
-                                        <div>
-                                            <a target="_blank" href="{{ asset('img/logo_ch.png') }}">檢視圖檔</a><BR/>
-                                            <input type="file" name="logo_ch">
-                                        </div>
-                                        <h3>简体中文</h3>
+                                                <div>
+                                                    <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
+                                                    {!! Form::file($language->id.'_logo')!!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
 
-                                        <div>
-                                            <a target="_blank" href="{{ asset('img/logo_cn.png') }}">檢視圖檔</a><BR/>
-                                            <input type="file" name="logo_cn">
-                                        </div>
-                                        <h3>English</h3>
-
-                                        <div>
-                                            <a target="_blank" href="{{ asset('img/logo_en.png') }}">檢視圖檔</a><BR/>
-                                            <input type="file" name="logo_en">
-                                        </div>
-                                        <h3>日本語</h3>
-
-                                        <div>
-                                            <a target="_blank" href="{{ asset('img/logo_jp.png') }}">檢視圖檔</a><BR/>
-                                            <input type="file" name="logo_jp">
-                                        </div>
-                                        <h3>한국어</h3>
-
-                                        <div>
-                                            <a target="_blank" href="{{ asset('img/logo_kr.png') }}">檢視圖檔</a><BR/>
-                                            <input type="file" name="logo_kr">
-                                        </div>
+                                                <div>
+                                                    <a target="_blank"
+                                                       href="{{ asset('img/logo_'.$language->id.'.png') }}">檢視圖檔</a><BR/>
+                                                    {!! Form::file($language->id.'_logo')!!}
+                                                </div>
+                                            @endif
+                                        @endforeach
 
                                         <div class="note_txt">圖檔尺寸大小不限，以900px X 130px為佳。</div>
                                     </td>
@@ -74,7 +63,6 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <a class="btn_02" href="/sys_edit_2">上一步</a>
                                         <a class="btn_02" href="javascript:void(0);"
                                            onclick="document.getElementById('webconfig').submit();">下一步</a>
@@ -82,6 +70,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            {!! Form::close() !!}
                         </form>
                     </div>
                     <!-- detail 區塊 End -->

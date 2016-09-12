@@ -45,7 +45,7 @@
                                 @for($i = 0; $i < count($querydatabase); $i++)
 
                                     <tr>
-                                        <td>{{ $querydatabase[$i]->database_name_ch }}</td>
+                                        <td>{{ $querydatabase[$i]->database_name }}</td>
 
                                         @if( $querydatabase[$i]->view == 1)
                                             <td>是</td>
