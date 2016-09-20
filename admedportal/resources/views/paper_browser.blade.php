@@ -31,6 +31,7 @@
                     <!-- 瀏覽 區塊 Begin -->
                     <div class="browser_box">
                         <table width="100%" border="1" cellpadding="0" cellspacing="0">
+                            <thead>
                             <tr>
                                 <th>標題</th>
                                 <th>是否顯示</th>
@@ -39,39 +40,20 @@
                                 <th>修改時間</th>
                                 <th>功能</th>
                             </tr>
-
-                            @if(count($pages))
-
-                                @for($i = 0; $i < count($pages); $i++)
-
-                                    <tr>
-                                        <td>{{ $pages[$i]->title }}</td>
-
-                                        @if( $pages[$i]->view == 1)
-                                            <td>是</td>
-                                        @elseif( $pages[$i]->view == 0)
-                                            <td>否</td>
-                                        @endif
-
-                                        <td>{{ $pages[$i]->rank_id }}</td>
-                                        <td>{{ $pages[$i]->created_at }}</td>
-                                        <td>{{ $pages[$i]->updated_at }}</td>
-                                        <td>
-                                            <a class="btn_03"
-                                               href="{{ $url = route('paper.browser.id.delete', ['id' => $pages[$i]->id ] ) }}">刪除</a>
-                                            <a class="btn_02"
-                                               href="{{ $url = route('paper.edit.id', ['id' => $pages[$i]->id ] )}}">修改</a>
-                                        </td>
-                                    </tr>
-
-                                @endfor
-
+                            </thead>
+                            <tbody>
+                            @if (count($menus) > 0)
+                                @foreach ($menus as $menu)
+                                    @include('layout.tree', $menu)
+                                @endforeach
+                            @else
+                                @include('layout.tree')
                             @endif
-
+                            </tbody>
                         </table>
                     </div>
 
-                    {!! $pages->render() !!}
+                    {!! $menus->render() !!}
 
                             <!-- 瀏覽 區塊 End -->
 
@@ -85,7 +67,6 @@
     @include('layout.footer')
 
 </div>
-
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')

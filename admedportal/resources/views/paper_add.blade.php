@@ -49,16 +49,16 @@
                                     <th>類型</th>
                                     <td>
                                         <label>
-                                            {!! Form::radio('type',true,true,['onclick'=>'chgShowField("type","txt");']) !!}
+                                            {!! Form::radio('type',true,true,['onclick'=>'chgShowField("url","txt");']) !!}
                                             網頁內容
                                         </label>
                                         <label>
-                                            {!! Form::radio('type',false,false,['onclick'=>'chgShowField("type","url");']) !!}
+                                            {!! Form::radio('type',false,false,['onclick'=>'chgShowField("txt","url");']) !!}
                                             連結
                                         </label>
                                     </td>
                                 </tr>
-                                <tr class="group_02 txt">
+                                <tr class="txt">
                                     <th>網頁內容</th>
                                     <td>
                                         <div class="accordion_01">
@@ -79,7 +79,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="group_02 url" style="">
+                                <tr class="url" style="">
                                     <th>連結</th>
                                     <td>
                                         @foreach($languages as $language)
@@ -94,24 +94,8 @@
                                 <tr>
                                     <th>位置</th>
                                     <td>
-                                        <select>
-                                            <option>不設定(單一網頁)</option>
-                                            <option>首頁</option>
-                                            <option>考科藍新訊</option>
-                                            <option>本館簡介</option>
-                                            <option>館藏目錄查詢</option>
-                                            <option>電子資源整合查詢</option>
-                                            <option>申請館際合作</option>
-                                            <option>相關醫學網站</option>
-                                            <option>常用連結</option>
-                                            <option>開館時間</option>
-                                            <option>交通位置</option>
-                                        </select>
+                                        {!! Form::select('parent_id',$select) !!}
                                     </td>
-                                </tr>
-                                <tr class="type url" style="display:none;">
-                                    <th>連結</th>
-                                    <td><input type="text" name="url"></td>
                                 </tr>
                                 <tr>
                                     <th>是否顯示</th>
@@ -171,7 +155,7 @@
         <!-- 執行javascript 區塊 End -->
 
 <script>
-    for (var i = 1; i <= 8; i++) {
+    for (var i = 1; i <= 7; i++) {
         $("form table tr:eq(" + i + ")").hide();
     }
 
@@ -195,7 +179,7 @@
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
                 $("form table tr:eq(0)").show();
-                for (var i = 1; i <= 8; i++) {
+                for (var i = 1; i <= 7; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
@@ -215,11 +199,20 @@
 
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 8 && i != 1 && i != 2; i++) {
+                $("form table tr:eq(0)").hide();
+                $("form table tr:eq(1)").show();
+                for (var i = 4; i <= 7; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
-                $("form table tr:eq(1)").show();
-                $("form table tr:eq(2)").show();
+
+                var value = $("input[name='type']:checked").val();
+                var option = value != null && value.trim() != "" && value != "0" && value != 0;
+                if (option) {
+                    chgShowField("url", "txt");
+                } else {
+                    chgShowField("txt", "url");
+                }
+
                 message_hide();
                 $("a.btn_02:eq(0)").show();
                 $("a.btn_02:eq(1)").show();
@@ -229,11 +222,11 @@
             case 3:
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 2; i++) {
+                for (var i = 0; i <= 3; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
-                for (var i = 3; i <= 7; i++) {
+                for (var i = 4; i <= 7; i++) {
                     $("form table tr:eq(" + i + ")").show();
                 }
 

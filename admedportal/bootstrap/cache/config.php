@@ -132,7 +132,7 @@
   array (
     'debug' => true,
     'pages_config' => 10,
-    'books_image_folder' => '/var/www/laravel/public/',
+    'books_image_folder' => '/var/www/admedportal/public/',
     'books_image_width' => 130,
     'logo_image_width' => 900,
     'logo_image_height' => 130,
@@ -360,6 +360,53 @@
         'driver' => 'log',
       ),
     ),
+  ),
+  'ide-helper' => 
+  array (
+    'filename' => '_ide_helper',
+    'format' => 'php',
+    'include_helpers' => false,
+    'helper_files' => 
+    array (
+      0 => '/var/www/admedportal/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+    ),
+    'model_locations' => 
+    array (
+      0 => 'app',
+    ),
+    'extra' => 
+    array (
+      'Eloquent' => 
+      array (
+        0 => 'Illuminate\\Database\\Eloquent\\Builder',
+        1 => 'Illuminate\\Database\\Query\\Builder',
+      ),
+      'Session' => 
+      array (
+        0 => 'Illuminate\\Session\\Store',
+      ),
+    ),
+    'magic' => 
+    array (
+      'Log' => 
+      array (
+        'debug' => 'Monolog\\Logger::addDebug',
+        'info' => 'Monolog\\Logger::addInfo',
+        'notice' => 'Monolog\\Logger::addNotice',
+        'warning' => 'Monolog\\Logger::addWarning',
+        'error' => 'Monolog\\Logger::addError',
+        'critical' => 'Monolog\\Logger::addCritical',
+        'alert' => 'Monolog\\Logger::addAlert',
+        'emergency' => 'Monolog\\Logger::addEmergency',
+      ),
+    ),
+    'interfaces' => 
+    array (
+    ),
+    'custom_db_types' => 
+    array (
+    ),
+    'model_camel_case_properties' => false,
   ),
   'filesystems' => 
   array (
@@ -684,52 +731,5 @@
         ),
       ),
     ),
-  ),
-  'ide-helper' => 
-  array (
-    'filename' => '_ide_helper',
-    'format' => 'php',
-    'include_helpers' => false,
-    'helper_files' => 
-    array (
-      0 => '/var/www/admedportal/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
-    ),
-    'model_locations' => 
-    array (
-      0 => 'app',
-    ),
-    'extra' => 
-    array (
-      'Eloquent' => 
-      array (
-        0 => 'Illuminate\\Database\\Eloquent\\Builder',
-        1 => 'Illuminate\\Database\\Query\\Builder',
-      ),
-      'Session' => 
-      array (
-        0 => 'Illuminate\\Session\\Store',
-      ),
-    ),
-    'magic' => 
-    array (
-      'Log' => 
-      array (
-        'debug' => 'Monolog\\Logger::addDebug',
-        'info' => 'Monolog\\Logger::addInfo',
-        'notice' => 'Monolog\\Logger::addNotice',
-        'warning' => 'Monolog\\Logger::addWarning',
-        'error' => 'Monolog\\Logger::addError',
-        'critical' => 'Monolog\\Logger::addCritical',
-        'alert' => 'Monolog\\Logger::addAlert',
-        'emergency' => 'Monolog\\Logger::addEmergency',
-      ),
-    ),
-    'interfaces' => 
-    array (
-    ),
-    'custom_db_types' => 
-    array (
-    ),
-    'model_camel_case_properties' => false,
   ),
 );

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<?php echo $__env->make('layout.head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<body>
+<div class="wrapper">
+
+    <?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    <div class="box">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr valign="top">
+                <td class="td_1">
+                    <!-- menu 區塊 Begin -->
+                    <?php echo $__env->make('layout.menu', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                            <!-- menu 區塊 End -->
+                </td>
+                <td class="td_2">
+                    <!-- 內容 區塊 Begin -->
+
+                    <!-- message 區塊 Begin -->
+                    <?php echo $__env->make('layout.message', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                            <!-- message 區塊 End -->
+
+                    <!-- 功能 區塊 Begin -->
+                    <div class="func_box">
+                        <a class="btn_02" href="<?php echo e(route('paper.add')); ?>">新增</a>
+                    </div>
+                    <!-- 功能 區塊 End -->
+
+
+                    <!-- 瀏覽 區塊 Begin -->
+                    <div class="browser_box">
+                        <table width="100%" border="1" cellpadding="0" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>標題</th>
+                                <th>是否顯示</th>
+                                <th>排序</th>
+                                <th>建立時間</th>
+                                <th>修改時間</th>
+                                <th>功能</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if(count($menus) > 0): ?>
+                                <?php foreach($menus as $menu): ?>
+                                    <?php echo $__env->make('layout.tree', $menu, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php echo $__env->make('layout.tree', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <?php echo $menus->render(); ?>
+
+
+                            <!-- 瀏覽 區塊 End -->
+
+
+                    <!-- 內容 區塊 End -->
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+</div>
+
+<!-- 執行javascript 區塊 Begin -->
+<?php echo $__env->make('layout.javascript', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <!-- 執行javascript 區塊 End -->
+</body>
+</html>
+

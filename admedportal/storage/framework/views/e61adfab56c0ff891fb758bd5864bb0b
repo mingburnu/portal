@@ -1,0 +1,16 @@
+<tr>
+    <td>
+        <?php if(!empty($mark)): ?>
+        <?php echo e($mark); ?>
+
+        <?php endif; ?>
+        <?php echo e($menu->title); ?>
+
+        <?php /*<?php while($menu->parent==null): ?>*/ ?>
+
+        <?php /*<?php endwhile; ?>*/ ?>
+    </td>
+</tr>
+<?php foreach($menu->children as $child): ?>
+    <?php echo $__env->make('layout.branch',['menu'=>$child,'mark'=>" └ "], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php endforeach; ?>

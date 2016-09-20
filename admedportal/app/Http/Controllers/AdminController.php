@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Menupage;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use Mail;
@@ -310,9 +311,11 @@ class AdminController extends Controller
 
     public function paper_add()
     {
+        $top = array('' => '不設定(單一網頁)');
+        $titles = DB::table('pages')->where('parent_id', '=', null)->lists('title', 'id');
+        $select = array_merge($top, $titles);
         $languages = DB::table('languages')->get();
-        return view('paper_add')->with('languages', $languages);
-
+        return view('paper_add')->with('languages', $languages)->with('select', $select);
     }
 
     public function paper_add_post(Request $request)
@@ -1745,18 +1748,14 @@ class AdminController extends Controller
 
     }
 
-    public
-    function paper_browser()
+    public function paper_browser()
     {
-
-        $pages = DB::table('pages')
+        $menus = Menupage::whereNull('parent_id')
+            ->with('children')
             ->orderBy('rank_id', 'desc')
-//                    ->get();
             ->paginate(Config::get('app.pages_config'));
-//                    ->paginate(5);
 
-        return view('paper_browser')->with('pages', $pages);
-
+        return view('paper_browser')->with('menus', $menus);
     }
 
     public

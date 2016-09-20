@@ -1,0 +1,25 @@
+<tr>
+    <td>
+        <?php if(!empty($mark)): ?>
+            <?php echo e($mark); ?>
+
+        <?php endif; ?>
+        <?php echo e($menu->title); ?></td>
+</tr>
+<?php /* / $var = 'this' /*/ ?>
+<?php if(count($menu['children']) > 0): ?>
+    <?php foreach($menu['children'] as $menu): ?>
+
+        <?php $record = "";
+        $parent = $menu['parent'];
+
+        while ($parent != null) {
+            $record = $record . '*';
+            $parent = $parent->parent;
+        }
+        ?>
+
+        <?php echo $__env->make('layout.markt', ['menu'=>$menu,'mark'=>$record], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    <?php endforeach; ?>
+<?php endif; ?>
