@@ -53,9 +53,9 @@
                         </table>
                     </div>
 
-                    {!! $menus->render() !!}
+                    {{--{!! $menus->render() !!}--}}
 
-                            <!-- 瀏覽 區塊 End -->
+                    <!-- 瀏覽 區塊 End -->
 
 
                     <!-- 內容 區塊 End -->

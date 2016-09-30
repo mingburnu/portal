@@ -220,6 +220,14 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'paper.browser', 'uses' => 'AdminController@paper_browser']
     );
 
+    Route::get('/paper_browser',
+        ['as' => 'paper.browser', 'uses' => 'AdminController@paper_browser']
+    );
+
+    Route::get('/lang_browser',
+        ['as' => 'lang.browser', 'uses' => 'AdminController@lang_browser']
+    );
+
     Route::get('/my_info',
         ['as' => 'my.info', 'uses' => 'AdminController@my_info']
     );

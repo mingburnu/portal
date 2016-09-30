@@ -166,8 +166,7 @@
                 if ($("span.active").html() == "2") {
                     var syntax_ch = $("textarea[name='0_syntax']").val()
                     if (syntax_ch == null || syntax_ch.trim() == "") {
-                        $("td.message_text").html("<p>．請輸入嵌入語法。</p>");
-                        $("div.message").show();
+                        message_show("<p>．請輸入嵌入語法。</p>");
                         break;
                     }
                 }

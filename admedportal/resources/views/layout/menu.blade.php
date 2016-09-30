@@ -8,12 +8,16 @@
         <a class="menu_D" href="{{ route('books.browser') }}">書籍管理</a>
         <a class="menu_E" href="{{ route('news.browser') }}">公告管理</a>
         <a class="menu_F" href="{{ route('paper.browser') }}">網頁管理</a>
+        <a class="menu_G" href="">電子書管理</a>
+        <a class="menu_H" href="{{ route('lang.browser') }}">訊息設定</a>
     </div>
 
     <div class="menu_box">
         <div class="title">統計資訊</div>
         <a class="menu_list" href="{{ route('state.A') }}">後台登入次數統計</a>
+        <a class="menu_list" href="">用戶查詢資料庫統計</a>
         <a class="menu_list" href="{{ route('state.C') }}">各網頁登入次數統計</a>
+        <a class="menu_list" href="">常用關鍵字排行</a>
     </div>
 
 </div>

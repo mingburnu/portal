@@ -1752,10 +1752,21 @@ class AdminController extends Controller
     {
         $menus = Menupage::whereNull('parent_id')
             ->with('children')
-            ->orderBy('rank_id', 'desc')
-            ->paginate(Config::get('app.pages_config'));
+            ->orderBy('rank_id', 'desc')->get();
+//            ->paginate(Config::get('app.pages_config'));
+
+        $sql = 'CALL showChildLst()';
+        $pdo = new \PDO("mysql:host=" . DB::getConfig('host') . ";dbname=" . DB::getDatabaseName(),
+            DB::getConfig('username'), DB::getConfig('password'));
+        $row = $pdo->query($sql)->fetchAll();
 
         return view('paper_browser')->with('menus', $menus);
+    }
+
+    public function lang_browser()
+    {
+        $languages = DB::table('languages')->get();
+        return view('lang_browser')->with('languages', $languages);
     }
 
     public
