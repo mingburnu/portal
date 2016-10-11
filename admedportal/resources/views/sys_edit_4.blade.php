@@ -40,7 +40,7 @@
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language==$languages[0])
-                                                <h3>{{$language->language}}</h3>
+                                                <h3>{{$language->language.$language->required}}</h3>
 
                                                 <div>
                                                     {!! Form::textarea($language->id.'_copyright',$webconfig[0]->copyright,['class'=>'v_01','cols'=>'80','rows'=>'5']) !!}

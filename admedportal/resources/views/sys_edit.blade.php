@@ -44,21 +44,11 @@
                                                 <th>排序</th>
                                             </tr>
                                             @foreach($languages as $language)
-                                                @if($language==$languages[0])
-                                                    <tr>
-                                                        <td>
-                                                            <?=str_replace(' (&#8226;)', '(必選)', $language->language)?>
-                                                        </td>
-                                                        <td><input type="checkbox" checked disabled></td>
-                                                        <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                                    </tr>
-                                                @else
-                                                    <tr>
-                                                        <td>{{$language->language}}</td>
-                                                        <td>{!! Form::checkbox($language->id.'_display', true , (boolean)$language->display) !!}</td>
-                                                        <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
-                                                    </tr>
-                                                @endif
+                                                <tr>
+                                                    <td>{{str_replace('(繁體中文)', '(必選)', $language->name.'('.$language->language.')')}}</td>
+                                                    <td>{!! Form::checkbox($language->id.'_display', true , (boolean)$language->display) !!}</td>
+                                                    <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                </tr>
                                             @endforeach
                                         </table>
                                         <div class="note_txt">
@@ -66,8 +56,6 @@
                                             排序欄位：數字愈大，順序愈前面。<BR>
                                             排序數字最大而且前台顯示也打勾選的語系即是預設語系。
                                         </div>
-
-
                                     </td>
                                 </tr>
                                 <tr>

@@ -40,7 +40,7 @@
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language==$languages[0])
-                                                <h3>{{$language->language}}</h3>
+                                                <h3>{{$language->language.$language->required}}</h3>
 
                                                 <div>
                                                     {!! Form::text($language->id.'_title',$news[0]->title) !!}
@@ -67,7 +67,7 @@
                                         <div class="accordion_01">
                                             @foreach($languages as $language)
                                                 @if($language==$languages[0])
-                                                    <h3>{{$language->language}}</h3>
+                                                    <h3>{{$language->language.$language->required}}</h3>
 
                                                     <div>
                                                         {!! Form::textarea($language->id.'_content',$news[0]->content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
@@ -109,8 +109,8 @@
                                 <tr>
                                     <th>是否顯示</th>
                                     <td>
-                                        <label>{!! Form::radio('group_01',true,['checked'=>true]) !!}是</label>
-                                        <label>{!! Form::radio('group_01',false) !!}否</label>
+                                        <label>{!! Form::radio('view',true) !!}是</label>
+                                        <label>{!! Form::radio('view',false) !!}否</label>
                                     </td>
                                 </tr>
                                 <tr>

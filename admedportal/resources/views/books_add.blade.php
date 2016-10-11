@@ -36,7 +36,7 @@
                                     <th>書名</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language}}</h3>
+                                            <h3>{{$language->language.$language->required}}</h3>
 
                                             <div>
                                                 {!! Form::text($language->id.'_book_name',null) !!}

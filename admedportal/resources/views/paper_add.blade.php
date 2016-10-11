@@ -37,7 +37,7 @@
                                     <th>項目名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language}}</h3>
+                                            <h3>{{$language->language.$language->required}}</h3>
 
                                             <div>
                                                 {!! Form::text($language->id.'_title',null) !!}
@@ -63,7 +63,7 @@
                                     <td>
                                         <div class="accordion_01">
                                             @foreach($languages as $language)
-                                                <h3>{{$language->language}}</h3>
+                                                <h3>{{$language->language.$language->required}}</h3>
 
                                                 <div>
                                                     {!! Form::textarea($language->id.'_content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}

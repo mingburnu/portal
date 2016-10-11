@@ -21,8 +21,6 @@ BEGIN
 END
 
 --showChildLst--
-CREATE DEFINER=`root`@`localhost` PROCEDURE `showChildLst`()
-    NO SQL
 BEGIN
    DECLARE done INT DEFAULT 0;
    DECLARE b INT;
@@ -42,7 +40,7 @@ SET max_sp_recursion_depth = 255;
    END WHILE;
  CLOSE cur1;
 
-  select tmpLst.*,pages.title,pages.view, pages.rank_id, pages.created_at, pages.updated_at from tmpLst,pages where tmpLst.id=pages.id order by tmpLst.sno;
+  select tmpLst.*,pages.title,pages.view, pages.rank_id, pages.created_at, pages.updated_at from tmpLst,pages where tmpLst.id=pages.id order by tmpLst.sno limit position , perPage;
 END
 
 --getChildLst--

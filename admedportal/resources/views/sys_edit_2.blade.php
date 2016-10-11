@@ -42,7 +42,7 @@
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language==$languages[0])
-                                                <h3>{{$language->language}}</h3>
+                                                <h3>{{$language->language.$language->required}}</h3>
 
                                                 <div>
                                                     {!! Form::text($language->id.'_site_name',$webconfig[0]->site_name,['class'=>'v_01']) !!}

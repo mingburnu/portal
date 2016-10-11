@@ -50,19 +50,14 @@
                                 </tr>
                                 <tr>
                                     <th>版面配色</th>
-                                    <td><label>
-                                            {!! Form::radio('color','S1') !!}
-                                            <img src="{{ asset('templates/images/style_S1.png') }}"
-                                                 width="60" height="35"></label>&nbsp;&nbsp;
-                                        <label>{!! Form::radio('color','S2') !!}
-                                            <img src="{{ asset('templates/images/style_S2.png') }}"
-                                                 width="60" height="35"></label>&nbsp;&nbsp;
-                                        <label>{!! Form::radio('color','S3') !!}
-                                            <img src="{{ asset('templates/images/style_S3.png') }}"
-                                                 width="60" height="35"></label>&nbsp;&nbsp;
-                                        <label>{!! Form::radio('color','S4') !!}
-                                            <img src="{{ asset('templates/images/style_S4.png') }}"
-                                                 width="60" height="35"></label>&nbsp;&nbsp;</td>
+                                    <td>
+                                        @for($i=1;$i<=3;$i++)
+                                            <label>
+                                                {!! Form::radio('color','S'.$i) !!}
+                                                <img src="{{ asset('templates/images/style_S'.$i.'.png') }}"
+                                                     width="60" height="35"></label>&nbsp;&nbsp;
+                                        @endfor
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>備註</th>
@@ -99,7 +94,6 @@
     </div>
 
     @include('layout.footer')
-
 </div>
 
 <!-- 執行javascript 區塊 Begin -->

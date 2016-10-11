@@ -1545,12 +1545,24 @@ class AdminController extends Controller
 
             if (preg_match("|^[-_.0-9a-z]+@([-_0-9a-z][-_0-9a-z]+\.)+[a-z]{2,3}$|i", $email)) {
                 $timedata = DB::select('select now() as timedata');
+                $color = trim(\Input::get('color'));
+
+                for ($i = 1; $i <= 4; $i++) {
+                    if ($i == 4) {
+                        $color = 'S1';
+                    } else {
+                        if ($color == 'S' . $i) {
+                            break;
+                        }
+                    }
+                }
+
                 DB::table('webconfig')
                     ->where('id', 1)
                     ->update([
                         'email' => $email,
                         'ico' => $icoName,
-                        'color' => trim(\Input::get('color')),
+                        'color' => $color,
                         'note' => trim(\Input::get('note')),
                         'updated_at' => $timedata[0]->timedata
                     ]);
@@ -1750,17 +1762,24 @@ class AdminController extends Controller
 
     public function paper_browser()
     {
-        $menus = Menupage::whereNull('parent_id')
-            ->with('children')
-            ->orderBy('rank_id', 'desc')->get();
-//            ->paginate(Config::get('app.pages_config'));
+        $perPage = Config::get('app.pages_config');
+        $totalPage = ceil(Menupage::count() / $perPage);
 
-        $sql = 'CALL showChildLst()';
+        $page = intval(\Input::get('page'));
+        if ($page <= 0) {
+            $page = 1;
+        } elseif ($page > $totalPage) {
+            $page = $totalPage;
+        }
+
+        $offset = ($page - 1) * $perPage;
+
+        $sql = 'CALL showChildLst(' . $offset . ',' . $perPage . ')';
         $pdo = new \PDO("mysql:host=" . DB::getConfig('host') . ";dbname=" . DB::getDatabaseName(),
             DB::getConfig('username'), DB::getConfig('password'));
-        $row = $pdo->query($sql)->fetchAll();
+        $menus = $pdo->query($sql)->fetchAll();
 
-        return view('paper_browser')->with('menus', $menus);
+        return view('paper_browser')->with('menus', $menus)->with('totalPage', $totalPage)->with('page', $page);
     }
 
     public function lang_browser()

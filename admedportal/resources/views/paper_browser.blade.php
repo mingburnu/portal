@@ -42,23 +42,63 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if (count($menus) > 0)
-                                @foreach ($menus as $menu)
-                                    @include('layout.tree', $menu)
-                                @endforeach
-                            @else
-                                @include('layout.tree')
-                            @endif
+                            @foreach($menus as $menu)
+                                <tr>
+                                    <td>
+                                        @for($i=0;$i<$menu[2];$i++)
+                                            └
+                                        @endfor
+                                        {{$menu[3]}}
+                                    </td>
+                                    <td>@if($menu[4])
+                                            是
+                                        @else
+                                            否
+                                        @endif
+                                    </td>
+                                    <td>{{$menu[5]}}</td>
+                                    <td>{{$menu[6]}}</td>
+                                    <td>{{$menu[7]}}</td>
+                                    <td>
+                                        <a class="btn_03"
+                                           href="{{ $url = route('paper.browser.id.delete', ['id' => $menu[1] ] ) }}">刪除</a>
+                                        <a class="btn_02"
+                                           href="{{ $url = route('paper.edit.id', ['id' => $menu[1] ] )}}">修改</a>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
 
-                    {{--{!! $menus->render() !!}--}}
+                    @if($totalPage > 1)
+                        <ul class="pagination">
+                            @if($page==1)
+                                <span>«</span>
+                            @else
+                                <a href="{{ route('paper.browser') }}/?page={{$p-1}}" rel="prev">»</a>
+                            @endif
 
-                    <!-- 瀏覽 區塊 End -->
+                            @for($p=1;$p<=$totalPage;$p++)
+                                @if($page==$p)
+                                    <span>{{$p}}</span>
+                                @else
+                                    <a href="{{ route('paper.browser') }}/?page={{$p}}">{{$p}}</a>
+                                @endif
+                            @endfor
+
+                            @if($page==$totalPage)
+                                <span>»</span>
+                            @else
+                                <a href="{{ route('paper.browser') }}/?page=${{$p+1}}" rel="prev">»</a>
+                            @endif
+                        </ul>
+                        @endif
+
+                                <!-- 瀏覽 區塊 End -->
 
 
-                    <!-- 內容 區塊 End -->
+                        <!-- 內容 區塊 End -->
                 </td>
             </tr>
         </table>

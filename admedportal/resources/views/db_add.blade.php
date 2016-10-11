@@ -37,7 +37,7 @@
                                     <th>資料庫名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language}}</h3>
+                                            <h3>{{$language->language.$language->required}}</h3>
 
                                             <div>
                                                 {!! Form::text($language->id.'_database_name',null) !!}
@@ -49,7 +49,7 @@
                                     <th>嵌入語法</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language}}</h3>
+                                            <h3>{{$language->language.$language->required}}</h3>
 
                                             <div>
                                                 {!! Form::textarea($language->id.'_syntax',null,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
