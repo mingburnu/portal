@@ -106,7 +106,7 @@ class WebController extends Controller
 
     public function news_list()
     {
-        $lang_id = \Cookie::get('language');
+        $lang_id = $this->get_lang_id();
 
         $webconfig = DB::table('webconfig')->get();
         $webconfig_i18n = null;
@@ -141,7 +141,7 @@ class WebController extends Controller
     public function news_detail($id)
     {
 
-        $lang_id = \Cookie::get('language');
+        $lang_id = $this->get_lang_id();
 
         $webconfig = DB::table('webconfig')->get();
         $webconfig_i18n = null;
