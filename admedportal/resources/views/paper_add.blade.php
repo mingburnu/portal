@@ -37,11 +37,19 @@
                                     <th>項目名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
-                                            <div>
-                                                {!! Form::text($language->id.'_title',null) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::text('title',null) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
+
+                                                <div>
+                                                    {!! Form::text($language->id.'_title',null) !!}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </td>
                                 </tr>
@@ -63,11 +71,19 @@
                                     <td>
                                         <div class="accordion_01">
                                             @foreach($languages as $language)
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                                @if($language->id==0)
+                                                    <h3>{{$language->language}} (&#8226;)</h3>
 
-                                                <div>
-                                                    {!! Form::textarea($language->id.'_content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
-                                                </div>
+                                                    <div>
+                                                        {!! Form::textarea('content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                    </div>
+                                                @else
+                                                    <h3>{{$language->language}}</h3>
+
+                                                    <div>
+                                                        {!! Form::textarea($language->id.'_content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                    </div>
+                                                @endif
                                             @endforeach
                                         </div>
 
@@ -83,11 +99,19 @@
                                     <th>連結</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
-                                            <div>
-                                                {!! Form::text($language->id.'_url',null) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::text('url',null) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
+
+                                                <div>
+                                                    {!! Form::text($language->id.'_url',null) !!}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </td>
                                 </tr>
@@ -190,7 +214,7 @@
                 break;
             case 2 :
                 if ($("span.active").html() == "1") {
-                    var title_ch = $("input[name='0_title']").val()
+                    var title_ch = $("input[name='title']").val()
                     if (title_ch == null || title_ch.trim() == "") {
                         message_show("<p>．請輸入標題。</p>");
                         break;

@@ -39,11 +39,11 @@
                                     <th>版權宣告</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::textarea($language->id.'_copyright',$webconfig[0]->copyright,['class'=>'v_01','cols'=>'80','rows'=>'5']) !!}
+                                                    {!! Form::textarea('copyright',$webconfig[0]->copyright,['class'=>'v_01','cols'=>'80','rows'=>'5']) !!}
                                                 </div>
                                             @else
                                                 <h3>{{$language->language}}</h3>
@@ -53,7 +53,6 @@
                                                 </div>
                                             @endif
                                         @endforeach
-
                                     </td>
                                 </tr>
                                 <tr>

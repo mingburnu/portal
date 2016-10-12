@@ -27,7 +27,7 @@
                             <tbody>
                             <tr>
                                 @foreach($languages as $language)
-                                    <th><?=str_replace(' (&#8226;)', '', $language->language)?></th>
+                                    <th>{{$language->language}}</th>
                                 @endforeach
                                 <th>功能</th>
                             </tr>

@@ -11,11 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $cover
  * @property integer $upload_option
  * @property string $book_name
- * @property string $book_name_ch
- * @property string $book_name_cn
- * @property string $book_name_en
- * @property string $book_name_jp
- * @property string $book_name_kr
  * @property string $url
  * @property integer $view
  * @property integer $rand_id
@@ -27,11 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereCover($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereUploadOption($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookName($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookNameCh($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookNameCn($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookNameEn($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookNameJp($value)
- * @method static \Illuminate\Database\Query\Builder|\App\Book whereBookNameKr($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereUrl($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereView($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Book whereRandId($value)

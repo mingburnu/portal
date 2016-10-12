@@ -216,7 +216,7 @@ class WebController extends Controller
             ->orderBy('rank_id', 'desc')
             ->get();
 
-        $languages = DB::table('languages')->where('display', true)->lists('language', 'id');
+        $languages = DB::table('languages')->where('display', true)->orderBy('sort', 'desc')->lists('language', 'id');
 
         $totalc = DB::table('webcounter')->count();
 

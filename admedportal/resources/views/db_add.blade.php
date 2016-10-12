@@ -37,11 +37,19 @@
                                     <th>資料庫名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
-                                            <div>
-                                                {!! Form::text($language->id.'_database_name',null) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::text('database_name',null) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
+
+                                                <div>
+                                                    {!! Form::text($language->id.'_database_name',null) !!}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </td>
                                 </tr>
@@ -49,11 +57,19 @@
                                     <th>嵌入語法</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
-                                            <div>
-                                                {!! Form::textarea($language->id.'_syntax',null,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::textarea('syntax',null,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
+
+                                                <div>
+                                                    {!! Form::textarea($language->id.'_syntax',null,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </td>
                                 </tr>
@@ -137,7 +153,7 @@
                 break;
             case 2 :
                 if ($("span.active").html() == "1") {
-                    var database_name_ch = $("input[name='0_database_name']").val()
+                    var database_name_ch = $("input[name='database_name']").val()
                     if (database_name_ch == null || database_name_ch.trim() == "") {
                         message_show("<p>．請輸入資料庫名稱。</p>");
                         break;
@@ -164,7 +180,7 @@
 
             case 3:
                 if ($("span.active").html() == "2") {
-                    var syntax_ch = $("textarea[name='0_syntax']").val()
+                    var syntax_ch = $("textarea[name='syntax']").val()
                     if (syntax_ch == null || syntax_ch.trim() == "") {
                         message_show("<p>．請輸入嵌入語法。</p>");
                         break;

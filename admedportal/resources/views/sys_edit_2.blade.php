@@ -41,11 +41,11 @@
                                     <th>網站名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_site_name',$webconfig[0]->site_name,['class'=>'v_01']) !!}
+                                                    {!! Form::text('site_name',$webconfig[0]->site_name,['class'=>'v_01']) !!}
                                                 </div>
                                             @else
                                                 <h3>{{$language->language}}</h3>

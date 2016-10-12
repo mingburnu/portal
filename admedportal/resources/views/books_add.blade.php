@@ -36,11 +36,19 @@
                                     <th>書名</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
-                                            <div>
-                                                {!! Form::text($language->id.'_book_name',null) !!}
-                                            </div>
+                                                <div>
+                                                    {!! Form::text('book_name',null) !!}
+                                                </div>
+                                            @else
+                                                <h3>{{$language->language}}</h3>
+
+                                                <div>
+                                                    {!! Form::text($language->id.'_book_name',null) !!}
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </td>
                                 </tr>
@@ -162,7 +170,7 @@
 
             case 2:
                 if ($("span.active").html() == "1") {
-                    var book_name_ch = $("input[name='0_book_name']").val()
+                    var book_name_ch = $("input[name='book_name']").val()
                     if (book_name_ch == null || book_name_ch.trim() == "") {
                         message_show("<p>．請輸入書名。</p>");
                         break;

@@ -39,12 +39,16 @@
                                     <th>Logo圖檔</th>
                                     <td>
                                         @foreach($languages as $language)
-                                                <h3><?=str_replace(' (&#8226;)', '', $language->language)?></h3>
+                                            <h3>{{$language->language}}</h3>
 
-                                                <div>
-                                                    <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
+                                            <div>
+                                                <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
+                                                @if($language->id==0)
+                                                    {!! Form::file('logo')!!}
+                                                @else
                                                     {!! Form::file($language->id.'_logo')!!}
-                                                </div>
+                                                @endif
+                                            </div>
                                         @endforeach
 
                                         <div class="note_txt">圖檔尺寸大小不限，以900px X 130px為佳。</div>

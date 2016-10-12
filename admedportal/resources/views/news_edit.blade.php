@@ -39,23 +39,26 @@
                                     <th>標題</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_title',$news[0]->title) !!}
-                                                </div>
-                                            @elseif($news_i18n!=null && $news_i18n[$language->id-1]!=null )
-                                                <h3>{{$language->language}}</h3>
-
-                                                <div>
-                                                    {!! Form::text($language->id.'_title',$news_i18n[$language->id-1]->title) !!}
+                                                    {!! Form::text('title',$news[0]->title) !!}
                                                 </div>
                                             @else
+                                                <?php
+                                                $i18n_title = null;
+                                                foreach ($news_i18n as $i18n_news) {
+                                                    if ($language->id == $i18n_news->language) {
+                                                        $i18n_title = $i18n_news->title;
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_title',null) !!}
+                                                    {!! Form::text($language->id.'_title',$i18n_title) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -66,23 +69,26 @@
                                     <td>
                                         <div class="accordion_01">
                                             @foreach($languages as $language)
-                                                @if($language==$languages[0])
-                                                    <h3>{{$language->language.$language->required}}</h3>
+                                                @if($language->id==0)
+                                                    <h3>{{$language->language}} (&#8226;)</h3>
 
                                                     <div>
-                                                        {!! Form::textarea($language->id.'_content',$news[0]->content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
-                                                    </div>
-                                                @elseif($news_i18n!=null && $news_i18n[$language->id-1]!=null )
-                                                    <h3>{{$language->language}}</h3>
-
-                                                    <div>
-                                                        {!! Form::textarea($language->id.'_content',$news_i18n[$language->id-1]->content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                        {!! Form::textarea('content',$news[0]->content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
                                                     </div>
                                                 @else
+                                                    <?php
+                                                    $i18n_content = null;
+                                                    foreach ($news_i18n as $i18n_news) {
+                                                        if ($language->id == $i18n_news->language) {
+                                                            $i18n_content = $i18n_news->content;
+                                                            break;
+                                                        }
+                                                    }
+                                                    ?>
                                                     <h3>{{$language->language}}</h3>
 
                                                     <div>
-                                                        {!! Form::textarea($language->id.'_content',null,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                        {!! Form::textarea($language->id.'_content',$i18n_content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
                                                     </div>
                                                 @endif
                                             @endforeach
@@ -193,7 +199,7 @@
                 break;
             case 2 :
                 if ($("span.active").html() == "1") {
-                    var title_ch = $("input[name='0_title']").val()
+                    var title_ch = $("input[name='title']").val()
                     if (title_ch == null || title_ch.trim() == "") {
                         message_show("<p>．請輸入標題。</p>");
                         break;

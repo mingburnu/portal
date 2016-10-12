@@ -45,9 +45,15 @@
                                             </tr>
                                             @foreach($languages as $language)
                                                 <tr>
-                                                    <td>{{str_replace('(繁體中文)', '(必選)', $language->name.'('.$language->language.')')}}</td>
-                                                    <td>{!! Form::checkbox($language->id.'_display', true , (boolean)$language->display) !!}</td>
-                                                    <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                    @if($language->id==0)
+                                                        <td>繁體中文(必選)</td>
+                                                        <td><input type="checkbox" checked disabled></td>
+                                                        <td>{!! Form::text('sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                    @else
+                                                        <td>{{ $language->name.'('.$language->language.')'}}</td>
+                                                        <td>{!! Form::checkbox($language->id.'_display', true , (boolean)$language->display) !!}</td>
+                                                        <td>{!! Form::text($language->id.'_sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </table>

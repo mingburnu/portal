@@ -37,23 +37,26 @@
                                     <th>書名</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_book_name',$book[0]->book_name,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
-                                                </div>
-                                            @elseif($book_i18n!=null && $book_i18n[$language->id-1]!=null )
-                                                <h3>{{$language->language}}</h3>
-
-                                                <div>
-                                                    {!! Form::text($language->id.'_book_name',$book_i18n[$language->id-1]->book_name,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
+                                                    {!! Form::text('book_name',$book[0]->book_name,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
                                                 </div>
                                             @else
+                                                <?php
+                                                $i18n_bkName = null;
+                                                foreach ($book_i18n as $i18n_bk) {
+                                                    if ($language->id == $i18n_bk->language) {
+                                                        $i18n_bkName = $i18n_bk->book_name;
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_book_name',null,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
+                                                    {!! Form::text($language->id.'_book_name',$i18n_bkName,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -180,7 +183,7 @@
 
             case 2:
                 if ($("span.active").html() == "1") {
-                    var book_name_ch = $("input[name='0_book_name']").val()
+                    var book_name_ch = $("input[name='book_name']").val()
                     if (book_name_ch == null || book_name_ch.trim() == "") {
                         message_show("<p>．請輸入書名。</p>");
                         break;

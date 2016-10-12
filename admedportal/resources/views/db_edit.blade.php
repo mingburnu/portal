@@ -37,23 +37,26 @@
                                     <th>資料庫名稱</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_database_name',$querydatabase[0]->database_name,['class'=>'v_01']) !!}
-                                                </div>
-                                            @elseif($querydatabase_i18n!=null && $querydatabase_i18n[$language->id-1]!=null )
-                                                <h3>{{$language->language}}</h3>
-
-                                                <div>
-                                                    {!! Form::text($language->id.'_database_name',$querydatabase_i18n[$language->id-1]->database_name,['class'=>'v_01']) !!}
+                                                    {!! Form::text('database_name',$querydatabase[0]->database_name,['class'=>'v_01']) !!}
                                                 </div>
                                             @else
+                                                <?php
+                                                $i18n_dbName = null;
+                                                foreach ($querydatabase_i18n as $i18n_db) {
+                                                    if ($language->id == $i18n_db->language) {
+                                                        $i18n_dbName = $i18n_db->database_name;
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_database_name',null,['class'=>'v_01']) !!}
+                                                    {!! Form::text($language->id.'_database_name',$i18n_dbName,['class'=>'v_01']) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -67,19 +70,22 @@
                                                 <h3>{{$language->language.$language->required}}</h3>
 
                                                 <div>
-                                                    {!! Form::textarea($language->id.'_syntax',$querydatabase[0]->syntax) !!}
-                                                </div>
-                                            @elseif($querydatabase_i18n!=null && $querydatabase_i18n[$language->id-1]!=null )
-                                                <h3>{{$language->language}}</h3>
-
-                                                <div>
-                                                    {!! Form::textarea($language->id.'_syntax',$querydatabase_i18n[$language->id-1]->syntax) !!}
+                                                    {!! Form::textarea('syntax',$querydatabase[0]->syntax) !!}
                                                 </div>
                                             @else
+                                                <?php
+                                                $i18n_syntax = null;
+                                                foreach ($querydatabase_i18n as $i18n_db) {
+                                                    if ($language->id == $i18n_db->language) {
+                                                        $i18n_syntax = $i18n_db->syntax;
+                                                        break;
+                                                    }
+                                                }
+                                                ?>
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::textarea($language->id.'_syntax',null) !!}
+                                                    {!! Form::textarea($language->id.'_syntax',$i18n_syntax) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -165,7 +171,7 @@
                 break;
             case 2 :
                 if ($("span.active").html() == "1") {
-                    var database_name_ch = $("input[name='0_database_name']").val()
+                    var database_name_ch = $("input[name='database_name']").val()
                     if (database_name_ch == null || database_name_ch.trim() == "") {
                         message_show("<p>．請輸入資料庫名稱。</p>");
                         break;
@@ -192,7 +198,7 @@
 
             case 3:
                 if ($("span.active").html() == "2") {
-                    var syntax_ch = $("textarea[name='0_syntax']").val()
+                    var syntax_ch = $("textarea[name='syntax']").val()
                     if (syntax_ch == null || syntax_ch.trim() == "") {
                         message_show("<p>．請輸入嵌入語法。</p>");
                         break;
