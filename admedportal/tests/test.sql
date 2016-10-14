@@ -63,3 +63,6 @@ END
 --call stored *--
 select * from `pages` where FIND_IN_SET(id, getChildLst(2));
 CALL `showChildLst`();
+
+--
+ALTER TABLE tablename AUTO_INCREMENT = 100;
