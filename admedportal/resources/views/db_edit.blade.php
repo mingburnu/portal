@@ -66,8 +66,8 @@
                                     <th>嵌入語法</th>
                                     <td>
                                         @foreach($languages as $language)
-                                            @if($language==$languages[0])
-                                                <h3>{{$language->language.$language->required}}</h3>
+                                            @if($language->id==0)
+                                                <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
                                                     {!! Form::textarea('syntax',$querydatabase[0]->syntax) !!}
