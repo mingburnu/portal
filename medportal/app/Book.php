@@ -37,6 +37,6 @@ class Book extends Model
 
     public function many()
     {
-        return $this->hasMany('App\Book_i18n');
+        return $this->hasMany('App\Book_i18n','book_id');
     }
 }

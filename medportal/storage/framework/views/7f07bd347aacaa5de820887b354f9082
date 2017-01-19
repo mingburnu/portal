@@ -1,0 +1,96 @@
+<div class="menu">
+    <div class="innerwrapper">
+        <div class="menu_box_list">
+            <ul>
+                <li><a class="menu_hover" href="<?php echo e(route('index')); ?>">首頁</a></li>
+
+                <?php foreach( $pages as $page): ?>
+                    <li>
+                        <?php
+                        $target = "";
+                        if (!$page->type) {
+                            $target = "_blank";
+                        }
+                        ?>
+                        <a href="<?php echo e($url = route('pages.id', ['id' => $page->id])); ?>" target="<?php echo e($target); ?>">
+
+                            <?php if(Cookie::get('language')==0): ?>
+                                <?php echo e($page->title); ?>
+
+                            <?php else: ?>
+                                <?php
+                                $title_i18n = $page->title;
+                                ?>
+                                <?php foreach($page['many'] as $page_i18n): ?>
+                                    <?php
+                                    if ($page_i18n->language == Cookie::get('language') && $page_i18n->title != null) {
+                                        $title_i18n = $page_i18n->title;
+                                    }
+                                    ?>
+                                <?php endforeach; ?>
+                                <?php echo e($title_i18n); ?>
+
+                            <?php endif; ?>
+                        </a>
+                        <?php foreach($page->children as $child): ?>
+                            <ul>
+                                <?php
+                                $target_child = "";
+                                if (!$page->type) {
+                                    $target_child = "_blank";
+                                }
+                                ?>
+                                <a href="<?php echo e($url = route('pages.id', ['id' => $page->id])); ?>" target="<?php echo e($target_child); ?>">
+                                    <?php if(Cookie::get('language')==0): ?>
+                                        <?php echo e($child->title); ?>
+
+                                    <?php else: ?>
+                                        <?php
+                                        $child_title_i18n = $child->title;
+                                        ?>
+                                        <?php foreach($child['many'] as $child_page_i18n): ?>
+                                            <?php
+                                            if ($child_page_i18n->language == Cookie::get('language') && $child_page_i18n->title != null) {
+                                                $child_title_i18n = $child_page_i18n->title;
+                                            }
+                                            ?>
+                                        <?php endforeach; ?>
+                                        <?php echo e($child_title_i18n); ?>
+
+                                    <?php endif; ?>
+                                </a>
+                            </ul>
+                        <?php endforeach; ?>
+
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+        <div class="menu_box_select">
+        <select onChange="menu_box_select_chg(this);">
+        <option value="<?php echo e(route('index')); ?>" selected>首頁</option>
+
+        <?php if(count($pages) > 0): ?>
+
+        <?php for( $i = 0; $i < count($pages); $i++): ?>
+
+        <?php if($pages[$i]->type): ?>
+
+        <option value="<?php echo e($url = route('pages.id', ['id' => $pages[$i]->id])); ?>"><?php echo e($pages[$i]->title); ?></option>
+
+        <?php else: ?>
+
+        <option value="<?php echo e($url = route('pages.id.type', ['id' => $pages[$i]->id, 'type' => $pages[$i]->type ])); ?>"><?php echo e($pages[$i]->title); ?></option>
+
+        <?php endif; ?>
+
+
+        <?php endfor; ?>
+
+        <?php endif; ?>
+
+        </select>
+        </div>
+    </div>
+</div>

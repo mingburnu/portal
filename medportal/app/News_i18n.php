@@ -25,6 +25,6 @@ class News_i18n extends Model
 
     public function one()
     {
-        return $this->belongsTo('App\News_i18n');
+        return $this->belongsTo('App\News_i18n','news_id');
     }
 }

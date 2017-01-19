@@ -1,0 +1,75 @@
+<?php /*<div>*/ ?>
+<?php /*<?php echo $queryDb[0]->syntax; ?>*/ ?>
+<?php /*</div>*/ ?>
+<div class="search">
+    <div class="search_db">
+        <div class="innerwrapper">
+            <div class="search_db_l">
+                <span class="search_db_title">查詢資料庫：</span>
+                <span class="search_db_list">
+                    <?php foreach($queryDb as $db): ?>
+                        <label><input type="radio" name="search_db_radio" value="<?php echo e($db->id); ?>"
+                                      onClick="SearchBox_show('<?php echo e($db->id); ?>')">
+                            <?php if(Cookie::get('language')==0): ?>
+                                <?php echo e($db->database_name); ?>
+
+                            <?php else: ?>
+                                <?php
+                                $name_i18n = $db->database_name;
+                                ?>
+                                <?php foreach($db['many'] as $db_i18n): ?>
+                                    <?php
+                                    if ($db_i18n->language == Cookie::get('language') && $db_i18n->database_name != null) {
+                                        $name_i18n = $db_i18n->database_name;
+                                    }
+                                    ?>
+                                <?php endforeach; ?>
+                                <?php echo e($name_i18n); ?>
+
+                            <?php endif; ?>
+                        </label>
+                    <?php endforeach; ?>
+                </span>
+            </div>
+
+            <div class="search_db_s">
+                <span class="search_db_title">查詢資料庫：</span>
+                <span class="search_db_list">
+                    <?php /*<select onChange="SearchBox_show(this.value)">*/ ?>
+                    <?php /*<option value="<?php echo e($queryDb[0]->rank_id); ?>"><?php echo e($queryDb[0]->database_name); ?></option>*/ ?>
+                    <?php /*</select>*/ ?>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="search_box" style="display: block;">
+        <div class="innerwrapper">
+            <?php if(count($queryDb) > 0): ?>
+                <?php for($i = 0; $i < count($queryDb); $i++ ): ?>
+                    <div class="search_box_in search_box_in_<?php echo e($queryDb[$i]->id); ?>">
+                        <?php if(Cookie::get('language')==0): ?>
+                            <?php echo $queryDb[$i]->syntax; ?>
+
+                        <?php else: ?>
+                            <?php
+                            $syntax_i18n = $queryDb[$i]->syntax;
+                            ?>
+                            <?php foreach($queryDb[$i]['many'] as $db_i18n): ?>
+                                <?php
+                                if ($db_i18n->language == Cookie::get('language') && $db_i18n->syntax != null) {
+                                    $syntax_i18n = $db_i18n->syntax;
+                                }
+                                ?>
+                            <?php endforeach; ?>
+                            <?php echo $syntax_i18n; ?>
+
+                        <?php endif; ?>
+                    </div>
+                <?php endfor; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<div>
+</div>

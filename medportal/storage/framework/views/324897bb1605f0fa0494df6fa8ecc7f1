@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
-@include('layout.head')
+<?php echo $__env->make('layout.head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <body>
 <div class="wrapper">
 
     <!-- header 區塊 Begin -->
-    @include('layout.header')
+    <?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             <!-- header 區塊 End -->
 
 
     <!-- search 區塊 Begin -->
-    @include('layout.search')
+    <?php echo $__env->make('layout.search', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             <!-- search 區塊 End -->
 
 
     <!-- Menu 區塊 Begin -->
-    @include('layout.menu')
+    <?php echo $__env->make('layout.menu', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             <!-- Menu 區塊 End -->
 
     <!-- 麵包屑 區塊 Begin -->
     <div class="crumbs">
         <div class="innerwrapper">
-            目前位置：<a href="{{ route('index') }}">首頁</a> &gt; <a href="{{ route('news.list') }}">訊息列表</a>
+            目前位置：<a href="<?php echo e(route('index')); ?>">首頁</a> &gt; <a href="<?php echo e(route('news.list')); ?>">訊息列表</a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->
@@ -34,37 +34,39 @@
 
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="news_box_list">
 
-                @if(count($news))
+                <?php if(count($news)): ?>
 
-                    @for($i = 0; $i < count($news); $i++)
+                    <?php for($i = 0; $i < count($news); $i++): ?>
 
                         <tr>
                             <?php list($newt1, $newt2) = explode(" ", $news[$i]->publish_time); ?>
-                            <th>{{ $newt1 }}</th>
+                            <th><?php echo e($newt1); ?></th>
                             <td>
-                                <a href="{{ $url = route('news.detail.id', ['id' => $news[$i]->id ]) }}">
-                                    @if(Cookie::get('language')==0)
-                                        {{ $news[$i]->title }}
-                                    @else
+                                <a href="<?php echo e($url = route('news.detail.id', ['id' => $news[$i]->id ])); ?>">
+                                    <?php if(Cookie::get('language')==0): ?>
+                                        <?php echo e($news[$i]->title); ?>
+
+                                    <?php else: ?>
                                         <?php
                                         $title_i18n = $news[$i]->title;
                                         ?>
-                                        @foreach($news[$i]['many'] as $news_i18n)
+                                        <?php foreach($news[$i]['many'] as $news_i18n): ?>
                                             <?php
                                             if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
                                                 $title_i18n = $news_i18n->title;
                                             }
                                             ?>
-                                        @endforeach
-                                        {{ $title_i18n }}
-                                    @endif
+                                        <?php endforeach; ?>
+                                        <?php echo e($title_i18n); ?>
+
+                                    <?php endif; ?>
                                 </a>
                             </td>
                         </tr>
 
-                    @endfor
+                    <?php endfor; ?>
 
-                @endif
+                <?php endif; ?>
 
             </table>
 
@@ -74,15 +76,16 @@
     </div>
     <!-- 主內容 區塊 End -->
 
+
     <!-- footer 區塊 Begin -->
-    @include('layout.footer')
+    <?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
             <!-- footer 區塊 End -->
 
 </div>
 
 
 <!-- 執行javascript 區塊 Begin -->
-@include('layout.init')
+<?php echo $__env->make('layout.init', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <!-- 執行javascript 區塊 End -->
 </body>
 </html>

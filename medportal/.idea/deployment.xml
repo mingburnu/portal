@@ -28,6 +28,9 @@
           <mappings>
             <mapping deploy="/var/www/medportal" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath path="/var/www/medportal/optimize" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

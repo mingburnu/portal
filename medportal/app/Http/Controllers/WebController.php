@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Book;
+use App\Menupage;
 use App\News;
 use DB;
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Log;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -25,57 +22,12 @@ class WebController extends Controller
      */
 
 
-    public function pages_id_type($id, $type)
-    {
-
-        if ($type == 2) {
-
-            $newid = trim($id);
-
-            $pages_data = DB::table('pages')
-                ->where('view', '1')
-                ->where('type', '2')
-                ->where('id', $newid)
-                ->get();
-
-
-            DB::table('login_pages_stat')->insert(
-                [
-                    'title' => $pages_data[0]->title,
-                    'view' => $pages_data[0]->view,
-                    'view_times' => 1
-                ]
-            );
-
-            return Redirect::to($pages_data[0]->url);
-
-        } else {
-
-            return view('errors.404');
-
-        }
-        // else 404
-
-    }
-
     public function pages($id)
     {
-
-        $webconfig = DB::table('webconfig')->get();
-
-        $querydatabase = DB::table('querydatabase')
-            ->where('view', '1')
-            ->orderBy('rank_id', 'desc')
-            ->get();
-
-        $newid = trim($id);
-
-        $pages_data = DB::table('pages')
-            ->where('view', '1')
-            ->where('type', '1')
-            ->where('id', $newid)
-            ->get();
-
+        $pages_data = Menupage::where('view', true)->where('id', $id)->get();
+        if (sizeof($pages_data) == 0) {
+            return view('errors.404');
+        }
 
         DB::table('login_pages_stat')->insert(
             [
@@ -85,23 +37,35 @@ class WebController extends Controller
             ]
         );
 
+        if ($pages_data[0]->type) {
+            $lang_id = $this->get_lang_id();
 
-        $pages = DB::table('pages')
-            ->where('view', '1')
-            ->orderBy('rank_id', 'desc')
-            ->get();
+            $webconfig = DB::table('webconfig')->get();
+            $webconfig_i18n = null;
+            if ($lang_id != 0) {
+                $webconfig_i18n = DB::table('webconfig_i18n')->where('language', $lang_id)->get();
+            }
 
-        $totalc = DB::table('webcounter')->count();
+            $queryDb = \App\Db::where('view', true)->orderBy('rank_id', 'desc')->get();
 
-        return view('pages', [
-            'webconfig' => $webconfig,
-            'querydatabase' => $querydatabase,
-            'pages_data' => $pages_data,
-            'pages' => $pages,
-            'totalc' => $totalc,
-            'newid' => $newid
-        ]);
+            $pages = Menupage::where('view', true)
+                ->where('parent_id', null)
+                ->orderBy('rank_id', 'desc')->get();
 
+            $totalc = DB::table('webcounter')->count();
+
+            return view('pages', [
+                'webconfig' => $webconfig,
+                'webconfig_i18n' => $webconfig_i18n,
+                'queryDb' => $queryDb,
+                'pages_data' => $pages_data,
+                'pages' => $pages,
+                'totalc' => $totalc
+            ]);
+        } else {
+
+            return Redirect::to($pages_data[0]->url);
+        }
     }
 
     public function news_list()
@@ -120,10 +84,9 @@ class WebController extends Controller
             ->where('publish_time', '<=', DB::raw('CURRENT_TIMESTAMP'))
             ->orderBy('publish_time', 'desc')->get();
 
-        $pages = DB::table('pages')
-            ->where('view', '1')
-            ->orderBy('rank_id', 'desc')
-            ->get();
+        $pages = Menupage::where('view', true)
+            ->where('parent_id', null)
+            ->orderBy('rank_id', 'desc')->get();
 
         $totalc = DB::table('webcounter')->count();
 
@@ -155,10 +118,9 @@ class WebController extends Controller
             ->where('publish_time', '<=', DB::raw('CURRENT_TIMESTAMP'))
             ->where('id', $id)->get();
 
-        $pages = DB::table('pages')
-            ->where('view', '1')
-            ->orderBy('rank_id', 'desc')
-            ->get();
+        $pages = Menupage::where('view', true)
+            ->where('parent_id', null)
+            ->orderBy('rank_id', 'desc')->get();
 
         $totalc = DB::table('webcounter')->count();
 
@@ -211,10 +173,9 @@ class WebController extends Controller
             ->where('publish_time', '<=', DB::raw('CURRENT_TIMESTAMP'))
             ->orderBy('publish_time', 'desc')->take(5)->skip(0)->get();
 
-        $pages = DB::table('pages')
-            ->where('view', '1')
-            ->orderBy('rank_id', 'desc')
-            ->get();
+        $pages = Menupage::where('view', true)
+            ->where('parent_id', null)
+            ->orderBy('rank_id', 'desc')->get();
 
         $languages = DB::table('languages')->where('display', true)->orderBy('sort', 'desc')->lists('language', 'id');
 

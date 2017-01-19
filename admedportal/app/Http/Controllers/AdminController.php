@@ -388,7 +388,7 @@ class AdminController extends Controller
             $id = DB::table('pages')->insertGetId([
                 'title' => trim(\Input::get('title')),
                 'type' => $type,
-                'content' => null,
+                'content' => '',
                 'url' => trim(Input::get('url')),
                 'parent_id' => $pid,
                 'view' => (boolean)\Input::get('view'),
@@ -404,7 +404,7 @@ class AdminController extends Controller
                         'page_id' => $id,
                         'language' => $languages[$i]->id,
                         'title' => trim(\Input::get($languages[$i]->id . '_title')),
-                        'content' => null,
+                        'content' => '',
                         'url' => trim(\Input::get($languages[$i]->id . '_url'))
                     ]
                 );
@@ -528,7 +528,7 @@ class AdminController extends Controller
                 ->update([
                     'title' => trim(\Input::get('title')),
                     'type' => $type,
-                    'content' => null,
+                    'content' => '',
                     'url' => trim(Input::get('url')),
                     'parent_id' => $pid,
                     'view' => (boolean)\Input::get('view'),
@@ -544,7 +544,7 @@ class AdminController extends Controller
                             'page_id' => $id,
                             'language' => $languages[$i]->id,
                             'title' => trim(\Input::get($languages[$i]->id . '_title')),
-                            'content' => null,
+                            'content' => '',
                             'url' => trim(\Input::get($languages[$i]->id . '_url'))
                         ]
                     );
@@ -557,7 +557,7 @@ class AdminController extends Controller
                                 'page_id' => $id,
                                 'language' => $languages[$i]->id,
                                 'title' => trim(\Input::get($languages[$i]->id . '_title')),
-                                'content' => null,
+                                'content' => '',
                                 'url' => trim(\Input::get($languages[$i]->id . '_url'))
                             ]
                         );
@@ -599,7 +599,6 @@ class AdminController extends Controller
 
         return redirect()->route('paper.browser')
             ->with('success', '刪除資料成功');
-
 
     }
 

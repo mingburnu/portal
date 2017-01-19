@@ -33,6 +33,6 @@ class Db extends Model
 
     public function many()
     {
-        return $this->hasMany('App\Db_i18n');
+        return $this->hasMany('App\Db_i18n','db_id');
     }
 }

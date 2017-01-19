@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Menupage_i18n
  *
- * @mixin \Eloquent
  * @property integer $page_id
  * @property integer $language
  * @property string $title
@@ -19,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereContent($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereUrl($value)
+ * @mixin \Eloquent
  */
 class Menupage_i18n extends Model
 {
@@ -27,6 +27,6 @@ class Menupage_i18n extends Model
 
     public function one()
     {
-        return $this->belongsTo('App\Menupage', 'page_id');
+        return $this->belongsTo('App\Menupage','page_id');
     }
 }

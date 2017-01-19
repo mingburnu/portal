@@ -31,8 +31,5 @@ Route::get('/pages/{id}',
     ['as' => 'pages.id', 'uses' => 'WebController@pages']
 )->where('id', '[0-9]+');
 
-Route::get('/pages/{id}/{type}',
-    ['as' => 'pages.id.type', 'uses' => 'WebController@pages_id_type']
-)->where(['id' => '[0-9]+', 'type' => '2']);
 
 

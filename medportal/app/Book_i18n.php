@@ -23,6 +23,6 @@ class Book_i18n extends Model
 
     public function one()
     {
-        return $this->belongsTo('App\Book');
+        return $this->belongsTo('App\Book','book_id');
     }
 }

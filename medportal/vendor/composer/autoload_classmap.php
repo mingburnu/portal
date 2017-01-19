@@ -25,6 +25,8 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Requests\\Request' => $baseDir . '/app/Http/Requests/Request.php',
     'App\\Jobs\\Job' => $baseDir . '/app/Jobs/Job.php',
+    'App\\Menupage' => $baseDir . '/app/Menupage.php',
+    'App\\Menupage_i18n' => $baseDir . '/app/Menupage_i18n.php',
     'App\\News' => $baseDir . '/app/News.php',
     'App\\News_i18n' => $baseDir . '/app/News_i18n.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',

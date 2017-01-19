@@ -151,15 +151,8 @@
                                 <tr>
                                     <th>是否顯示</th>
                                     <td>
-
-                                        @if( $paper[0]->view == 1)
-                                            <label><input type="radio" name="view" value="1" checked>是</label>
-                                            <label><input type="radio" name="view" value="0">否</label>
-                                        @elseif( $paper[0]->view == 0)
-                                            <label><input type="radio" name="view" value="0" checked>否</label>
-                                            <label><input type="radio" name="view" value="1">是</label>
-                                        @endif
-
+                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}是</label>
+                                        <label>{!! Form::radio('view',false) !!}否</label>
                                     </td>
                                 </tr>
                                 <tr>

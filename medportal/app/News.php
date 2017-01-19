@@ -35,6 +35,6 @@ class News extends Model
 
     public function many()
     {
-        return $this->hasMany('App\News_i18n');
+        return $this->hasMany('App\News_i18n','news_id');
     }
 }

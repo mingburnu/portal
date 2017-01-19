@@ -1,0 +1,10 @@
+<div class="lang">
+    <div class="innerwrapper">
+        <?php echo Form::open(['method' => 'POST','route'=>['locale']]); ?>
+
+        <?php echo Form::select('lang_id',$languages,Cookie::get('language'),array('onchange'=>'change_lang()')); ?>
+
+        <?php echo Form::close(); ?>
+
+    </div>
+</div>

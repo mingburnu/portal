@@ -124,8 +124,8 @@
                                 <tr>
                                     <th>是否顯示</th>
                                     <td>
-                                        <label>{!! Form::radio('group_01',true,['checked'=>true]) !!}是</label>
-                                        <label>{!! Form::radio('group_01',false) !!}否</label>
+                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}是</label>
+                                        <label>{!! Form::radio('view',false) !!}否</label>
                                     </td>
                                 </tr>
                                 <tr>

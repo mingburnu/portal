@@ -27,6 +27,6 @@ class Db_i18n extends Model
 
     public function one()
     {
-        return $this->belongsTo('App\Db');
+        return $this->belongsTo('App\Db','db_id');
     }
 }
