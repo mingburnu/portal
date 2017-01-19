@@ -76,7 +76,7 @@
                             @if($page==1)
                                 <span>«</span>
                             @else
-                                <a href="{{ route('paper.browser') }}/?page={{$p-1}}" rel="prev">»</a>
+                                <a href="{{ route('paper.browser') }}/?page={{$page-1}}" rel="prev">«</a>
                             @endif
 
                             @for($p=1;$p<=$totalPage;$p++)
@@ -90,7 +90,7 @@
                             @if($page==$totalPage)
                                 <span>»</span>
                             @else
-                                <a href="{{ route('paper.browser') }}/?page=${{$p+1}}" rel="prev">»</a>
+                                <a href="{{ route('paper.browser') }}/?page={{$page+1}}" rel="prev">»</a>
                             @endif
                         </ul>
                         @endif

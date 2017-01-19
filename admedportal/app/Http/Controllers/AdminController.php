@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Menupage;
+use App\Menupage_i18n;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use Mail;
@@ -312,8 +313,8 @@ class AdminController extends Controller
     public function paper_add()
     {
         $top = array('' => '不設定(單一網頁)');
-        $titles = DB::table('pages')->where('parent_id', '=', null)->lists('title', 'id');
-        $select = array_merge($top, $titles);
+        $titles = Menupage::where('parent_id', '=', null)->lists('title', 'id')->toArray();
+        $select = $top + $titles;
         $languages = DB::table('languages')->get();
         return view('paper_add')->with('languages', $languages)->with('select', $select);
     }
@@ -321,23 +322,29 @@ class AdminController extends Controller
     public function paper_add_post(Request $request)
     {
         $type = (boolean)\Input::get('type');
-        if (type) {
-            $rules = array(
-                'title' => 'required'
-            );
+        $ids = Menupage::select('id')->where('parent_id', '=', null)->lists('id')->toArray();
 
-            $messages = array(
-                'title.required' => '<p>．請輸入項目名稱。</p>'
-            );
-        } else {
+        if ($type) {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/'
+                'parent_id' => 'in:' . implode(',', $ids)
             );
 
             $messages = array(
                 'title.required' => '<p>．請輸入項目名稱。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>'
+                'parent_id.in' => '<p>．位置不正確</p>'
+            );
+        } else {
+            $rules = array(
+                'title' => 'required',
+                'url' => 'regex:/^http([s]?):\/\/.*/',
+                'parent_id' => 'in:' . implode(',', $ids)
+            );
+
+            $messages = array(
+                'title.required' => '<p>．請輸入項目名稱。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'parent_id.in' => '<p>．位置不正確</p>'
             );
         }
 
@@ -347,13 +354,18 @@ class AdminController extends Controller
 
         $timedata = DB::select('select now() as timedata');
         $languages = DB::table('languages')->where('id', '>', 0)->get();
+        $pid = \Input::get('parent_id');
+        if (trim($pid) == "") {
+            $pid = null;
+        }
 
-        if (type) {
+        if ($type) {
             $id = DB::table('pages')->insertGetId([
                 'title' => trim(\Input::get('title')),
                 'type' => $type,
                 'content' => trim(Input::get('content')),
-                'url' => null,
+                'url' => '',
+                'parent_id' => $pid,
                 'view' => (boolean)\Input::get('view'),
                 'rank_id' => \Input::get('rank_id'),
                 'note' => trim(\Input::get('note')),
@@ -362,13 +374,13 @@ class AdminController extends Controller
             ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                DB::table('news_i18n')->insert(
+                DB::table('pages_i18n')->insert(
                     [
                         'page_id' => $id,
                         'language' => $languages[$i]->id,
                         'title' => trim(\Input::get($languages[$i]->id . '_title')),
                         'content' => trim(\Input::get($languages[$i]->id . '_content')),
-                        'url' => null
+                        'url' => ''
                     ]
                 );
             }
@@ -378,6 +390,7 @@ class AdminController extends Controller
                 'type' => $type,
                 'content' => null,
                 'url' => trim(Input::get('url')),
+                'parent_id' => $pid,
                 'view' => (boolean)\Input::get('view'),
                 'rank_id' => \Input::get('rank_id'),
                 'note' => trim(\Input::get('note')),
@@ -386,7 +399,7 @@ class AdminController extends Controller
             ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                DB::table('news_i18n')->insert(
+                DB::table('pages_i18n')->insert(
                     [
                         'page_id' => $id,
                         'language' => $languages[$i]->id,
@@ -398,79 +411,162 @@ class AdminController extends Controller
             }
         }
 
-
         return redirect()->route('paper.browser')
             ->with('success', '新增資料成功');
-
-
-    }
-
-    public function paper_edit_post(Request $request)
-    {
-        $paper = $request->all();
-
-        $this->validate($request, [
-            'title' => 'required'
-        ]);
-
-        //        Log::info('data ......................... ' . dump($paper));
-
-        $id = trim($paper['id']);
-
-        $title = trim($paper['title']);
-
-        $type = trim($paper['type']);
-
-        $content = '';
-
-        $url = '';
-
-        if ($type == 1) {
-
-            $content = trim($paper['content']);
-
-        } elseif ($type == 2) {
-
-            $url = trim($paper['url']);
-
-        }
-
-        $view = trim($paper['view']);
-
-        $rank_id = trim($paper['rank_id']);
-
-        $note = trim($paper['note']);
-
-        $timedata = DB::select('select now() as timedata');
-
-
-        DB::table('pages')
-            ->where('id', $id)
-            ->update([
-                'title' => $title,
-                'type' => $type,
-                'content' => $content,
-                'url' => $url,
-                'view' => $view,
-                'rank_id' => $rank_id,
-                'note' => $note,
-                'updated_at' => $timedata[0]->timedata
-            ]);
-
-        return redirect()->route('paper.browser')
-            ->with('success', '更新資料成功');
-
 
     }
 
     public function paper_edit_id($id)
     {
+        if (DB::table('pages')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $newid = trim($id);
+        $paper = DB::table('pages')->where('id', '=', $id)->get();
+        $paper_i18n = DB::table('pages_i18n')->where('page_id', '=', $id)->get();
 
-        $paper = DB::table('pages')->where('id', '=', $newid)->get();
+        $top = array('' => '不設定(單一網頁)');
+        $select = $top;
 
-        return view('paper_edit')->with('paper', $paper);
+        if (Menupage::where('parent_id', '=', $id)->count() == 0) {
+            $titles = Menupage::where('parent_id', '=', null)->where('id', '!=', $id)->lists('title', 'id')->toArray();
+            $select = $top + $titles;
+        }
+
+        $languages = DB::table('languages')->get();
+        return view('paper_edit')->with('paper', $paper)->with('paper_i18n', $paper_i18n)->with('languages', $languages)->with('select', $select);
+
+    }
+
+    public function paper_edit_post(Request $request, $id)
+    {
+        if (DB::table('pages')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
+
+        $type = (boolean)\Input::get('type');
+
+        if ($type) {
+            $rules = array(
+                'title' => 'required',
+                'parent_id' => 'node'
+            );
+
+            $messages = array(
+                'title.required' => '<p>．請輸入項目名稱。</p>',
+                'parent_id.node' => '<p>．位置不正確</p>'
+            );
+        } else {
+            $rules = array(
+                'title' => 'required',
+                'url' => 'regex:/^http([s]?):\/\/.*/',
+                'parent_id' => 'node'
+            );
+
+            $messages = array(
+                'title.required' => '<p>．請輸入項目名稱。</p>',
+                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
+                'parent_id.node' => '<p>．位置不正確</p>'
+            );
+        }
+
+        $this->validate($request, $rules, $messages);
+
+        //    Log::info('data ------------------ ' . dump($paper));
+
+        $timedata = DB::select('select now() as timedata');
+        $languages = DB::table('languages')->where('id', '>', 0)->get();
+        $pid = \Input::get('parent_id');
+        if (trim($pid) == "") {
+            $pid = null;
+        }
+
+        if ($type) {
+            DB::table('pages')
+                ->where('id', $id)
+                ->update([
+                    'title' => trim(\Input::get('title')),
+                    'type' => $type,
+                    'content' => trim(Input::get('content')),
+                    'url' => '',
+                    'parent_id' => $pid,
+                    'view' => (boolean)\Input::get('view'),
+                    'rank_id' => \Input::get('rank_id'),
+                    'note' => trim(\Input::get('note')),
+                    'updated_at' => $timedata[0]->timedata
+                ]);
+
+            for ($i = 0; $i < sizeof($languages); $i++) {
+                if (DB::table('pages_i18n')->where('page_id', '=', $id)->where('language', '=', $languages[$i]->id)->count() == 0) {
+                    DB::table('pages_i18n')->insert(
+                        [
+                            'page_id' => $id,
+                            'language' => $languages[$i]->id,
+                            'title' => trim(\Input::get($languages[$i]->id . '_title')),
+                            'content' => trim(\Input::get($languages[$i]->id . '_content')),
+                            'url' => ''
+                        ]
+                    );
+                } else {
+                    DB::table('pages_i18n')
+                        ->where('page_id', $id)
+                        ->where('language', '=', $languages[$i]->id)
+                        ->update(
+                            [
+                                'page_id' => $id,
+                                'language' => $languages[$i]->id,
+                                'title' => trim(\Input::get($languages[$i]->id . '_title')),
+                                'content' => trim(\Input::get($languages[$i]->id . '_content')),
+                                'url' => ''
+                            ]
+                        );
+                }
+            }
+        } else {
+            DB::table('pages')
+                ->where('id', $id)
+                ->update([
+                    'title' => trim(\Input::get('title')),
+                    'type' => $type,
+                    'content' => null,
+                    'url' => trim(Input::get('url')),
+                    'parent_id' => $pid,
+                    'view' => (boolean)\Input::get('view'),
+                    'rank_id' => \Input::get('rank_id'),
+                    'note' => trim(\Input::get('note')),
+                    'updated_at' => $timedata[0]->timedata
+                ]);
+
+            for ($i = 0; $i < sizeof($languages); $i++) {
+                if (DB::table('pages_i18n')->where('page_id', '=', $id)->where('language', '=', $languages[$i]->id)->count() == 0) {
+                    DB::table('pages_i18n')->insert(
+                        [
+                            'page_id' => $id,
+                            'language' => $languages[$i]->id,
+                            'title' => trim(\Input::get($languages[$i]->id . '_title')),
+                            'content' => null,
+                            'url' => trim(\Input::get($languages[$i]->id . '_url'))
+                        ]
+                    );
+                } else {
+                    DB::table('pages_i18n')
+                        ->where('page_id', $id)
+                        ->where('language', '=', $languages[$i]->id)
+                        ->update(
+                            [
+                                'page_id' => $id,
+                                'language' => $languages[$i]->id,
+                                'title' => trim(\Input::get($languages[$i]->id . '_title')),
+                                'content' => null,
+                                'url' => trim(\Input::get($languages[$i]->id . '_url'))
+                            ]
+                        );
+                }
+            }
+        }
+
+        return redirect()->route('paper.browser')
+            ->with('success', '更新資料成功');
 
     }
 
@@ -488,10 +584,18 @@ class AdminController extends Controller
 
     public function paper_browser_id_delete($id)
     {
+        if (DB::table('pages')->where('id', '=', $id)->count() == 0) {
+            return view('errors.404');
+        }
 
-        $newid = trim($id);
+        $children = Menupage::where('parent_id', '=', $id)->get();
+        foreach ($children as $child) {
+            Menupage_i18n::where('page_id', '=', $child->id)->delete();
+        }
 
-        DB::table('pages')->where('id', '=', $newid)->delete();
+        Menupage_i18n::where('page_id', '=', $id)->delete();
+        Menupage::where('parent_id', '=', $id)->delete();
+        Menupage::where('id', '=', $id)->delete();
 
         return redirect()->route('paper.browser')
             ->with('success', '刪除資料成功');

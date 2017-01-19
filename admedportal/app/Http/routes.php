@@ -40,12 +40,12 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'paper.add', 'uses' => 'AdminController@paper_add']
     );
 
-    Route::post('/paper_edit/post',
-        ['as' => 'paper.edit.post', 'uses' => 'AdminController@paper_edit_post']
-    );
-
     Route::get('/paper_edit/{id}',
         ['as' => 'paper.edit.id', 'uses' => 'AdminController@paper_edit_id']
+    )->where('id', '[0-9]+');
+
+    Route::patch('/paper_edit/{id}',
+        ['as' => 'paper.edit.post', 'uses' => 'AdminController@paper_edit_post']
     )->where('id', '[0-9]+');
 
 //    Route::get('/paper_view/{id}',

@@ -41,7 +41,7 @@
                                                 <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text('title',null) !!}
+                                                    {!! Form::text('title',null,['class'=>'v_01']) !!}
                                                 </div>
                                             @else
                                                 <h3>{{$language->language}}</h3>

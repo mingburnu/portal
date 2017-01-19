@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 /**
  * App\Menupage
  *
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property-read \App\Menupage $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Menupage[] $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Menupage_i18n[] $many
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereType($value)
@@ -46,5 +48,10 @@ class Menupage extends Model
     public function children()
     {
         return $this->hasMany('App\Menupage', 'parent_id');
+    }
+
+    public function many()
+    {
+        return $this->hasMany('App\Menupage_i18n');
     }
 }

@@ -8,7 +8,7 @@
         <a class="menu_D" href="{{ route('books.browser') }}">書籍管理</a>
         <a class="menu_E" href="{{ route('news.browser') }}">公告管理</a>
         <a class="menu_F" href="{{ route('paper.browser') }}">網頁管理</a>
-        <a class="menu_G" href="">電子書管理</a>
+        {{--<a class="menu_G" href="">電子書管理</a>--}}
         <a class="menu_H" href="{{ route('lang.browser') }}">訊息設定</a>
     </div>
 
