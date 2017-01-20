@@ -77,7 +77,7 @@
 
         @else
 
-        <option value="{{ $url = route('pages.id.type', ['id' => $pages[$i]->id, 'type' => $pages[$i]->type ]) }}">{{ $pages[$i]->title }}</option>
+        <option value="{{ $url = route('pages.id', ['id' => $pages[$i]->id, 'type' => $pages[$i]->type ]) }}">{{ $pages[$i]->title }}</option>
 
         @endif
 
