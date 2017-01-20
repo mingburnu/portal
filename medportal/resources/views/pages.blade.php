@@ -22,8 +22,24 @@
 
     <div class="crumbs">
         <div class="innerwrapper">
-            目前位置：<a href="{{ route('index') }}">首頁</a> &gt; <a
-                    href="{{ $url = route('pages.id', ['id' => $pages_data[0]->id]) }}">{{ $pages_data[0]->title }}</a>
+            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a
+                    href="{{ $url = route('pages.id', ['id' => $pages_data[0]->id]) }}">
+                @if(Cookie::get('language')==0)
+                    {{ $pages_data[0]->title }}
+                @else
+                    <?php
+                    $title_i18n = $pages_data[0]->title;
+                    ?>
+                    @foreach($pages_data[0]['many'] as $pages_data_i18n)
+                        <?php
+                        if ($pages_data_i18n->language == Cookie::get('language') && $pages_data_i18n->title != null) {
+                            $title_i18n = $pages_data_i18n->title;
+                        }
+                        ?>
+                    @endforeach
+                    {{ $title_i18n }}
+                @endif
+            </a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->

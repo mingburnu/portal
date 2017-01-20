@@ -1,6 +1,6 @@
 <div class="news_home">
     <div class="innerwrapper">
-        <div class="news_title">最 新 公 告 訊 息</div>
+        <div class="news_title">{{$signal[0]->newest}}</div>
         <div class="news_box">
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="news_box_list">
 
@@ -32,7 +32,7 @@
                 @endfor
 
             </table>
-            <div class="news_box_buttom"><a class="btn_01" href="{{ route('news.list') }}">更多訊息</a></div>
+            <div class="news_box_buttom"><a class="btn_01" href="{{ route('news.list') }}">{{$signal[0]->more}}</a></div>
         </div>
     </div>
 </div>

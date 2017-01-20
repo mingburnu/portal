@@ -2,7 +2,11 @@
     <div class="innerwrapper">
         <div class="menu_box_list">
             <ul>
-                <li><a class="menu_hover" href="{{ route('index') }}">首頁</a></li>
+                <li>
+                    <a class="menu_hover" href="{{ route('index') }}">
+                        {{ $signal[0]->home }}
+                    </a>
+                </li>
 
                 @foreach( $pages as $page)
                     <li>

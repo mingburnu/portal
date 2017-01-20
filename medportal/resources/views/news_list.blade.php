@@ -21,7 +21,7 @@
     <!-- 麵包屑 區塊 Begin -->
     <div class="crumbs">
         <div class="innerwrapper">
-            目前位置：<a href="{{ route('index') }}">首頁</a> &gt; <a href="{{ route('news.list') }}">訊息列表</a>
+            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a href="{{ route('news.list') }}">{{$signal[0]->board}}</a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->

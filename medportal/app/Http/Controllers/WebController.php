@@ -52,6 +52,8 @@ class WebController extends Controller
                 ->where('parent_id', null)
                 ->orderBy('rank_id', 'desc')->get();
 
+            $signal = DB::table('languages')->where('id', $lang_id)->get();
+
             $totalc = DB::table('webcounter')->count();
 
             return view('pages', [
@@ -60,7 +62,8 @@ class WebController extends Controller
                 'queryDb' => $queryDb,
                 'pages_data' => $pages_data,
                 'pages' => $pages,
-                'totalc' => $totalc
+                'totalc' => $totalc,
+                'signal' => $signal
             ]);
         } else {
 
@@ -88,6 +91,8 @@ class WebController extends Controller
             ->where('parent_id', null)
             ->orderBy('rank_id', 'desc')->get();
 
+        $signal = DB::table('languages')->where('id', $lang_id)->get();
+
         $totalc = DB::table('webcounter')->count();
 
         return view('news_list', [
@@ -96,7 +101,8 @@ class WebController extends Controller
             'queryDb' => $queryDb,
             'news' => $news,
             'pages' => $pages,
-            'totalc' => $totalc
+            'totalc' => $totalc,
+            'signal' => $signal
         ]);
 
     }
@@ -122,6 +128,8 @@ class WebController extends Controller
             ->where('parent_id', null)
             ->orderBy('rank_id', 'desc')->get();
 
+        $signal = DB::table('languages')->where('id', $lang_id)->get();
+
         $totalc = DB::table('webcounter')->count();
 
         return view('news_detail', [
@@ -130,7 +138,8 @@ class WebController extends Controller
             'queryDb' => $queryDb,
             'news' => $news,
             'pages' => $pages,
-            'totalc' => $totalc
+            'totalc' => $totalc,
+            'signal' => $signal
         ]);
 
     }
@@ -179,6 +188,8 @@ class WebController extends Controller
 
         $languages = DB::table('languages')->where('display', true)->orderBy('sort', 'desc')->lists('language', 'id');
 
+        $signal = DB::table('languages')->where('id', $lang_id)->get();
+
         $totalc = DB::table('webcounter')->count();
 
         return view('index', [
@@ -189,7 +200,8 @@ class WebController extends Controller
             'news' => $news,
             'pages' => $pages,
             'totalc' => $totalc,
-            'languages' => $languages
+            'languages' => $languages,
+            'signal' => $signal
         ]);
     }
 

@@ -67,6 +67,12 @@
                                 @endforeach
                                 <td><a class="btn_02" href="">修改</a></td>
                             </tr>
+                            <tr>
+                                @foreach($languages as $language)
+                                    <td>{{$language->board}}</td>
+                                @endforeach
+                                <td><a class="btn_02" href="">修改</a></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -5,7 +5,7 @@
     <div class="search_db">
         <div class="innerwrapper">
             <div class="search_db_l">
-                <span class="search_db_title">查詢資料庫：</span>
+                <span class="search_db_title">{{$signal[0]->query}}：</span>
                 <span class="search_db_list">
                     @foreach($queryDb as $db)
                         <label><input type="radio" name="search_db_radio" value="{{ $db->id }}"

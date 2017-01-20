@@ -96,7 +96,7 @@ GROUP BY account_userid', [ $MD_1[0]->first_day . ' 00:00:00', $MD_2[0]->final_d
             }
 
 
-        })->cron('1 2 1 * *');  
+        })->cron('1 2 1 * *');
             
     }
 }

@@ -16,7 +16,6 @@
     @include('layout.search')
             <!-- search 區塊 End -->
 
-
     <!-- Menu 區塊 Begin -->
     @include('layout.menu')
             <!-- Menu 區塊 End -->
@@ -24,7 +23,7 @@
     <!-- 麵包屑 區塊 Begin -->
     <div class="crumbs">
         <div class="innerwrapper">
-            目前位置：<a href="{{ route('index') }}">首頁</a>
+            {{$signal[0]->location}}：<a href="{{ route('index') }}"> {{ $signal[0]->home }}</a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->
