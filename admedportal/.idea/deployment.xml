@@ -16,14 +16,14 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.136 admedportal">
+      <paths name="192.168.21.153 admedportal">
         <serverdata>
           <mappings>
             <mapping deploy="/var/www/admedportal" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.136 medportal">
+      <paths name="192.168.21.153 medportal">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />

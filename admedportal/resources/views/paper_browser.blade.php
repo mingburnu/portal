@@ -61,7 +61,7 @@
                                     <td>{{$menu[7]}}</td>
                                     <td>
                                         <a class="btn_03"
-                                           href="{{ $url = route('paper.browser.id.delete', ['id' => $menu[1] ] ) }}">刪除</a>
+                                           onclick="del('{{ $url = route('paper.browser.id.delete', ['id' => $menu[1] ] ) }}')">刪除</a>
                                         <a class="btn_02"
                                            href="{{ $url = route('paper.edit.id', ['id' => $menu[1] ] )}}">修改</a>
                                     </td>
@@ -111,6 +111,15 @@
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
+<script>
+    function del(url) {
+        if (confirm('您確認要刪除該筆？')) {
+            location.href = url;
+        } else {
+            //
+        }
+    }
+</script>
 </body>
 </html>
 

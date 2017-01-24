@@ -41,34 +41,30 @@
                                 <th>功能</th>
                             </tr>
 
-                            @if(count($book))
+                            @for($i = 0; $i < count($book); $i++)
 
-                                @for($i = 0; $i < count($book); $i++)
+                                <tr>
+                                    <td><img class="browser_img" src="{{ asset($book[$i]->cover) }}"></td>
+                                    <td>{{ $book[$i]->book_name }}</td>
+                                    <td><a target="_blank" href="{{ $book[$i]->url }}">連結</a></td>
 
-                                    <tr>
-                                        <td><img class="browser_img" src="{{ asset($book[$i]->cover) }}"></td>
-                                        <td>{{ $book[$i]->book_name }}</td>
-                                        <td><a target="_blank" href="{{ $book[$i]->url }}">連結</a></td>
+                                    @if($book[$i]->view == 1 )
+                                        <td>是</td>
+                                    @elseif($book[$i]->view == 0)
+                                        <td>否</td>
+                                    @endif
 
-                                        @if($book[$i]->view == 1 )
-                                            <td>是</td>
-                                        @elseif($book[$i]->view == 0)
-                                            <td>否</td>
-                                        @endif
+                                    <td>{{ $book[$i]->created_at }}</td>
+                                    <td>{{ $book[$i]->updated_at }}</td>
+                                    <td>
+                                        <a class="btn_03"
+                                           onclick="del('{{ $url = route('books.browser.id.delete', ['id' => $book[$i]->id ] ) }}')">刪除</a>
+                                        <a class="btn_02"
+                                           href="{{ $url = route('books.edit.id', ['id' => $book[$i]->id ]) }}">修改</a>
+                                    </td>
+                                </tr>
 
-                                        <td>{{ $book[$i]->created_at }}</td>
-                                        <td>{{ $book[$i]->updated_at }}</td>
-                                        <td>
-                                            <a class="btn_03"
-                                               href="{{ $url = route('books.browser.id.delete', ['id' => $book[$i]->id ] ) }}">刪除</a>
-                                            <a class="btn_02"
-                                               href="{{ $url = route('books.edit.id', ['id' => $book[$i]->id ]) }}">修改</a>
-                                        </td>
-                                    </tr>
-
-                                @endfor
-
-                            @endif
+                            @endfor
 
                         </table>
                     </div>
@@ -90,9 +86,17 @@
 
 </div>
 
-
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
+<script>
+    function del(url) {
+        if (confirm('您確認要刪除該筆？')) {
+            location.href = url;
+        } else {
+            //
+        }
+    }
+</script>
 </body>
 </html>

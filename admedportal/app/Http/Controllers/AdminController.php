@@ -1434,6 +1434,7 @@ class AdminController extends Controller
                     ]);
             }
 
+
             return redirect()->route('sys.edit.2');
         } else {
             return view('errors.404');
@@ -1480,11 +1481,19 @@ class AdminController extends Controller
                 ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                DB::table('webconfig_i18n')
-                    ->where('language', $languages[$i]->id)
-                    ->update([
-                        'site_name' => trim(\Input::get($languages[$i]->id . '_site_name')),
-                    ]);
+                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                    DB::table('webconfig_i18n')
+                        ->insert([
+                            'language' => $languages[$i]->id,
+                            'site_name' => trim(\Input::get($languages[$i]->id . '_site_name'))
+                        ]);
+                } else {
+                    DB::table('webconfig_i18n')
+                        ->where('language', $languages[$i]->id)
+                        ->update([
+                            'site_name' => trim(\Input::get($languages[$i]->id . '_site_name'))
+                        ]);
+                }
             }
 
             return redirect()->route('sys.edit.3');
@@ -1539,11 +1548,19 @@ class AdminController extends Controller
                         ->save(public_path('img/' . "logo_" . $languages[$i]->id . ".png"));
                 }
 
-                DB::table('webconfig_i18n')
-                    ->where('language', $languages[$i]->id)
-                    ->update([
-                        'logo' => "logo_" . $languages[$i]->id . ".png"
-                    ]);
+                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                    DB::table('webconfig_i18n')
+                        ->insert([
+                            'language' => $languages[$i]->id,
+                            'logo' => "logo_" . $languages[$i]->id . ".png"
+                        ]);
+                } else {
+                    DB::table('webconfig_i18n')
+                        ->where('language', $languages[$i]->id)
+                        ->update([
+                            'logo' => "logo_" . $languages[$i]->id . ".png"
+                        ]);
+                }
             }
 
             // width 固定
@@ -1598,11 +1615,19 @@ class AdminController extends Controller
                 ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                DB::table('webconfig_i18n')
-                    ->where('language', $languages[$i]->id)
-                    ->update([
-                        'copyright' => \Input::get($languages[$i]->id . '_copyright')
-                    ]);
+                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                    DB::table('webconfig_i18n')
+                        ->insert([
+                            'language' => $languages[$i]->id,
+                            'copyright' => \Input::get($languages[$i]->id . '_copyright')
+                        ]);
+                } else {
+                    DB::table('webconfig_i18n')
+                        ->where('language', $languages[$i]->id)
+                        ->update([
+                            'copyright' => \Input::get($languages[$i]->id . '_copyright')
+                        ]);
+                }
             }
             return redirect()->route('sys.edit.5');
         } else {

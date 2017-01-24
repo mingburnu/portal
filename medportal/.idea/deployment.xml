@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="192.168.21.136 medportal">
+  <component name="PublishConfigData" serverName="192.168.21.153 medportal">
     <serverData>
       <paths name="192.168.21.128">
         <serverdata>
@@ -16,21 +16,18 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.136 admedportal">
+      <paths name="192.168.21.153 admedportal">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.136 medportal">
+      <paths name="192.168.21.153 medportal">
         <serverdata>
           <mappings>
             <mapping deploy="/var/www/medportal" local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath path="/var/www/medportal/optimize" />
-          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

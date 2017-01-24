@@ -21,7 +21,8 @@
     <!-- 麵包屑 區塊 Begin -->
     <div class="crumbs">
         <div class="innerwrapper">
-            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a href="{{ route('news.list') }}">{{$signal[0]->board}}</a>
+            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a
+                    href="{{ route('news.list') }}">{{$signal[0]->board}}</a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->
@@ -34,37 +35,33 @@
 
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="news_box_list">
 
-                @if(count($news))
+                @for($i = 0; $i < count($news); $i++)
 
-                    @for($i = 0; $i < count($news); $i++)
-
-                        <tr>
-                            <?php list($newt1, $newt2) = explode(" ", $news[$i]->publish_time); ?>
-                            <th>{{ $newt1 }}</th>
-                            <td>
-                                <a href="{{ $url = route('news.detail.id', ['id' => $news[$i]->id ]) }}">
-                                    @if(Cookie::get('language')==0)
-                                        {{ $news[$i]->title }}
-                                    @else
+                    <tr>
+                        <?php list($newt1, $newt2) = explode(" ", $news[$i]->publish_time); ?>
+                        <th>{{ $newt1 }}</th>
+                        <td>
+                            <a href="{{ $url = route('news.detail.id', ['id' => $news[$i]->id ]) }}">
+                                @if(Cookie::get('language')==0)
+                                    {{ $news[$i]->title }}
+                                @else
+                                    <?php
+                                    $title_i18n = $news[$i]->title;
+                                    ?>
+                                    @foreach($news[$i]['many'] as $news_i18n)
                                         <?php
-                                        $title_i18n = $news[$i]->title;
+                                        if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
+                                            $title_i18n = $news_i18n->title;
+                                        }
                                         ?>
-                                        @foreach($news[$i]['many'] as $news_i18n)
-                                            <?php
-                                            if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
-                                                $title_i18n = $news_i18n->title;
-                                            }
-                                            ?>
-                                        @endforeach
-                                        {{ $title_i18n }}
-                                    @endif
-                                </a>
-                            </td>
-                        </tr>
+                                    @endforeach
+                                    {{ $title_i18n }}
+                                @endif
+                            </a>
+                        </td>
+                    </tr>
 
-                    @endfor
-
-                @endif
+                @endfor
 
             </table>
 
@@ -83,6 +80,6 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')
-<!-- 執行javascript 區塊 End -->
+        <!-- 執行javascript 區塊 End -->
 </body>
 </html>

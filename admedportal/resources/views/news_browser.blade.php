@@ -38,31 +38,27 @@
                                 <th>功能</th>
                             </tr>
 
-                            @if(count($news))
+                            @for($i = 0 ; $i < count($news); $i++)
 
-                                @for($i = 0 ; $i < count($news); $i++)
+                                <tr>
+                                    <td>{{ $news[$i]->publish_time }}</td>
+                                    <td>{{ $news[$i]->title }}</td>
 
-                                    <tr>
-                                        <td>{{ $news[$i]->publish_time }}</td>
-                                        <td>{{ $news[$i]->title }}</td>
+                                    @if( $news[$i]->view == 1)
+                                        <td>是</td>
+                                    @elseif( $news[$i]->view == 0)
+                                        <td>否</td>
+                                    @endif
 
-                                        @if( $news[$i]->view == 1)
-                                            <td>是</td>
-                                        @elseif( $news[$i]->view == 0)
-                                            <td>否</td>
-                                        @endif
+                                    <td>
+                                        <a class="btn_03"
+                                           onclick="del('{{ $url = route('news.browser.id.delete', ['id' => $news[$i]->id ] ) }}')">刪除</a>
+                                        <a class="btn_02"
+                                           href="{{ $url = route('news.edit.id', ['id' => $news[$i]->id ]) }}">修改</a>
+                                    </td>
+                                </tr>
 
-                                        <td>
-                                            <a class="btn_03"
-                                               href="{{ $url = route('news.browser.id.delete', ['id' => $news[$i]->id ] ) }}">刪除</a>
-                                            <a class="btn_02"
-                                               href="{{ $url = route('news.edit.id', ['id' => $news[$i]->id ]) }}">修改</a>
-                                        </td>
-                                    </tr>
-
-                                @endfor
-
-                            @endif
+                            @endfor
 
                         </table>
                     </div>
@@ -82,9 +78,17 @@
 
 </div>
 
-
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
+<script>
+    function del(url) {
+        if (confirm('您確認要刪除該筆？')) {
+            location.href = url;
+        } else {
+            //
+        }
+    }
+</script>
 </body>
 </html>

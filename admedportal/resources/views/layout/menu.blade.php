@@ -15,9 +15,7 @@
     <div class="menu_box">
         <div class="title">統計資訊</div>
         <a class="menu_list" href="{{ route('state.A') }}">後台登入次數統計</a>
-        <a class="menu_list" href="">用戶查詢資料庫統計</a>
         <a class="menu_list" href="{{ route('state.C') }}">各網頁登入次數統計</a>
-        <a class="menu_list" href="">常用關鍵字排行</a>
     </div>
 
 </div>

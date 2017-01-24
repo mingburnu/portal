@@ -40,32 +40,28 @@
                                 <th>功能</th>
                             </tr>
 
-                            @if(count($querydatabase))
+                            @for($i = 0; $i < count($querydatabase); $i++)
 
-                                @for($i = 0; $i < count($querydatabase); $i++)
+                                <tr>
+                                    <td>{{ $querydatabase[$i]->database_name }}</td>
 
-                                    <tr>
-                                        <td>{{ $querydatabase[$i]->database_name }}</td>
+                                    @if( $querydatabase[$i]->view == 1)
+                                        <td>是</td>
+                                    @elseif( $querydatabase[$i]->view == 0)
+                                        <td>否</td>
+                                    @endif
+                                    <td>{{ $querydatabase[$i]->rank_id }}</td>
+                                    <td>{{ $querydatabase[$i]->created_at }}</td>
+                                    <td>{{ $querydatabase[$i]->updated_at }}</td>
+                                    <td>
+                                        <a class="btn_03"
+                                           onclick="del('{{ $url = route('db.browser.id.delete', ['id' => $querydatabase[$i]->id ] ) }}')">刪除</a>
+                                        <a class="btn_02"
+                                           href="{{ $url = route('db.edit.id', ['id' => $querydatabase[$i]->id ]) }}">修改</a>
+                                    </td>
+                                </tr>
 
-                                        @if( $querydatabase[$i]->view == 1)
-                                            <td>是</td>
-                                        @elseif( $querydatabase[$i]->view == 0)
-                                            <td>否</td>
-                                        @endif
-                                        <td>{{ $querydatabase[$i]->rank_id }}</td>
-                                        <td>{{ $querydatabase[$i]->created_at }}</td>
-                                        <td>{{ $querydatabase[$i]->updated_at }}</td>
-                                        <td>
-                                            <a class="btn_03"
-                                               href="{{ $url = route('db.browser.id.delete', ['id' => $querydatabase[$i]->id ] ) }}">刪除</a>
-                                            <a class="btn_02"
-                                               href="{{ $url = route('db.edit.id', ['id' => $querydatabase[$i]->id ]) }}">修改</a>
-                                        </td>
-                                    </tr>
-
-                                @endfor
-
-                            @endif
+                            @endfor
 
                         </table>
                     </div>
@@ -85,9 +81,17 @@
 
 </div>
 
-
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
+<script>
+    function del(url) {
+        if (confirm('您確認要刪除該筆？')) {
+            location.href = url;
+        } else {
+            //
+        }
+    }
+</script>
 </body>
 </html>

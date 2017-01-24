@@ -1,6 +1,8 @@
 <div class="footer">
     <div class="innerwrapper">
-        <span class="counter">網站訪客人數：{{ sprintf("%08d", $totalc) }}</span>
+        <span class="counter">
+            {!! $signal[0]->visitor !!} ：{{ sprintf("%08d", $totalc) }}
+        </span>
         @if(Cookie::get('language')==0)
             {!! $webconfig[0]->copyright !!}
         @else
