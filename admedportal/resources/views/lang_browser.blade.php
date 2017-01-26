@@ -31,48 +31,17 @@
                                 @endforeach
                                 <th>功能</th>
                             </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->home}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->location}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->query}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->newest}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->more}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->visitor}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
-                            <tr>
-                                @foreach($languages as $language)
-                                    <td>{{$language->board}}</td>
-                                @endforeach
-                                <td><a class="btn_02" href="">修改</a></td>
-                            </tr>
+
+                            @foreach($table as  $i=>$row)
+                                <tr>
+                                    @foreach($row as $cell)
+                                        <td>{{$cell}}</td>
+                                    @endforeach
+                                    <td><a class="btn_02"
+                                           href="{{ $url = route('lang.edit.label', ['label' => $i ]) }}">修改</a></td>
+                                </tr>
+                            @endforeach
+
                             </tbody>
                         </table>
                     </div>

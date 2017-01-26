@@ -1847,7 +1847,6 @@ class AdminController extends Controller
                     ->where('db_id', '=', $id)
                     ->where('language', '=', $languages[$i]->id)
                     ->update([
-                        'db_id' => $id,
                         'database_name' => trim(\Input::get($languages[$i]->id . '_database_name')),
                         'syntax' => trim(\Input::get($languages[$i]->id . '_syntax'))
                     ]);
@@ -1904,10 +1903,94 @@ class AdminController extends Controller
         return view('paper_browser')->with('menus', $menus)->with('totalPage', $totalPage)->with('page', $page);
     }
 
+    public function lang_edit_label($label)
+    {
+        $languages = DB::table('languages')->get();
+        $record = DB::table('label_update_time')->where('label', '=', $label)->get();
+
+        $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
+        if ($label >= sizeof($table)) {
+            return view('errors.404');
+        }
+
+        for ($i = 0; $i < sizeof($table); $i++) {
+            $table[$i] = new \SplFixedArray(sizeof($languages));
+        }
+
+        for ($j = 0; $j < sizeof($languages); $j++) {
+            $language_array = array_slice((array)$languages[$j], 5);
+            $index_array = array_values($language_array);
+
+            for ($i = 0; $i < sizeof($language_array); $i++) {
+                $table[$i][$j] = $index_array[$i];
+            }
+        }
+
+        $row = $table[$label];
+
+        return view('lang_edit')->with('languages', $languages)->with('row', $row)->with('label', $label)->with('record', $record);
+    }
+
+    public function lang_edit_post(Request $request, $label)
+    {
+        $languages = DB::table('languages')->get();
+
+        $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
+        if ($label >= sizeof($table)) {
+            return view('errors.404');
+        }
+
+        $columns = \Schema::getColumnListing('languages');
+        $timedata = DB::select('select now() as timedata');
+
+        for ($i = 0; $i < sizeof($languages); $i++) {
+            $signal = Input::get($i . '_title');
+            $lang_array = (array)$languages[$i];
+            $index = 5 + $label;
+
+            $values = array_combine(array_values($columns), array_values($lang_array));
+            $values[$columns[$index]] = $signal;
+
+            DB::table('languages')->where('id', '=', $languages[$i]->id)->update($values);
+
+        }
+
+        if (DB::table('label_update_time')->where('label', '=', $label)->count() == 0) {
+            DB::table('label_update_time')->insert([
+                'label' => $label,
+                'updated_at' => $timedata[0]->timedata
+            ]);
+        } else {
+            DB::table('label_update_time')
+                ->where('label', '=', $label)
+                ->update([
+                    'updated_at' => $timedata[0]->timedata
+                ]);
+        }
+
+        return redirect()->route('lang.browser')->with('success', '更新資料成功');
+    }
+
     public function lang_browser()
     {
         $languages = DB::table('languages')->get();
-        return view('lang_browser')->with('languages', $languages);
+
+        $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
+
+        for ($i = 0; $i < sizeof($table); $i++) {
+            $table[$i] = new \SplFixedArray(sizeof($languages));
+        }
+
+        for ($j = 0; $j < sizeof($languages); $j++) {
+            $language_array = array_slice((array)$languages[$j], 5);
+            $index_array = array_values($language_array);
+
+            for ($i = 0; $i < sizeof($language_array); $i++) {
+                $table[$i][$j] = $index_array[$i];
+            }
+        }
+
+        return view('lang_browser')->with('languages', $languages)->with('table', $table);
     }
 
     public

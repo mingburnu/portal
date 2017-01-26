@@ -228,6 +228,14 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'lang.browser', 'uses' => 'AdminController@lang_browser']
     );
 
+    Route::get('/lang_edit/{label}',
+        ['as' => 'lang.edit.label', 'uses' => 'AdminController@lang_edit_label']
+    )->where('label', '[0-9]+');
+
+    Route::patch('/lang_edit/{label}',
+        ['as' => 'lang.edit.post', 'uses' => 'AdminController@lang_edit_post']
+    )->where('label', '[0-9]+');
+
     Route::get('/my_info',
         ['as' => 'my.info', 'uses' => 'AdminController@my_info']
     );
