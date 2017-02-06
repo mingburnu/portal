@@ -36,6 +36,7 @@
                                 <th>書名</th>
                                 <th>連結</th>
                                 <th>是否顯示</th>
+                                <th>排序</th>
                                 <th>建立時間</th>
                                 <th>修改時間</th>
                                 <th>功能</th>
@@ -54,6 +55,7 @@
                                         <td>否</td>
                                     @endif
 
+                                    <td>{{ $book[$i]->rand_id }}</td>
                                     <td>{{ $book[$i]->created_at }}</td>
                                     <td>{{ $book[$i]->updated_at }}</td>
                                     <td>

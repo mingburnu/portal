@@ -628,7 +628,8 @@ class AdminController extends Controller
 
         $messages = array(
             'publish_time.required' => '<p>．請輸入公告時間。</p>',
-            'title.required' => '<p>．請輸入標題。</p>'
+            'title.required' => '<p>．請輸入標題。</p>',
+            'content.required' => '<p>．請輸入內容。</p>'
         );
 
         $this->validate($request, $rules, $messages);
@@ -724,7 +725,8 @@ class AdminController extends Controller
 
         $messages = array(
             'publish_time.required' => '<p>．請輸入公告時間。</p>',
-            'title.required' => '<p>．請輸入標題。</p>'
+            'title.required' => '<p>．請輸入標題。</p>',
+            'content.required' => '<p>．請輸入內容。</p>'
         );
 
         $this->validate($request, $rules, $messages);
@@ -1481,7 +1483,7 @@ class AdminController extends Controller
                 ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                if (DB::table('webconfig_i18n')->where('language', '=', $languages[$i]->id)->count() == 0) {
                     DB::table('webconfig_i18n')
                         ->insert([
                             'language' => $languages[$i]->id,
@@ -1548,7 +1550,7 @@ class AdminController extends Controller
                         ->save(public_path('img/' . "logo_" . $languages[$i]->id . ".png"));
                 }
 
-                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                if (DB::table('webconfig_i18n')->where('language', '=', $languages[$i]->id)->count() == 0) {
                     DB::table('webconfig_i18n')
                         ->insert([
                             'language' => $languages[$i]->id,
@@ -1615,7 +1617,7 @@ class AdminController extends Controller
                 ]);
 
             for ($i = 0; $i < sizeof($languages); $i++) {
-                if (DB::table('webconfig_i18n')->where('language')->count() == 0) {
+                if (DB::table('webconfig_i18n')->where('language', '=', $languages[$i]->id)->count() == 0) {
                     DB::table('webconfig_i18n')
                         ->insert([
                             'language' => $languages[$i]->id,
@@ -1693,7 +1695,7 @@ class AdminController extends Controller
                 return redirect()->route('sys.edit.5')->with('success', '資料更新成功');
             } else {
                 return redirect()->route('sys.edit.5')
-                    ->with('error', $email . ' 格式不合法')->withInput();
+                    ->with('error', ' 請輸入符合格式之電子信箱')->withInput();
             }
 
         } else {
@@ -1939,6 +1941,16 @@ class AdminController extends Controller
         if ($label >= sizeof($table)) {
             return view('errors.404');
         }
+
+        $rules = array(
+            '0_title' => 'required'
+        );
+
+        $messages = array(
+            '0_title.required' => '<p>．請輸入繁體中文訊息名稱。</p>'
+        );
+
+        $this->validate($request, $rules, $messages);
 
         $columns = \Schema::getColumnListing('languages');
         $timedata = DB::select('select now() as timedata');

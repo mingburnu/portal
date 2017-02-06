@@ -4,15 +4,17 @@
 <body>
 <div class="wrapper">
 
+    <!-- lang 區塊 Begin -->
+    @include('layout.lang')
+            <!-- lang 區塊 End -->
+
     <!-- header 區塊 Begin -->
     @include('layout.header')
             <!-- header 區塊 End -->
 
-
     <!-- search 區塊 Begin -->
     @include('layout.search')
             <!-- search 區塊 End -->
-
 
     <!-- Menu 區塊 Begin -->
     @include('layout.menu')

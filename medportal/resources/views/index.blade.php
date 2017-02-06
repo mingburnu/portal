@@ -46,26 +46,6 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')
-<script>
-    function change_lang() {
-        var url = $('div.lang').children().children().attr('action');
-        var data = $('div.lang').children().children().serialize();
-
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            success: function (result) {
-                loadI18n();
-            }
-        });
-    }
-
-    function loadI18n() {
-        window.location.href = location.href;
-    }
-
-</script>
 <!-- 執行javascript 區塊 End -->
 </body>
 </html>

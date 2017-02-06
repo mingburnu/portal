@@ -190,10 +190,14 @@
 
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 4 && i != 1; i++) {
-                    $("form table tr:eq(" + i + ")").hide();
+                for (var i = 0; i <= 4; i++) {
+                    if (i != 1) {
+                        $("form table tr:eq(" + i + ")").hide();
+                    } else {
+                        $("form table tr:eq(" + i + ")").show();
+                    }
                 }
-                $("form table tr:eq(1)").show();
+
                 message_hide();
                 $("a.btn_02:eq(0)").show();
                 $("a.btn_02:eq(1)").show();
@@ -201,6 +205,14 @@
                 break;
 
             case 3:
+                if ($("span.active").html() == "2") {
+                    var content_ch = $("iframe.cke_wysiwyg_frame.cke_reset").contents().find("body").text();
+                    if (content_ch == null || content_ch.trim() == "") {
+                        message_show("<p>．請輸入內容。</p>");
+                        break;
+                    }
+                }
+
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
                 for (var i = 0; i <= 1; i++) {

@@ -51,7 +51,17 @@
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_site_name',$webconfig_i18n[$language->id-1]->site_name,['class'=>'v_01']) !!}
+                                                    <?php
+                                                    $site_name_i18n = '';
+                                                    ?>
+                                                    @foreach($webconfig_i18n as $config_i18n)
+                                                        @if($config_i18n->language==$language->id)
+                                                            <?php
+                                                            $site_name_i18n = $config_i18n->site_name;
+                                                            ?>
+                                                        @endif
+                                                    @endforeach
+                                                    {!! Form::text($language->id.'_site_name',$site_name_i18n,['class'=>'v_01']) !!}
                                                 </div>
                                             @endif
                                         @endforeach

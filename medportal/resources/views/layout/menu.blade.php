@@ -43,7 +43,7 @@
                                         $target_child = "_blank";
                                     }
                                     ?>
-                                    <a href="{{ $url = route('pages.id', ['id' => $page->id]) }}"
+                                    <a href="{{ $url = route('pages.id', ['id' => $child->id]) }}"
                                        target="{{$target_child}}">
                                         @if(Cookie::get('language')==0)
                                             {{ $child->title }}

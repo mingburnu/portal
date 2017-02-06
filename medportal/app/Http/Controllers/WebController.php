@@ -186,8 +186,6 @@ class WebController extends Controller
             ->where('parent_id', null)
             ->orderBy('rank_id', 'desc')->get();
 
-        $languages = DB::table('languages')->where('display', true)->orderBy('sort', 'desc')->lists('language', 'id');
-
         $signal = DB::table('languages')->where('id', $lang_id)->get();
 
         $totalc = DB::table('webcounter')->count();
@@ -200,7 +198,6 @@ class WebController extends Controller
             'news' => $news,
             'pages' => $pages,
             'totalc' => $totalc,
-            'languages' => $languages,
             'signal' => $signal
         ]);
     }

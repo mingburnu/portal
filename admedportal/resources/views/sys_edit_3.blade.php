@@ -42,10 +42,13 @@
                                             <h3>{{$language->language}}</h3>
 
                                             <div>
-                                                <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
                                                 @if($language->id==0)
+                                                    <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
                                                     {!! Form::file('logo')!!}
                                                 @else
+                                                    <a target="_blank"
+                                                       href="{{ asset('img/logo_'.$language->id.'.png') }}">檢視圖檔</a>
+                                                    <BR/>
                                                     {!! Form::file($language->id.'_logo')!!}
                                                 @endif
                                             </div>
