@@ -1,5 +1,5 @@
 @if(count($errors) > 0)
-    <div class="message_print_errer">
+    <div class="message" style="display: block;">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
                 <td class="message_text">
@@ -7,29 +7,29 @@
                         {!! $error !!}
                     @endforeach</td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_print_errer_hide();">關閉</a>
+                                                             onClick="message_hide();">關閉</a>
                 </td>
             </tr>
         </table>
     </div>
 @elseif(Session::get('error'))
-    <div class="message_print_errer">
+    <div class="message" style="display: block;" >
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
                 <td class="message_text">{{ Session::get('error') }}</td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_print_errer_hide();">關閉</a>
+                                                             onClick="message_hide();">關閉</a>
                 </td>
             </tr>
         </table>
     </div>
 @else
-    <div class="message_print_errer" style="display: none">
+    <div class="message" style="display: none">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
                 <td class="message_text"></td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_print_errer_hide();">關閉</a>
+                                                             onClick="message_hide();">關閉</a>
                 </td>
             </tr>
         </table>
@@ -37,7 +37,7 @@
 @endif
 
 @if(Session::get('success'))
-    <div class="message_print_ok">
+    <div class="message_print_ok" style="display: block;">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
                 <td class="message_text">{{ Session::get('success') }}</td>

@@ -30,8 +30,9 @@
                             <span>2</span>
                             <span>3</span>
                         </div>
-                        <form id="database_id" method="POST" action="/db_edit/{{$querydatabase[0]->id}}">
-                            {!! Form::model($querydatabase[0],['method' => 'PATCH','route'=>['db.edit.post',$querydatabase[0]->id]]) !!}
+                        <form id="database_id" method="POST"
+                              action="{{route('db.update',['id'=>$querydatabase[0]->id])}}">
+                            {!! Form::model($querydatabase[0],['method' => 'PATCH','route'=>['db.update',$querydatabase[0]->id]]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <th>資料庫名稱</th>
@@ -56,7 +57,7 @@
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text($language->id.'_database_name',$i18n_dbName,['class'=>'v_01']) !!}
+                                                    {!! Form::text('db_i18ns['.$language->id.'][database_name]',$i18n_dbName,['class'=>'v_01']) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -85,7 +86,7 @@
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::textarea($language->id.'_syntax',$i18n_syntax) !!}
+                                                    {!! Form::textarea('db_i18ns['.$language->id.'][syntax]',$i18n_syntax) !!}
                                                 </div>
                                             @endif
                                         @endforeach

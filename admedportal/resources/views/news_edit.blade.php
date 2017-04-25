@@ -30,8 +30,8 @@
                             <span>2</span>
                             <span>3</span>
                         </div>
-                        <form id="news_edit" method="POST" action="/news_edit/{{$news[0]->id}}">
-                            {!! Form::model($news[0],['method' => 'PATCH','route'=>['news.edit.post',$news[0]->id]]) !!}
+                        <form id="news_edit" method="POST" action="{{route('news.update',['id'=>$news->id])}}">
+                            {!! Form::model($news,['method' => 'PATCH','route'=>['news.update',$news->id]]) !!}
 
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
@@ -43,12 +43,12 @@
                                                 <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text('title',$news[0]->title) !!}
+                                                    {!! Form::text('title',$news->title) !!}
                                                 </div>
                                             @else
                                                 <?php
                                                 $i18n_title = null;
-                                                foreach ($news_i18n as $i18n_news) {
+                                                foreach ($news->news_i18ns as $i18n_news) {
                                                     if ($language->id == $i18n_news->language) {
                                                         $i18n_title = $i18n_news->title;
                                                         break;
@@ -56,9 +56,8 @@
                                                 }
                                                 ?>
                                                 <h3>{{$language->language}}</h3>
-
                                                 <div>
-                                                    {!! Form::text($language->id.'_title',$i18n_title) !!}
+                                                    {!! Form::text('news_i18ns['.$language->id.'][title]',$i18n_title) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -73,12 +72,12 @@
                                                     <h3>{{$language->language}} (&#8226;)</h3>
 
                                                     <div>
-                                                        {!! Form::textarea('content',$news[0]->content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                        {!! Form::textarea('content',$news->content,['id'=>'editor'.$language->id,'cols'=>'80','rows'=>'10']) !!}
                                                     </div>
                                                 @else
                                                     <?php
                                                     $i18n_content = null;
-                                                    foreach ($news_i18n as $i18n_news) {
+                                                    foreach ($news->news_i18ns as $i18n_news) {
                                                         if ($language->id == $i18n_news->language) {
                                                             $i18n_content = $i18n_news->content;
                                                             break;
@@ -86,9 +85,8 @@
                                                     }
                                                     ?>
                                                     <h3>{{$language->language}}</h3>
-
                                                     <div>
-                                                        {!! Form::textarea($language->id.'_content',$i18n_content,['id'=>$language->id.'_editor','cols'=>'80','rows'=>'10']) !!}
+                                                        {!! Form::textarea('news_i18ns['.$language->id.'][content]',$i18n_content,['id'=>'editor'.$language->id,'cols'=>'80','rows'=>'10']) !!}
                                                     </div>
                                                 @endif
                                             @endforeach
@@ -103,13 +101,25 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>公告時間(•)</th>
+                                    <th>公告開始時間(•)</th>
                                     <td>
-                                        {!! Form::text('publish_time',null,array('id'=>'datepicker','class'=>'v_01','style'=>'width:180px;')) !!}
-
-                                        {!! Form::select('hh', $hours) !!} 時
-                                        {!! Form::select('mm', $minuteSeconds) !!} 分
-                                        {!! Form::select('ss', $minuteSeconds) !!} 秒
+                                        {!! Form::text('publish_day',null,array('id'=>'datepicker','class'=>'v_01','style'=>'width:180px;')) !!}
+                                        {!! Form::select('publish_hh', $hours) !!} 時
+                                        {!! Form::select('publish_ii', $minuteSeconds) !!} 分
+                                        {!! Form::select('publish_ss', $minuteSeconds) !!} 秒
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>公告結束時間(•)</th>
+                                    <td>
+                                        <label>{!! Form::radio('forever',true,['checked'=>true]) !!}常駐</label>
+                                        <label>
+                                            {!! Form::radio('forever',false) !!}
+                                            {!! Form::text('end_day',null,array('id'=>'datepicker_2','class'=>'v_02','style'=>'width:180px;')) !!}
+                                            {!! Form::select('end_hh', $hours) !!} 時
+                                            {!! Form::select('end_ii', $minuteSeconds) !!} 分
+                                            {!! Form::select('end_ss', $minuteSeconds) !!} 秒
+                                        </label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -164,23 +174,30 @@
         <!-- 執行javascript 區塊 End -->
 
 <script>
-    for (var i = 1; i <= 4; i++) {
-        $("form table tr:eq(" + i + ")").hide();
+    init();
+
+    function init() {
+        for (var i = 1; i <= 5; i++) {
+            $("form table tr:eq(" + i + ")").hide();
+        }
+
+        $("a.btn_02:eq(0)").hide();
+        $("a.btn_02:eq(2)").hide();
+
+        @foreach($languages as $language)
+        CKEDITOR.replace("{{'editor'.$language->id}}");
+        @endforeach
+
+        $(".accordion_01").accordion({heightStyle: "content"});
+
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd"
+        });
+
+        $("#datepicker_2").datepicker({
+            dateFormat: "yy-mm-dd"
+        });
     }
-
-    $("a.btn_02:eq(0)").hide();
-    $("a.btn_02:eq(2)").hide();
-
-    var total = parseInt('<?=sizeof($languages) ?>');
-    for (var i = 0; i < total; i++) {
-        CKEDITOR.replace(i + '_editor');
-    }
-    //
-    $(".accordion_01").accordion({heightStyle: "content"});
-
-    $("#datepicker").datepicker({
-        dateFormat: "yy-mm-dd"
-    });
 
     function step(i) {
         switch (i) {
@@ -188,7 +205,7 @@
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
                 $("form table tr:eq(0)").show();
-                for (var i = 1; i <= 4; i++) {
+                for (var i = 1; i <= 5; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
@@ -208,7 +225,7 @@
 
                 $("span.active").removeClass();
                 $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 4; i++) {
+                for (var i = 0; i <= 5; i++) {
                     if (i != 1) {
                         $("form table tr:eq(" + i + ")").hide();
                     } else {
@@ -224,9 +241,8 @@
 
             case 3:
                 if ($("span.active").html() == "2") {
-                    var content_ch = $("iframe.cke_wysiwyg_frame.cke_reset").contents().find("body").text();
-                    if (content_ch == null || content_ch.trim() == "") {
-                        message_show("<p>．請輸入內容。</p>");
+                    if (CKEDITOR.instances.editor0.getData().length == 0) {
+                        message_show("<p>．請輸入繁體中文的內容。</p>");
                         break;
                     }
                 }
@@ -237,7 +253,7 @@
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
-                for (var i = 2; i <= 4; i++) {
+                for (var i = 2; i <= 5; i++) {
                     $("form table tr:eq(" + i + ")").show();
                 }
 
@@ -251,16 +267,95 @@
 
     function submit() {
         var msg = "";
-        var value = $("input[name='publish_time']").val();
+        var publish_day = $("input[name='publish_day']").val();
+        var publish_hh = $("select[name='publish_hh']").val();
+        var publish_ii = $("select[name='publish_ii']").val();
+        var publish_ss = $("select[name='publish_ss']").val();
+        var end_day = $("input[name='end_day']").val();
+        var end_hh = $("select[name='end_hh']").val();
+        var end_ii = $("select[name='end_ii']").val();
+        var end_ss = $("select[name='end_ss']").val();
+        var dayRegEx = /^\d{4}-\d{2}-\d{2}$/;
+        var timeRegEx = /^\d{2}$/;
 
-        if (value == null || value.trim() == "") {
-            msg = "<p>．請輸入公告時間。</p>";
+        var forever = $("input[name='forever']:checked").val();
+        var is_no_end = forever != null && forever.trim() != "" && forever != "0" && forever != 0;
+
+        if (publish_day == null || publish_day.trim() == "") {
+            msg = msg + "<p>．請輸入公告日期。</p>";
+        } else {
+            if (publish_day.match(dayRegEx) == null) {
+                msg = msg + "<p>．請輸入正確格式公告日期。</p>";
+            } else {
+                var publishDate = new Date(publish_day.match(dayRegEx));
+                if (Object.prototype.toString.call(publishDate) === "[object Date]") {
+                    if (isNaN(publishDate)) {
+                        msg = msg + "<p>．請輸入正確格式公告日期。</p>";
+                    }
+                }
+            }
         }
 
-        if (msg != "") {
-            message_show(msg);
+        if (publish_hh == null || publish_ii == null || publish_ss == null || publish_hh == "" || publish_ii == "" || publish_ss == "") {
+            msg = msg + "<p>．請輸入公告時間。</p>";
         } else {
-            document.getElementById('news_edit').submit();
+            if (publish_hh.match(timeRegEx) == null || publish_ii.match(timeRegEx) == null || publish_ss.match(timeRegEx) == null) {
+                msg = msg + "<p>．請輸入正確格式公告時、分、秒。</p>";
+            } else {
+                var publishTime = new Date(1970, 0, 1, publish_hh, publish_ii, publish_ss, 0);
+                if (Object.prototype.toString.call(publishTime) === "[object Date]") {
+                    if (isNaN(publishTime)) {
+                        msg = msg + "<p>．請輸入正確格式公告時、分、秒。</p>";
+                    }
+                }
+            }
+
+            if (!is_no_end) {
+                if (end_day == null || end_day.trim() == "") {
+                    msg = msg + "<p>．請輸入結束日期。</p>";
+                } else {
+                    if (end_day.match(dayRegEx) == null) {
+                        msg = msg + "<p>．請輸入正確格式結束日期。</p>";
+                    } else {
+                        var endDate = new Date(end_day.match(dayRegEx));
+                        if (Object.prototype.toString.call(endDate) === "[object Date]") {
+                            if (isNaN(endDate)) {
+                                msg = msg + "<p>．請輸入正確格式結束日期。</p>";
+                            }
+                        }
+                    }
+                }
+
+                if (end_hh == null || end_ii == null || end_ss == null || end_hh == "" || end_ii == "" || end_ss == "") {
+                    msg = msg + "<p>．請輸入結束時間。</p>";
+                } else {
+                    if (end_hh.match(timeRegEx) == null || end_ii.match(timeRegEx) == null || end_ss.match(timeRegEx) == null) {
+                        msg = msg + "<p>．請輸入正確格式結束時、分、秒。</p>";
+                    } else {
+                        var endTime = new Date(1970, 0, 1, end_hh, end_ii, end_ss, 0);
+                        if (Object.prototype.toString.call(endTime) === "[object Date]") {
+                            if (isNaN(endTime)) {
+                                msg = msg + "<p>．請輸入正確格式結束時、分、秒。</p>";
+                            }
+                        }
+                    }
+                }
+
+                if (msg == "") {
+                    var begin = new Date(publish_day + " " + publish_hh + ":" + publish_ii + ":" + publish_ss);
+                    var after = new Date(end_day + " " + end_hh + ":" + end_ii + ":" + end_ss);
+
+                    if (begin.getTime() >= after.getTime()) {
+                        msg = msg + "<p>．公告時間必須早於結束時間。</p>";
+                    }
+                }
+            }
+
+            if (msg != "") {
+                message_show(msg);
+            } else {
+                document.getElementById('news_edit').submit();
+            }
         }
     }
 </script>

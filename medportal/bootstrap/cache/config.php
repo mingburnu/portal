@@ -164,11 +164,12 @@
       21 => 'Illuminate\\Validation\\ValidationServiceProvider',
       22 => 'Illuminate\\View\\ViewServiceProvider',
       23 => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
-      24 => 'App\\Providers\\AppServiceProvider',
-      25 => 'App\\Providers\\AuthServiceProvider',
-      26 => 'App\\Providers\\EventServiceProvider',
-      27 => 'App\\Providers\\RouteServiceProvider',
-      28 => 'Collective\\Html\\HtmlServiceProvider',
+      24 => 'Mews\\Purifier\\PurifierServiceProvider',
+      25 => 'App\\Providers\\AppServiceProvider',
+      26 => 'App\\Providers\\AuthServiceProvider',
+      27 => 'App\\Providers\\EventServiceProvider',
+      28 => 'App\\Providers\\RouteServiceProvider',
+      29 => 'Collective\\Html\\HtmlServiceProvider',
     ),
     'aliases' => 
     array (
@@ -207,6 +208,7 @@
       'View' => 'Illuminate\\Support\\Facades\\View',
       'Form' => 'Collective\\Html\\FormFacade',
       'Html' => 'Collective\\Html\\HtmlFacade',
+      'Purifier' => 'Mews\\Purifier\\Facades\\Purifier',
     ),
   ),
   'cache' => 
@@ -433,6 +435,271 @@
         'endpoint' => 'https://identity.api.rackspacecloud.com/v2.0/',
         'region' => 'IAD',
         'url_type' => 'publicURL',
+      ),
+    ),
+  ),
+  'purifier' => 
+  array (
+    'encoding' => 'UTF-8',
+    'finalize' => true,
+    'cachePath' => '/var/www/medportal/storage/app/purifier',
+    'cacheFileMode' => 493,
+    'settings' => 
+    array (
+      'default' => 
+      array (
+        'HTML.Doctype' => 'HTML 4.01 Transitional',
+        'HTML.Allowed' => 'div,b,strong,i,em,u,a[href|title],ul,ol,li,p[style],br,span[style],img[width|height|alt|src]',
+        'CSS.AllowedProperties' => 'font,font-size,font-weight,font-style,font-family,text-decoration,padding-left,color,background-color,text-align',
+        'AutoFormat.AutoParagraph' => true,
+        'AutoFormat.RemoveEmpty' => true,
+      ),
+      'test' => 
+      array (
+        'Attr.EnableID' => 'true',
+      ),
+      'youtube' => 
+      array (
+        'HTML.SafeIframe' => 'true',
+        'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
+      ),
+      'custom_definition' => 
+      array (
+        'id' => 'html5-definitions',
+        'rev' => 1,
+        'debug' => false,
+        'elements' => 
+        array (
+          0 => 
+          array (
+            0 => 'section',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          1 => 
+          array (
+            0 => 'nav',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          2 => 
+          array (
+            0 => 'article',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          3 => 
+          array (
+            0 => 'aside',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          4 => 
+          array (
+            0 => 'header',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          5 => 
+          array (
+            0 => 'footer',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          6 => 
+          array (
+            0 => 'address',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          7 => 
+          array (
+            0 => 'hgroup',
+            1 => 'Block',
+            2 => 'Required: h1 | h2 | h3 | h4 | h5 | h6',
+            3 => 'Common',
+          ),
+          8 => 
+          array (
+            0 => 'figure',
+            1 => 'Block',
+            2 => 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow',
+            3 => 'Common',
+          ),
+          9 => 
+          array (
+            0 => 'figcaption',
+            1 => 'Inline',
+            2 => 'Flow',
+            3 => 'Common',
+          ),
+          10 => 
+          array (
+            0 => 'video',
+            1 => 'Block',
+            2 => 'Optional: (source, Flow) | (Flow, source) | Flow',
+            3 => 'Common',
+            4 => 
+            array (
+              'src' => 'URI',
+              'type' => 'Text',
+              'width' => 'Length',
+              'height' => 'Length',
+              'poster' => 'URI',
+              'preload' => 'Enum#auto,metadata,none',
+              'controls' => 'Bool',
+            ),
+          ),
+          11 => 
+          array (
+            0 => 'source',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+            4 => 
+            array (
+              'src' => 'URI',
+              'type' => 'Text',
+            ),
+          ),
+          12 => 
+          array (
+            0 => 's',
+            1 => 'Inline',
+            2 => 'Inline',
+            3 => 'Common',
+          ),
+          13 => 
+          array (
+            0 => 'var',
+            1 => 'Inline',
+            2 => 'Inline',
+            3 => 'Common',
+          ),
+          14 => 
+          array (
+            0 => 'sub',
+            1 => 'Inline',
+            2 => 'Inline',
+            3 => 'Common',
+          ),
+          15 => 
+          array (
+            0 => 'sup',
+            1 => 'Inline',
+            2 => 'Inline',
+            3 => 'Common',
+          ),
+          16 => 
+          array (
+            0 => 'mark',
+            1 => 'Inline',
+            2 => 'Inline',
+            3 => 'Common',
+          ),
+          17 => 
+          array (
+            0 => 'wbr',
+            1 => 'Inline',
+            2 => 'Empty',
+            3 => 'Core',
+          ),
+          18 => 
+          array (
+            0 => 'ins',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+            4 => 
+            array (
+              'cite' => 'URI',
+              'datetime' => 'CDATA',
+            ),
+          ),
+          19 => 
+          array (
+            0 => 'del',
+            1 => 'Block',
+            2 => 'Flow',
+            3 => 'Common',
+            4 => 
+            array (
+              'cite' => 'URI',
+              'datetime' => 'CDATA',
+            ),
+          ),
+        ),
+        'attributes' => 
+        array (
+          0 => 
+          array (
+            0 => 'iframe',
+            1 => 'allowfullscreen',
+            2 => 'Bool',
+          ),
+          1 => 
+          array (
+            0 => 'table',
+            1 => 'height',
+            2 => 'Text',
+          ),
+          2 => 
+          array (
+            0 => 'td',
+            1 => 'border',
+            2 => 'Text',
+          ),
+          3 => 
+          array (
+            0 => 'th',
+            1 => 'border',
+            2 => 'Text',
+          ),
+          4 => 
+          array (
+            0 => 'tr',
+            1 => 'width',
+            2 => 'Text',
+          ),
+          5 => 
+          array (
+            0 => 'tr',
+            1 => 'height',
+            2 => 'Text',
+          ),
+          6 => 
+          array (
+            0 => 'tr',
+            1 => 'border',
+            2 => 'Text',
+          ),
+        ),
+      ),
+      'custom_attributes' => 
+      array (
+        0 => 
+        array (
+          0 => 'a',
+          1 => 'target',
+          2 => 'Enum#_blank,_self,_target,_top',
+        ),
+      ),
+      'custom_elements' => 
+      array (
+        0 => 
+        array (
+          0 => 'u',
+          1 => 'Inline',
+          2 => 'Inline',
+          3 => 'Common',
+        ),
       ),
     ),
   ),

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="expires" content="0">
-<title>圖書館管理後台</title>
+<title>404</title>
 <link rel="stylesheet" href="{{ asset('templates/art.css') }}">
 </head>
 
@@ -19,7 +19,7 @@ SORRY，找不到此頁面！<BR />
 很抱歉！您所要進入的頁面連結可能有誤或權限不足，<BR />
 您可返回上一頁或是直接跟客服人員聯繫。<BR />
     </div>
-    
+
     <div class="txt_02">
 客戶服務中心<BR />
 <a href="http://www.customer-support.com.tw" target="_blank">http://www.customer-support.com.tw</a><BR />

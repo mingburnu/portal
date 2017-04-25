@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="192.168.21.153 admedportal" compareModeInSync="SIZE">
+  <component name="PublishConfigData" serverName="192.168.21.66 admedportal" compareModeInSync="SIZE" showNewOnSourceInSync="false">
     <serverData>
       <paths name="192.168.21.128">
         <serverdata>
@@ -16,14 +16,14 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.153 admedportal">
+      <paths name="192.168.21.66 admedportal">
         <serverdata>
           <mappings>
             <mapping deploy="/var/www/admedportal" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.153 medportal">
+      <paths name="192.168.21.66 medportal">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />

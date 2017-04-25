@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
                 $parent_id = null;
             };
 
-            if (Menupage::where('parent_id', '=', $this->app->request->id)->count() > 0) {
+            if (Menupage::whereParentId($this->app->request->id)->count() > 0) {
                 return $parent_id == null;
             } else {
                 $ids = Menupage::where('parent_id', '=', null)->where('id', '!=', $this->app->request->id)->lists('id')->toArray();

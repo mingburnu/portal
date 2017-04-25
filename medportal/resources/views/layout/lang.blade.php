@@ -4,7 +4,11 @@ $languages = DB::table('languages')->where('display', true)->orderBy('sort', 'de
 <div class="lang">
     <div class="innerwrapper">
         {!! Form::open(['method' => 'POST','route'=>['locale']]) !!}
-        {!! Form::select('lang_id',$languages,Cookie::get('language'),array('onchange'=>'change_lang()')) !!}
+        @if(Cookie::get('language')!=null)
+            {!! Form::select('lang_id',$languages,Cookie::get('language'),array('onchange'=>'change_lang()')) !!}
+        @else
+            {!! Form::select('lang_id',$languages,0,array('onchange'=>'change_lang()')) !!}
+        @endif
         {!! Form::close() !!}
     </div>
 </div>

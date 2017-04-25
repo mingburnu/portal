@@ -15,7 +15,9 @@
         @endif
     </title>
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ asset('templates/art_' . $webconfig[0]->color . '_l.css') }}">
-    <link rel="stylesheet" href="{{ asset('templates/art_' . $webconfig[0]->color . '_s.css') }}"
+    <link rel="stylesheet" href="{{ asset('templates/OwlCarousel/assets/owl.carousel.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('templates/OwlCarousel/assets/owl.theme.default.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('templates/art_' . $webconfig[0]->color . '_l.css').'?v='.uniqid() }}">
+    <link rel="stylesheet" href="{{ asset('templates/art_' . $webconfig[0]->color . '_s.css').'?v='.uniqid() }}"
           media="only screen and (max-width:640px)">
 </head>

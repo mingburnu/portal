@@ -16,7 +16,7 @@
                                     <?php
                                     $title_i18n = $news[$i]->title;
                                     ?>
-                                    @foreach($news[$i]['many'] as $news_i18n)
+                                    @foreach($news[$i]->news_i18ns as $news_i18n)
                                         <?php
                                         if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
                                             $title_i18n = $news_i18n->title;

@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::post('/forget/post',
     ['as' => 'forget.post', 'uses' => 'AdminController@forget_post']
 );
@@ -22,39 +21,13 @@ Route::get('/forget',
 
 Route::group(['middleware' => 'auth'], function () {
 
-
     Route::post('/state_C/post',
         ['as' => 'state.C.post', 'uses' => 'AdminController@state_C_post']
     );
 
-
     Route::post('/state_A/post',
         ['as' => 'state.A.post', 'uses' => 'AdminController@state_A_post']
     );
-
-    Route::post('/paper_add/post',
-        ['as' => 'paper.add.post', 'uses' => 'AdminController@paper_add_post']
-    );
-
-    Route::get('/paper_add',
-        ['as' => 'paper.add', 'uses' => 'AdminController@paper_add']
-    );
-
-    Route::get('/paper_edit/{id}',
-        ['as' => 'paper.edit.id', 'uses' => 'AdminController@paper_edit_id']
-    )->where('id', '[0-9]+');
-
-    Route::patch('/paper_edit/{id}',
-        ['as' => 'paper.edit.post', 'uses' => 'AdminController@paper_edit_post']
-    )->where('id', '[0-9]+');
-
-//    Route::get('/paper_view/{id}',
-//        ['as' => 'paper.view.id', 'uses' => 'AdminController@paper_view_id']
-//    )->where('id', '[0-9]+');
-
-    Route::get('/paper_browser/{id}/delete',
-        ['as' => 'paper.browser.id.delete', 'uses' => 'AdminController@paper_browser_id_delete']
-    )->where('id', '[0-9]+');
 
     Route::get('/news_add',
         ['as' => 'news.add', 'uses' => 'AdminController@news_add']
@@ -79,10 +52,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/news_browser/{id}/delete',
         ['as' => 'news.browser.id.delete', 'uses' => 'AdminController@news_browser_id_delete']
     )->where('id', '[0-9]+');
-
-    Route::post('/books_add/post',
-        ['as' => 'books.add.post', 'uses' => 'AdminController@books_add_post']
-    );
 
     Route::get('/',
         ['as' => 'admin.browser.index', 'uses' => 'AdminController@index']
@@ -160,68 +129,8 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'sys.edit.5.post', 'uses' => 'AdminController@sys_edit_5_post']
     );
 
-    Route::get('/db_browser',
-        ['as' => 'db.browser', 'uses' => 'AdminController@db_browser']
-    );
-
-    Route::get('/db_browser/{id}/delete',
-        ['as' => 'db.browser.id.delete', 'uses' => 'AdminController@db_browser_id_delete']
-    )->where('id', '[0-9]+');
-
-//    Route::get('/db_browser/{id}',
-//        ['as' => 'db.browser.id', 'uses' => 'AdminController@db_browser_id']
-//    );
-
-    Route::get('/db_add',
-        ['as' => 'db.add', 'uses' => 'AdminController@db_add']
-    );
-
-    Route::post('/db_add/post',
-        ['as' => 'db.add.post', 'uses' => 'AdminController@db_add_post']
-    );
-
-    Route::get('/db_edit/{id}',
-        ['as' => 'db.edit.id', 'uses' => 'AdminController@db_edit_id']
-    )->where('id', '[0-9]+');
-
-    Route::patch('/db_edit/{id}',
-        ['as' => 'db.edit.post', 'uses' => 'AdminController@db_edit_post']
-    )->where('id', '[0-9]+');
-
-    Route::get('/books_browser',
-        ['as' => 'books.browser', 'uses' => 'AdminController@books_browser']
-    );
-
-    Route::get('/books_add',
-        ['as' => 'books.add', 'uses' => 'AdminController@books_add']
-    );
-
-    Route::get('/books_browser/{id}/delete',
-        ['as' => 'books.browser.id.delete', 'uses' => 'AdminController@books_browser_id_delete']
-    )->where('id', '[0-9]+');
-
-//    Route::get('/books_view/{id}',
-//        ['as' => 'books.view.id', 'uses' => 'AdminController@books_view_id']
-//    )->where('id', '[0-9]+');
-
-    Route::get('/books_edit/{id}',
-        ['as' => 'books.edit.id', 'uses' => 'AdminController@books_edit_id']
-    )->where('id', '[0-9]+');
-
-    Route::patch('/books_edit/{id}',
-        ['as' => 'books.edit.post', 'uses' => 'AdminController@books_edit_post']
-    )->where('id', '[0-9]+');
-
     Route::get('/news_browser',
         ['as' => 'news.browser', 'uses' => 'AdminController@news_browser']
-    );
-
-    Route::get('/paper_browser',
-        ['as' => 'paper.browser', 'uses' => 'AdminController@paper_browser']
-    );
-
-    Route::get('/paper_browser',
-        ['as' => 'paper.browser', 'uses' => 'AdminController@paper_browser']
     );
 
     Route::get('/lang_browser',
@@ -268,16 +177,86 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'state.C.output.csv', 'uses' => 'AdminController@state_C_output_csv']
     )->where(['Year' => '[0-9]+', 'Month' => '[0-9]+']);
 
+    $controllers = array(
+        new \App\Http\Controllers\BannerController(),
+        new \App\Http\Controllers\MenupageController(),
+        new \App\Http\Controllers\BookController(),
+        new \App\Http\Controllers\DbController(),
+        new \App\Http\Controllers\NewsController()
+    );
 
+    foreach ($controllers as $controller) {
+        $className = get_class($controller);
+        $reflector = new \ReflectionClass($className);
+        $namespace = $reflector->getNamespaceName();
+        $clazz = str_replace($namespace . '\\', '', $className);
+        $entity = str_replace('Controller', '', $clazz);
+
+        foreach ($reflector->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            $methodName = $method->name;
+            $func = new \ReflectionMethod($className, $methodName);
+            $params = $func->getParameters();
+            $action = $clazz . '@' . $methodName;
+            $urlPrefix = '/' . strtolower($entity) . '/';
+            $routePrefix = strtolower($entity) . '.';
+
+            if (sizeof($params) == 0) {
+                if ($methodName == 'index') {
+                    Route::get($urlPrefix,
+                        ['as' => $routePrefix . $methodName, 'uses' => $action]
+                    );
+                } else {
+                    Route::get($urlPrefix . $methodName,
+                        ['as' => $routePrefix . $methodName, 'uses' => $action]
+                    );
+                }
+            } elseif (sizeof($params) == 1 && $params[0]->getName() == 'id') {
+                if ($methodName == 'destroy') {
+                    Route::delete($urlPrefix . $methodName . '/{id}',
+                        ['as' => $routePrefix . $methodName, 'uses' => $action]
+                    )->where('id', '[0-9]+');
+                } else {
+                    Route::get($urlPrefix . $methodName . '/{id}',
+                        ['as' => $routePrefix . $methodName, 'uses' => $action]
+                    )->where('id', '[0-9]+');
+                }
+
+            } elseif (sizeof($params) == 1 && $params[0]->getName() == 'request') {
+                Route::post($urlPrefix . $methodName,
+                    ['as' => $routePrefix . $methodName, 'uses' => $action]
+                );
+            } elseif (sizeof($params) == 2) {
+                $isPatch = true;
+
+                foreach ($params as $param) {
+                    if ($param->getClass() == null) {
+                        if ($param->getName() != 'id') {
+                            $isPatch = false;
+                        }
+                    } else {
+                        if ($param->getName() != 'request') {
+                            $isPatch = false;
+                        } else if ($param->getClass()->getName() != 'Illuminate\Http\Request') {
+                            $isPatch = false;
+                        }
+                    }
+                }
+
+                if ($params[0]->getClass() == $params[1]->getClass()) {
+                    $isPatch = false;
+                }
+
+                if ($isPatch) {
+                    Route::patch($urlPrefix . $methodName . '/{id}',
+                        ['as' => $routePrefix . $methodName, 'uses' => $action]
+                    )->where('id', '[0-9]+');
+                }
+            }
+        }
+    }
 });
-
 
 // vendor/laravel/framework/src/Illuminate/Foundation/Auth/AuthenticatesUsers.php
 
 Route::get('/auth/login', ['as' => 'login.index', 'uses' => 'Auth\AuthController@getLogin']);
 Route::post('/auth/login', ['as' => 'login.process', 'uses' => 'Auth\AuthController@postLogin']);
-
-
-
-
-

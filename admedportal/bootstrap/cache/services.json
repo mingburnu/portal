@@ -24,6 +24,7 @@
         "Illuminate\\Validation\\ValidationServiceProvider",
         "Illuminate\\View\\ViewServiceProvider",
         "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider",
+        "Mews\\Purifier\\PurifierServiceProvider",
         "App\\Providers\\AppServiceProvider",
         "App\\Providers\\AuthServiceProvider",
         "App\\Providers\\EventServiceProvider",
@@ -139,6 +140,7 @@
         "translation.loader": "Illuminate\\Translation\\TranslationServiceProvider",
         "command.ide-helper.generate": "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider",
         "command.ide-helper.models": "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider",
+        "purifier": "Mews\\Purifier\\PurifierServiceProvider",
         "html": "Collective\\Html\\HtmlServiceProvider",
         "form": "Collective\\Html\\HtmlServiceProvider",
         "Collective\\Html\\HtmlBuilder": "Collective\\Html\\HtmlServiceProvider",
@@ -158,6 +160,7 @@
         "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider": [],
         "Illuminate\\Translation\\TranslationServiceProvider": [],
         "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider": [],
+        "Mews\\Purifier\\PurifierServiceProvider": [],
         "Collective\\Html\\HtmlServiceProvider": []
     }
 }

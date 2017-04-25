@@ -31,7 +31,8 @@
                             <span>4</span>
                             <span class="active">5</span>
                         </div>
-                        <form id="webconfig" method="POST" enctype="multipart/form-data" action="/sys_edit_5/post">
+                        <form id="webconfig" method="POST" enctype="multipart/form-data"
+                              action="{{route('sys.edit.5.post')}}">
                             {!! Form::model($webconfig[0],['method' => 'POST','route'=>['sys.edit.5.post']]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
@@ -51,12 +52,26 @@
                                 <tr>
                                     <th>版面配色</th>
                                     <td>
-                                        @for($i=1;$i<=3;$i++)
+                                        @for($i=1;$i<=7;$i++)
                                             <label>
                                                 {!! Form::radio('color','S'.$i) !!}
                                                 <img src="{{ asset('templates/images/style_S'.$i.'.png') }}"
                                                      width="60" height="35"></label>&nbsp;&nbsp;
                                         @endfor
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Banner是否顯示</th>
+                                    <td>
+                                        <label>{!! Form::radio('play',true) !!}是</label>
+                                        <label>{!! Form::radio('play',false) !!}否</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>書籍是否顯示</th>
+                                    <td>
+                                        <label>{!! Form::radio('exhibition',true) !!}是</label>
+                                        <label>{!! Form::radio('exhibition',false) !!}否</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -68,7 +83,7 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="/sys_edit_4">上一步</a>
+                                        <a class="btn_02" href="{{route('sys.edit.4')}}">上一步</a>
                                         <a class="btn_02" href="javascript:void(0);"
                                            onclick="document.getElementById('webconfig').submit();">完成</a>
                                     </td>

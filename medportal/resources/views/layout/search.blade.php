@@ -1,6 +1,3 @@
-{{--<div>--}}
-{{--{!! $queryDb[0]->syntax !!}--}}
-{{--</div>--}}
 <div class="search">
     <div class="search_db">
         <div class="innerwrapper">
@@ -16,7 +13,7 @@
                                 <?php
                                 $name_i18n = $db->database_name;
                                 ?>
-                                @foreach($db['many'] as $db_i18n)
+                                @foreach($db->db_i18ns as $db_i18n)
                                     <?php
                                     if ($db_i18n->language == Cookie::get('language') && $db_i18n->database_name != null) {
                                         $name_i18n = $db_i18n->database_name;
@@ -32,11 +29,7 @@
 
             <div class="search_db_s">
                 <span class="search_db_title">查詢資料庫：</span>
-                <span class="search_db_list">
-                    {{--<select onChange="SearchBox_show(this.value)">--}}
-                    {{--<option value="{{ $queryDb[0]->rank_id }}">{{ $queryDb[0]->database_name }}</option>--}}
-                    {{--</select>--}}
-                </span>
+                <span class="search_db_list"></span>
             </div>
         </div>
     </div>
@@ -52,7 +45,7 @@
                             <?php
                             $syntax_i18n = $queryDb[$i]->syntax;
                             ?>
-                            @foreach($queryDb[$i]['many'] as $db_i18n)
+                            @foreach($queryDb[$i]->db_i18ns as $db_i18n)
                                 <?php
                                 if ($db_i18n->language == Cookie::get('language') && $db_i18n->syntax != null) {
                                     $syntax_i18n = $db_i18n->syntax;
@@ -66,6 +59,4 @@
             @endif
         </div>
     </div>
-</div>
-<div>
 </div>

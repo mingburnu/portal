@@ -64,7 +64,7 @@ function Menu_load_resize(){
 		});
 		$(".menu_box_list").css({
 			display:"block",
-			fontSize:"13px",
+			/*fontSize:"13px",*/
 			position:"absolute",
 			top:"-100em"
 		});
@@ -81,7 +81,7 @@ function Menu_load_resize(){
 		});
 		$(".menu_box_list").css({
 			display:"block",
-			fontSize:"13px",
+			/*fontSize:"13px",*/
 			position:"static",
 			top:"0"
 		});
@@ -102,6 +102,7 @@ function menu_box_select_chg(arg){
 var BooksBox_arr;
 var BooksBox_current_pageNum = 0;
 var BooksBox_max_pageNum;
+var BooksBox_current_width = "";
 
 function BooksBox_init(arg){
 	BooksBox_arr = arg;
@@ -110,42 +111,87 @@ function BooksBox_show(arg){
 	BooksBox_current_pageNum = arg;
 	//
 	var newHtml = '';
+
 	if (window.matchMedia("(max-width:640px)").matches) {
-		//640px以下
+		//0~640px
+
 		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 2)-1;
 		//
 		for(var i=(BooksBox_current_pageNum * 2) ; i < ((BooksBox_current_pageNum * 2) + 2) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<li style="width:50%;"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /><div>' + BooksBox_arr[i][0] + '</div></a></li>';
+				newHtml +='<td style="width:50%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
 			}else{
-				newHtml +='<li style="width:50%;"> </li>';
+				newHtml +='<td style="width:50%;" align="center"> </td>';
 			}
 		}
-	} else {
-		//640px以上
+		newHtml += "</tr><tr>";
+		for(var i=(BooksBox_current_pageNum * 2) ; i < ((BooksBox_current_pageNum * 2) + 2) ; i++){
+			if(i < BooksBox_arr.length){
+				newHtml +='<td style="width:50%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+			}else{
+				newHtml +='<td style="width:50%;" align="center"> </td>';
+			}
+		}
+	} else if (window.matchMedia("(max-width:960px)").matches) {
+		//640px~960px
+
 		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 5)-1;
 		//
 		for(var i=(BooksBox_current_pageNum * 5) ; i < ((BooksBox_current_pageNum * 5) + 5) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<li style="width:20%;"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /><div>' + BooksBox_arr[i][0] + '</div></a></li>';
+				newHtml +='<td style="width:20%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
 			}else{
-				newHtml +='<li style="width:20%;"> </li>';
+				newHtml +='<td style="width:20%;" align="center"> </td>';
+			}
+		}
+		newHtml += "</tr><tr>";
+		for(var i=(BooksBox_current_pageNum * 5) ; i < ((BooksBox_current_pageNum * 5) + 5) ; i++){
+			if(i < BooksBox_arr.length){
+				newHtml +='<td style="width:20%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+			}else{
+				newHtml +='<td style="width:20%;" align="center"> </td>';
+			}
+		}
+	} else {
+		//960px~9999
+
+		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 7)-1;
+		//
+		for(var i=(BooksBox_current_pageNum * 7) ; i < ((BooksBox_current_pageNum * 7) + 7) ; i++){
+			if(i < BooksBox_arr.length){
+				newHtml +='<td style="width:14.2%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
+			}else{
+				newHtml +='<td style="width:14.2%;" align="center"> </td>';
+			}
+		}
+		newHtml += "</tr><tr>";
+		for(var i=(BooksBox_current_pageNum * 7) ; i < ((BooksBox_current_pageNum * 7) + 7) ; i++){
+			if(i < BooksBox_arr.length){
+				newHtml +='<td style="width:14.2%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+			}else{
+				newHtml +='<td style="width:14.2%;" align="center"> </td>';
 			}
 		}
 	}
-	$(".books_box_list").empty();
-	$(".books_box_list").html(newHtml);
+
+
+	if(newHtml != ""){
+		$(".books_box_list").empty();
+		$(".books_box_list").html('<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>' + newHtml + '</tr></table>');
+	}
+
+
 	//上一頁
 	if(BooksBox_current_pageNum == 0){
-		$(".books_pager_prev").hide();
+		$(".books_pager_prev").css("visibility","hidden");
 	}else{
-		$(".books_pager_prev").show();
+		$(".books_pager_prev").css("visibility","visible");
 	}
 	//下一頁
 	if(BooksBox_current_pageNum < BooksBox_max_pageNum){
-		$(".books_pager_next").show();
+		$(".books_pager_next").css("visibility","visible");
 	}else{
-		$(".books_pager_next").hide();
+		$(".books_pager_next").css("visibility","hidden");
 	}
 	//頁數列
 	var newHtml = '';
@@ -162,7 +208,21 @@ function BooksBox_show(arg){
 	$(".pager_btn").html(newHtml);
 }
 function Book_load_resize(){
-	BooksBox_show(0);
+	//這是防止手機閃掉畫面
+	var temp;
+	if(window.matchMedia("(max-width:640px)").matches){
+		temp = "0-640";
+	} else if (window.matchMedia("(max-width:960px)").matches) {
+		temp = "640-960";
+	}else{
+		temp = "960-9999";
+	}
+
+	if(BooksBox_current_width != temp){
+		BooksBox_show(0);
+	}
+
+	BooksBox_current_width = temp;
 }
 function books_pager_prev(){
 	var temp = BooksBox_current_pageNum -= 1;
@@ -171,4 +231,16 @@ function books_pager_prev(){
 function books_pager_next(){
 	var temp = BooksBox_current_pageNum += 1;
 	BooksBox_show(temp);
+}
+
+/*Banner區*/
+function ShowInfo(arg){
+	var t = $(arg).parent().find(".info_txt");
+	if(t.css('opacity') == "1"){
+		$(arg).parent().css("width","0");
+		t.css("opacity","0");
+	}else{
+		$(arg).parent().css("width","500px");
+		t.css("opacity","1");
+	}
 }

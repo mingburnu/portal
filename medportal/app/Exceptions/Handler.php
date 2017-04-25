@@ -46,6 +46,14 @@ class Handler extends ExceptionHandler
             $e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
+        if( $e instanceof MethodNotAllowedHttpException){
+            return response(view('errors.405'), 405);
+        }
+
+//        if( $e instanceof TokenMismatchException){
+//            return response(\Redirect::route('login.index'));
+//        }
+
         return parent::render($request, $e);
     }
 }

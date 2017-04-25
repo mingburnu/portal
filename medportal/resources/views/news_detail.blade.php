@@ -36,12 +36,12 @@
 
             <div class="title">
                 @if(Cookie::get('language')==0)
-                    {{ $news[0]->title }}
+                    {{ $news->title }}
                 @else
                     <?php
-                    $title_i18n = $news[0]->title;
+                    $title_i18n = $news->title;
                     ?>
-                    @foreach($news[0]['many'] as $news_i18n)
+                    @foreach($news->news_i18ns as $news_i18n)
                         <?php
                         if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
                             $title_i18n = $news_i18n->title;
@@ -53,12 +53,12 @@
             </div>
             <div class="ck_htmlcode">
                 @if(Cookie::get('language')==0)
-                    {!! $news[0]->content !!}
+                    {!! $news->content !!}
                 @else
                     <?php
-                    $content_i18n = $news[0]->content;
+                    $content_i18n = $news->content;
                     ?>
-                    @foreach($news[0]['many'] as $news_i18n)
+                    @foreach($news->news_i18ns as $news_i18n)
                         <?php
                         if ($news_i18n->language == Cookie::get('language') && $news_i18n->content != null) {
                             $content_i18n = $news_i18n->content;

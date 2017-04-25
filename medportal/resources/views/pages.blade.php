@@ -25,14 +25,14 @@
     <div class="crumbs">
         <div class="innerwrapper">
             {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a
-                    href="{{ $url = route('pages.id', ['id' => $pages_data[0]->id]) }}">
+                    href="{{ $url = route('pages.id', ['id' => $pages_data->id]) }}">
                 @if(Cookie::get('language')==0)
-                    {{ $pages_data[0]->title }}
+                    {{ $pages_data->title }}
                 @else
                     <?php
-                    $title_i18n = $pages_data[0]->title;
+                    $title_i18n = $pages_data->title;
                     ?>
-                    @foreach($pages_data[0]['many'] as $pages_data_i18n)
+                    @foreach($pages_data->menupage_i18ns as $pages_data_i18n)
                         <?php
                         if ($pages_data_i18n->language == Cookie::get('language') && $pages_data_i18n->title != null) {
                             $title_i18n = $pages_data_i18n->title;
@@ -52,9 +52,9 @@
         <div class="innerwrapper">
             <!-- 內容 區塊 Begin -->
 
-            <div class="title">{{ $pages_data[0]->title }}</div>
+            <div class="title">{{ $pages_data->title }}</div>
             <div class="ck_htmlcode">
-                {!! $pages_data[0]->content !!}
+                {!! $pages_data->content !!}
             </div>
             <!-- 內容 區塊 End -->
         </div>

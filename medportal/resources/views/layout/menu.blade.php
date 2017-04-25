@@ -3,9 +3,15 @@
         <div class="menu_box_list">
             <ul>
                 <li>
-                    <a class="menu_hover" href="{{ route('index') }}">
-                        {{ $signal[0]->home }}
-                    </a>
+                    @if(Route::currentRouteName()=='index')
+                        <a class="menu_hover" href="{{ route('index') }}">
+                            {{ $signal[0]->home }}
+                        </a>
+                    @else
+                        <a href="{{ route('index') }}">
+                            {{ $signal[0]->home }}
+                        </a>
+                    @endif
                 </li>
 
                 @foreach( $pages as $page)
@@ -16,51 +22,99 @@
                             $target = "_blank";
                         }
                         ?>
-                        <a href="{{ $url = route('pages.id', ['id' => $page->id]) }}" target="{{$target}}">
 
-                            @if(Cookie::get('language')==0)
-                                {{ $page->title }}
-                            @else
-                                <?php
-                                $title_i18n = $page->title;
-                                ?>
-                                @foreach($page['many'] as $page_i18n)
+                        @if(Route::getCurrentRequest()->url()==route('pages.id', ['id' => $page->id]))
+                            <a class="menu_hover" href="{{ $url = route('pages.id', ['id' => $page->id]) }}"
+                               target="{{$target}}">
+
+                                @if(Cookie::get('language')==0)
+                                    {{ $page->title }}
+                                @else
                                     <?php
-                                    if ($page_i18n->language == Cookie::get('language') && $page_i18n->title != null) {
-                                        $title_i18n = $page_i18n->title;
-                                    }
+                                    $title_i18n = $page->title;
                                     ?>
-                                @endforeach
-                                {{ $title_i18n }}
-                            @endif
-                        </a>
+                                    @foreach($page->menupage_i18ns as $page_i18n)
+                                        <?php
+                                        if ($page_i18n->language == Cookie::get('language') && $page_i18n->title != null) {
+                                            $title_i18n = $page_i18n->title;
+                                        }
+                                        ?>
+                                    @endforeach
+                                    {{ $title_i18n }}
+                                @endif
+                            </a>
+                        @else
+                            <a href="{{ $url = route('pages.id', ['id' => $page->id]) }}" target="{{$target}}">
+
+                                @if(Cookie::get('language')==0)
+                                    {{ $page->title }}
+                                @else
+                                    <?php
+                                    $title_i18n = $page->title;
+                                    ?>
+                                    @foreach($page->menupage_i18ns as $page_i18n)
+                                        <?php
+                                        if ($page_i18n->language == Cookie::get('language') && $page_i18n->title != null) {
+                                            $title_i18n = $page_i18n->title;
+                                        }
+                                        ?>
+                                    @endforeach
+                                    {{ $title_i18n }}
+                                @endif
+                            </a>
+                        @endif
+
                         <ul>
                             @foreach($page->children as $child)
                                 <li>
                                     <?php
                                     $target_child = "";
-                                    if (!$page->type) {
+                                    if (!$child->type) {
                                         $target_child = "_blank";
                                     }
                                     ?>
-                                    <a href="{{ $url = route('pages.id', ['id' => $child->id]) }}"
-                                       target="{{$target_child}}">
-                                        @if(Cookie::get('language')==0)
-                                            {{ $child->title }}
-                                        @else
-                                            <?php
-                                            $child_title_i18n = $child->title;
-                                            ?>
-                                            @foreach($child['many'] as $child_page_i18n)
+
+                                    @if(Route::getCurrentRequest()->url()==route('pages.id', ['id' => $child->id]))
+                                        <a class="menu_hover"
+                                           href="{{ $url = route('pages.id', ['id' => $child->id]) }}"
+                                           target="{{$target_child}}">
+                                            @if(Cookie::get('language')==0)
+                                                {{ $child->title }}
+                                            @else
                                                 <?php
-                                                if ($child_page_i18n->language == Cookie::get('language') && $child_page_i18n->title != null) {
-                                                    $child_title_i18n = $child_page_i18n->title;
-                                                }
+                                                $child_title_i18n = $child->title;
                                                 ?>
-                                            @endforeach
-                                            {{ $child_title_i18n }}
-                                        @endif
-                                    </a>
+                                                @foreach($child->menupage_i18ns as $child_page_i18n)
+                                                    <?php
+                                                    if ($child_page_i18n->language == Cookie::get('language') && $child_page_i18n->title != null) {
+                                                        $child_title_i18n = $child_page_i18n->title;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                                {{ $child_title_i18n }}
+                                            @endif
+                                        </a>
+                                    @else
+                                        <a href="{{ $url = route('pages.id', ['id' => $child->id]) }}"
+                                           target="{{$target_child}}">
+                                            @if(Cookie::get('language')==0)
+                                                {{ $child->title }}
+                                            @else
+                                                <?php
+                                                $child_title_i18n = $child->title;
+                                                ?>
+                                                @foreach($child->menupage_i18ns as $child_page_i18n)
+                                                    <?php
+                                                    if ($child_page_i18n->language == Cookie::get('language') && $child_page_i18n->title != null) {
+                                                        $child_title_i18n = $child_page_i18n->title;
+                                                    }
+                                                    ?>
+                                                @endforeach
+                                                {{ $child_title_i18n }}
+                                            @endif
+                                        </a>
+                                    @endif
+
                                 </li>
                             @endforeach
                         </ul>

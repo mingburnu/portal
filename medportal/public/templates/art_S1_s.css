@@ -17,21 +17,23 @@ button{
 	font-size:15px;
 }
 .btn_01{
+	width:100%;
+}
+/*
+標準按鈕備份
+.btn_02{
 	padding:0.5em 1em;
 	width:100%;
 }
+*/
 
 /* lang 區塊 */
 .lang{
-	position:absolute;
-	right:auto;
-	top:auto;
-	bottom:60px;
+	position:static;
 	text-align:center;
-	width:100%;
 }
 .lang select{
-	width:90%;
+	width:100%;
 }
 
 /* header 區塊 */
@@ -40,7 +42,7 @@ button{
 }
 .header .logo img{
 	height:auto;
-	width:80%;
+	width:90%;
 }
 
 
@@ -78,20 +80,52 @@ button{
 
 /* news 區塊 */
 .news_home .news_title{
+	display:block;
+	-webkit-border-radius: 5px;
+	-webkit-border-bottom-right-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	-moz-border-radius: 5px;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	border-radius: 5px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	margin:0;
+	line-height:30px;
+	height:30px;
 	text-align:center;
+}
+.news_home .news_box{
+	-webkit-border-bottom-right-radius: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	margin:0;
+	padding:0 0 10px 0;
+	border:3px solid #bb0808;
+}
+.news_home .news_box .news_box_list{
+	margin:0 0 10px 0;
+}
+.news_home .news_box .news_box_list tr:last-child td{
+    border-bottom:1px solid #e2e2e2;
 }
 .news_home .news_box .news_box_list tr th{
 	display:none;
 }
 .news_home .news_box .news_box_list tr td{
-	padding:10px 0;
-	border-bottom:1px dashed #ccc;
+	padding:10px 10px;
+}
+.news_home .news_box .news_box_list tr td:before{
+	content:"";
 }
 .news_home .news_box .news_box_list tr{
 	line-height:1.2em;
 }
 .news_home .news_box .news_box_buttom{
-	padding:10px 0;
+	position:static;
 	text-align:center;
 }
 
@@ -102,6 +136,9 @@ button{
 }
 .news_list .news_box_list tr td{
 	padding:5px 10px;
+}
+.news_list .news_box_list tr td:before{
+	content:"";
 }
 .news_list .news_box_list tr{
 	line-height:1.2em;
@@ -129,5 +166,40 @@ button{
 /*
 .CKCSS_banner{
 	width:100%;
+}
+*/
+
+
+/* Banner 區塊 */
+.banners .item a .title{
+	display:none;
+	/*
+	position:static;
+	padding:20px 0 0 0;
+	font-size:1.2em;
+	*/
+}
+.banners .item .info{
+	display:none;
+	/*
+	position:static;
+	width:100%;
+	*/
+}
+/*
+.banners .item .info .info_btn{
+	display:none;
+}
+.banners .item .info .info_txt{
+	opacity:1;
+	padding:20px 0 10px 0;
+}
+*/
+/*
+.owl-theme .owl-dots{
+	position:static;
+	top:0;
+	text-align:center;
+	margin:0 0 20px 0;
 }
 */

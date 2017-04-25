@@ -1,5 +1,5 @@
 @charset "utf-8";
-
+@import url('font-awesome.min.css');
 html{
 	margin:0;
 	padding:0;
@@ -23,36 +23,36 @@ input[type="password"],
 input[type="file"],
 textarea {
 	margin:5px 0;
-	padding: 5px;
-	display: inline-block;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    padding: 5px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 select{
 	font-family:Verdana, Geneva, sans-serif, "新細明體";
 	font-size:13px;
 	padding: 4px;
-	display: inline-block;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 button{
 	padding:5px 15px;
-	display: inline-block;
-	border-radius: 3px;
+    display: inline-block;
+    border-radius: 3px;
 	border:none;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 	cursor:pointer;
 	background:#f06a0c;
 	color:#fff;
@@ -90,13 +90,13 @@ button{
 .btn_02{
 	margin:5px 0 5px 0;
 	padding:0.1em 0.8em;
-	display: inline-block;
-	border-radius:3px;
+    display: inline-block;
+    border-radius:3px;
 	border:none;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 	cursor:pointer;
 	background:#ffb337;
 	color:#fff;
@@ -110,13 +110,13 @@ button{
 .btn_03{
 	margin:5px 0 5px 0;
 	padding:0.1em 0.8em;
-	display: inline-block;
-	border-radius:3px;
+    display: inline-block;
+    border-radius:3px;
 	border:none;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 	cursor:pointer;
 	background:#f06b42;
 	color:#fff;
@@ -129,13 +129,13 @@ button{
 .btn_04{
 	margin:5px 0 5px 0;
 	padding:0.1em 0.8em;
-	display: inline-block;
-	border-radius:3px;
+    display: inline-block;
+    border-radius:3px;
 	border:none;
-	vertical-align: middle;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    vertical-align: middle;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 	cursor:pointer;
 	background:#53c1c0;
 	color:#fff;
@@ -461,6 +461,18 @@ button{
 	color:#ffb337;
 	background:url(images/icon.png) -180px -210px no-repeat;
 }
+.menu .menu_I{
+	display:block;
+	margin:0 0 10px 0;
+	padding:0 0 0 25px;
+	text-decoration:none;
+	color:#ffffff;
+	background:url(images/icon.png) 0 -240px no-repeat;
+}
+.menu .menu_I:hover{
+	color:#ffb337;
+	background:url(images/icon.png) -180px -240px no-repeat;
+}
 
 .menu .menu_list{
 	display:block;
@@ -497,14 +509,53 @@ button{
 	background:#d4e9e7;
 	color:#3c7978;
 	font-weight:normal;
+	min-width:60px;
 }
+.browser_box table th a{
+	text-decoration:none;
+	color:#c33592;
+	display:inline-block;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	padding:0 5px;
+	margin:0 0 0 5px;
+	color:#fff;
+	background:#649d9c;
+}
+.browser_box table th a:hover{
+	background:#538483;
+}
+.browser_box table th a i{
+	display:inline-block;
+	font:normal normal normal 14px/1 FontAwesome;
+	font-size:inherit;
+	text-rendering:auto;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+}
+.browser_box table th a .desc:before{
+	content:"\f063";
+}
+.browser_box table th a .asc:before{
+	content:"\f062";
+}
+.browser_box table th a:hover .desc:before{
+	content:"\f062";
+}
+.browser_box table th a:hover .asc:before{
+	content:"\f063";
+}
+
 .browser_box table td{
 	padding:10px 10px;
 }
 .browser_box table td .browser_img{
 	width:130px;
 }
-
+.browser_box table td .browser_img_2{
+	width:180px;
+}
 
 .detail_box{
 	margin:0;
@@ -537,6 +588,9 @@ button{
 
 .detail_box table td .bookcover{
 	width:130px;
+}
+.detail_box table td .banner_img{
+	width:180px;
 }
 .detail_box table td h3{
 	margin:10px 0 0 0;
@@ -594,7 +648,7 @@ button{
 	padding:0 0 10px 0;
 }
 .ck_htmlcode img{
-
+	
 }
 .ck_htmlcode table{
 	margin:0 0 10px 0;
@@ -603,7 +657,7 @@ button{
 	/*background:#e3e3e3;*/
 }
 .ck_htmlcode table tr{
-	/**/
+	/**/	
 }
 .ck_htmlcode table tr:nth-child(even){
 	/*background:#ffffff;*/
@@ -686,4 +740,70 @@ button{
 .steps_box .active{
 	border:5px solid #ed6c44;
 	color:#ed6c44;
+}
+
+/* bootstrap css */
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 5px 10px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #377099;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+  z-index: 2;
+  color: #fff;
+  background-color: #7dbebd;
+  border-color: #7dbebd;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #7dbebd;
+  border-color: #7dbebd;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #777;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
 }

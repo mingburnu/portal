@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * App\Menupage
  *
@@ -21,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $updated_at
  * @property-read \App\Menupage $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Menupage[] $children
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Menupage_i18n[] $many
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Menupage_i18n[] $menupage_i18ns
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage whereType($value)
@@ -40,6 +39,25 @@ class Menupage extends Model
     //
     protected $table = 'pages';
 
+    protected $fillable;
+
+    protected $casts = [
+        'type' => 'boolean',
+        'view' => 'boolean'
+    ];
+
+    function __construct(array $attributes = [])
+    {
+        $this->fillable(\Schema::getColumnListing($this->getTable()));
+
+        $this->bootIfNotBooted();
+
+        $this->syncOriginal();
+
+        $this->fill($attributes);
+
+    }
+
     public function parent()
     {
         return $this->belongsTo('App\Menupage', 'parent_id');
@@ -50,7 +68,7 @@ class Menupage extends Model
         return $this->hasMany('App\Menupage', 'parent_id');
     }
 
-    public function many()
+    public function menupage_i18ns()
     {
         return $this->hasMany('App\Menupage_i18n','page_id');
     }

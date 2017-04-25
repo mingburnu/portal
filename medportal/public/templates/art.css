@@ -1,5 +1,5 @@
 @charset "utf-8";
-
+@import url('font-awesome.min.css');
 html{
 	margin:0;
 	padding:0;
@@ -70,8 +70,7 @@ button{
 }
 .btn_01 span{
 	display:block;
-	background:url(images/btn_A.png) 100% 0 no-repeat;
-	margin:0;
+	background:url(images/btn_A.png) 100% 0 no-repeat;	margin:0;
 	padding:0 10px 0 0;
 	height:26px;
 	line-height:26px;
@@ -438,6 +437,42 @@ button{
 	color:#ffb337;
 	background:url(images/icon.png) -180px -150px no-repeat;
 }
+.menu .menu_G{
+	display:block;
+	margin:0 0 10px 0;
+	padding:0 0 0 25px;
+	text-decoration:none;
+	color:#ffffff;
+	background:url(images/icon.png) 0 -180px no-repeat;
+}
+.menu .menu_G:hover{
+	color:#ffb337;
+	background:url(images/icon.png) -180px -180px no-repeat;
+}
+.menu .menu_H{
+	display:block;
+	margin:0 0 10px 0;
+	padding:0 0 0 25px;
+	text-decoration:none;
+	color:#ffffff;
+	background:url(images/icon.png) 0 -210px no-repeat;
+}
+.menu .menu_H:hover{
+	color:#ffb337;
+	background:url(images/icon.png) -180px -210px no-repeat;
+}
+.menu .menu_I{
+	display:block;
+	margin:0 0 10px 0;
+	padding:0 0 0 25px;
+	text-decoration:none;
+	color:#ffffff;
+	background:url(images/icon.png) 0 -240px no-repeat;
+}
+.menu .menu_I:hover{
+	color:#ffb337;
+	background:url(images/icon.png) -180px -240px no-repeat;
+}
 
 .menu .menu_list{
 	display:block;
@@ -474,14 +509,53 @@ button{
 	background:#d4e9e7;
 	color:#3c7978;
 	font-weight:normal;
+	min-width:60px;
 }
+.browser_box table th a{
+	text-decoration:none;
+	color:#c33592;
+	display:inline-block;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	padding:0 5px;
+	margin:0 0 0 5px;
+	color:#fff;
+	background:#649d9c;
+}
+.browser_box table th a:hover{
+	background:#538483;
+}
+.browser_box table th a i{
+	display:inline-block;
+	font:normal normal normal 14px/1 FontAwesome;
+	font-size:inherit;
+	text-rendering:auto;
+	-webkit-font-smoothing:antialiased;
+	-moz-osx-font-smoothing:grayscale;
+}
+.browser_box table th a .desc:before{
+	content:"\f063";
+}
+.browser_box table th a .asc:before{
+	content:"\f062";
+}
+.browser_box table th a:hover .desc:before{
+	content:"\f062";
+}
+.browser_box table th a:hover .asc:before{
+	content:"\f063";
+}
+
 .browser_box table td{
 	padding:10px 10px;
 }
 .browser_box table td .browser_img{
 	width:130px;
 }
-
+.browser_box table td .browser_img_2{
+	width:180px;
+}
 
 .detail_box{
 	margin:0;
@@ -509,12 +583,20 @@ button{
 .detail_box table td input[type="password"],
 .detail_box table td textarea {
 	width:90%;
+	font-size:13px;
 }
 
 .detail_box table td .bookcover{
 	width:130px;
 }
-
+.detail_box table td .banner_img{
+	width:180px;
+}
+.detail_box table td h3{
+	margin:10px 0 0 0;
+	font-size:13px !important;
+	font-weight:normal;
+}
 
 /* detail_note
 ----------------------------------*/
@@ -620,4 +702,108 @@ button{
 	text-align:left;
 	font-size:12px;
 	line-height:20px;
+}
+
+/*步驟區塊*/
+.steps_box{
+	margin:10px 0 0 0;
+	padding:0;
+	background:url(images/steps_bg.png) 0 0 repeat;
+	overflow : auto;
+}
+.steps_box .title{
+	font-size:12px;
+	border:none;
+	border-radius:3px;
+	background:#ccc;
+	padding:0 5px;
+	font-weight:normal;
+	line-height:40px;
+	height:40px;
+	color:#333;
+}
+.steps_box span{
+	display:block;
+	border:5px solid #CCC;
+	width:30px;
+	height:30px;
+	background:#f8f3f0;
+	float:left;
+	margin:0 10px 10px 10px;
+	text-align:center;
+	line-height:30px;
+	font-size:15px;
+	font-weight:bold;
+	color:#888;
+	border-radius:100%;
+}
+.steps_box .active{
+	border:5px solid #ed6c44;
+	color:#ed6c44;
+}
+
+/* bootstrap css */
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+.pagination > li {
+  display: inline;
+}
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  padding: 5px 10px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #377099;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+.pagination > li:first-child > a,
+.pagination > li:first-child > span {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover,
+.pagination > li > a:focus,
+.pagination > li > span:focus {
+  z-index: 2;
+  color: #fff;
+  background-color: #7dbebd;
+  border-color: #7dbebd;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
+  z-index: 3;
+  color: #fff;
+  cursor: default;
+  background-color: #7dbebd;
+  border-color: #7dbebd;
+}
+.pagination > .disabled > span,
+.pagination > .disabled > span:hover,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+  color: #777;
+  cursor: not-allowed;
+  background-color: #fff;
+  border-color: #ddd;
 }

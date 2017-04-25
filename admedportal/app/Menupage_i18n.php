@@ -25,7 +25,22 @@ class Menupage_i18n extends Model
     //
     protected $table = 'pages_i18n';
 
-    public function one()
+    protected $fillable;
+
+    public $timestamps = false;
+
+    function __construct(array $attributes = [])
+    {
+        $this->fillable(\Schema::getColumnListing($this->getTable()));
+
+        $this->bootIfNotBooted();
+
+        $this->syncOriginal();
+
+        $this->fill($attributes);
+    }
+
+    public function menupage()
     {
         return $this->belongsTo('App\Menupage', 'page_id');
     }

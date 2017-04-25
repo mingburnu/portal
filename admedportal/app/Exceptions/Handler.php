@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,6 +54,14 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof ModelNotFoundException) {
             $e = new NotFoundHttpException($e->getMessage(), $e);
+        }
+
+        if( $e instanceof MethodNotAllowedHttpException){
+            return response(view('errors.405'), 405);
+        }
+
+        if( $e instanceof TokenMismatchException){
+            return response(\Redirect::route('login.index'));
         }
 
         return parent::render($request, $e);

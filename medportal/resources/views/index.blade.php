@@ -3,7 +3,6 @@
 @include('layout.head')
 <body>
 <div class="wrapper">
-
     <!-- lang 區塊 Begin -->
     @include('layout.lang')
             <!-- lang 區塊 End -->
@@ -28,10 +27,17 @@
     </div>
     <!-- 麵包屑 區塊 End -->
 
-    <!-- Books 區塊 Begin -->
-    @include('layout.books')
-            <!-- Books 區塊 End -->
+    <!-- Banner 區塊 Begin -->
+    @if($webconfig[0]->play)
+    @include('layout.banner')
+    @endif
+            <!-- Banner 區塊 End -->
 
+    <!-- Books 區塊 Begin -->
+    @if($webconfig[0]->exhibition)
+    @include('layout.books')
+    @endif
+            <!-- Books 區塊 End -->
 
     <!-- News 區塊 Begin -->
     @include('layout.news')
@@ -46,6 +52,6 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')
-<!-- 執行javascript 區塊 End -->
+        <!-- 執行javascript 區塊 End -->
 </body>
 </html>
