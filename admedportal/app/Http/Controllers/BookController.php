@@ -80,7 +80,7 @@ class BookController extends Controller
 
         Sort::updateOrCreate([$sort->getKeyName() => $sort->item], $sort->toArray());
 
-        return $this->index();
+        return redirect(route('book.index'));
     }
 
     /**

@@ -29,30 +29,6 @@ Route::group(['middleware' => 'auth'], function () {
         ['as' => 'state.A.post', 'uses' => 'AdminController@state_A_post']
     );
 
-    Route::get('/news_add',
-        ['as' => 'news.add', 'uses' => 'AdminController@news_add']
-    );
-
-    Route::post('/news_add/post',
-        ['as' => 'news.add.post', 'uses' => 'AdminController@news_add_post']
-    );
-
-    Route::get('/news_edit/{id}',
-        ['as' => 'news.edit.id', 'uses' => 'AdminController@news_edit_id']
-    )->where('id', '[0-9]+');
-
-    Route::patch('/news_edit/{id}',
-        ['as' => 'news.edit.post', 'uses' => 'AdminController@news_edit_post']
-    )->where('id', '[0-9]+');
-
-//    Route::get('/news_view/{id}',
-//        ['as' => 'news.view.id', 'uses' => 'AdminController@news_view_id']
-//    )->where('id', '[0-9]+');
-
-    Route::get('/news_browser/{id}/delete',
-        ['as' => 'news.browser.id.delete', 'uses' => 'AdminController@news_browser_id_delete']
-    )->where('id', '[0-9]+');
-
     Route::get('/',
         ['as' => 'admin.browser.index', 'uses' => 'AdminController@index']
     );
@@ -127,10 +103,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/sys_edit_5/post',
         ['as' => 'sys.edit.5.post', 'uses' => 'AdminController@sys_edit_5_post']
-    );
-
-    Route::get('/news_browser',
-        ['as' => 'news.browser', 'uses' => 'AdminController@news_browser']
     );
 
     Route::get('/lang_browser',

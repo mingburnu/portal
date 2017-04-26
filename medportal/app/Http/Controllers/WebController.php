@@ -43,7 +43,7 @@ class WebController extends Controller
         if ($pages_data->type) {
             $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
 
-            $pages = Menupage::whereView(true)
+            $menus = Menupage::whereView(true)
                 ->whereParentId(null)
                 ->orderBy('rank_id', 'desc')->get();
 
@@ -56,7 +56,7 @@ class WebController extends Controller
                 'webconfig_i18n' => $webconfig_i18n,
                 'queryDb' => $queryDb,
                 'pages_data' => $pages_data,
-                'pages' => $pages,
+                'menus' => $menus,
                 'totalc' => $totalc,
                 'signal' => $signal
             ]);
@@ -103,7 +103,7 @@ class WebController extends Controller
             })
             ->orderBy('publish_time', 'desc')->get();
 
-        $pages = Menupage::whereView(true)
+        $menus = Menupage::whereView(true)
             ->whereParentId(null)
             ->orderBy('rank_id', 'desc')->get();
 
@@ -116,7 +116,7 @@ class WebController extends Controller
             'webconfig_i18n' => $webconfig_i18n,
             'queryDb' => $queryDb,
             'news' => $news,
-            'pages' => $pages,
+            'menus' => $menus,
             'totalc' => $totalc,
             'signal' => $signal
         ]);
@@ -153,7 +153,7 @@ class WebController extends Controller
 
         $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
 
-        $pages = Menupage::whereView(true)
+        $menus = Menupage::whereView(true)
             ->whereParentId(null)
             ->orderBy('rank_id', 'desc')->get();
 
@@ -166,7 +166,7 @@ class WebController extends Controller
             'webconfig_i18n' => $webconfig_i18n,
             'queryDb' => $queryDb,
             'news' => $news,
-            'pages' => $pages,
+            'menus' => $menus,
             'totalc' => $totalc,
             'signal' => $signal
         ]);
@@ -213,7 +213,7 @@ class WebController extends Controller
             })
             ->orderBy('publish_time', 'desc')->take(5)->skip(0)->get();
 
-        $pages = Menupage::whereView(true)
+        $menus = Menupage::whereView(true)
             ->whereParentId(null)
             ->orderBy('rank_id', 'desc')->get();
 
@@ -230,11 +230,12 @@ class WebController extends Controller
             'queryDb' => $queryDb,
             'book' => $book,
             'news' => $news,
-            'pages' => $pages,
+            'menus' => $menus,
             'totalc' => $totalc,
             'signal' => $signal
         ]);
     }
+
 
     public function locale()
     {

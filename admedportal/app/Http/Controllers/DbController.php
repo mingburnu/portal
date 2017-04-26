@@ -79,7 +79,7 @@ class DbController extends Controller
 
         Sort::updateOrCreate([$sort->getKeyName() => $sort->item], $sort->toArray());
 
-        return $this->index();
+        return redirect(route('db.index'));
     }
 
     /**

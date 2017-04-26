@@ -534,7 +534,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return redirect()->route('db.index');
+        return $this->admin_browser();
     }
 
     public function sys_edit()
