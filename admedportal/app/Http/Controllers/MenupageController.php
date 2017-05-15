@@ -59,6 +59,7 @@ class MenupageController extends Controller
         $sql = 'CALL showChildLst(' . $offset . ',' . $perPage . ')';
         $pdo = new PDO("mysql:host=" . DB::getConfig('host') . ";dbname=" . DB::getDatabaseName(),
             DB::getConfig('username'), DB::getConfig('password'));
+        $pdo->exec("set names utf8");
         $pdo->query($procedure);
         $menus = $pdo->query($sql)->fetchAll();
 
