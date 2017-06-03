@@ -115,7 +115,7 @@
                                         <div class="group_02 pic">上傳圖檔：{!! Form::file('upload_file') !!}</div>
                                         <div class="group_02 url" style="display:none;">
                                             圖檔網址： {!! Form::text('img',null) !!}</div>
-                                        <div class="note_txt">圖檔尺寸大小不限制，前台會自動調整，圖檔建議尺寸為1600px X 550px。</div>
+                                        <div class="note_txt">圖檔尺寸大小不限制，前台會自動調整，圖檔建議尺寸為1300px X 550px。</div>
                                     </td>
                                 </tr>
                                 <tr>

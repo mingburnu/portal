@@ -10,7 +10,14 @@
        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff) format('woff'),
        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.ttf) format('truetype');
 }
-
+::selection {
+	background:#fff000;
+	color:#333;
+}
+::-moz-selection {
+	background:#fff000;
+	color:#333;
+}
 html{
 	margin:0;
 	padding:0;
@@ -33,7 +40,7 @@ p{
 input[type="text"],
 input[type="password"],
 textarea {
-    padding: 8px;
+    padding:6px 8px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -41,12 +48,12 @@ textarea {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-	font-size:1em;
+	font-size:13px;
 }
 select{
 	font-family:Verdana, Geneva, sans-serif, "新細明體";
-	font-size:1em;
-	padding: 7px;
+	font-size:13px;
+	padding:4px 7px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 3px;
@@ -56,7 +63,7 @@ select{
     box-sizing: border-box;
 }
 button{
-	padding:7px 15px;
+	padding:5px 15px;
     display: inline-block;
     -webkit-border-radius:3px;
 	-moz-border-radius:3px;
@@ -69,7 +76,7 @@ button{
 	cursor:pointer;
 	background:#2859a1;
 	color:#fff;
-	font-size:1em;
+	font-size:13px;
 }
 
 .btn_01{
@@ -141,11 +148,12 @@ button{
 	/**/
 }
 .search .search_db{
-	background:#e2e2e2;
+	background:#f3f3f3;
 	padding:10px 0;
 }
 .search .search_db .search_db_l{
 	display:block;
+	color:#204781;
 }
 .search .search_db .search_db_s{
 	display:none;
@@ -157,8 +165,9 @@ button{
 	/**/
 }
 .search .search_db label{
-	margin:0 10px 0 0;
+	margin:0 10px 5px 0;
 	white-space:nowrap;
+	display:inline-block;
 }
 .search .search_box{
 	background:#f3f3f3;
@@ -228,10 +237,10 @@ button{
 }
 .menu .menu_box_list ul ul a {
 	width: 120px;
-	padding:0 10px;
+	padding:8px 10px;
 	color: #fff;		
 	background:#2859a1;
-	line-height:35px;		
+	line-height:20px;		
 }
 .menu .menu_box_list ul ul a:hover {		
 	background:#204781;
@@ -633,7 +642,10 @@ button{
 
 /* Banner 區塊 */
 .banners{
-	margin:10px 0 20px 0;
+	margin:0 0 20px 0;
+}
+.banners .innerwrapper{
+	padding:0;
 }
 .banners .item a{
 	text-decoration:none;
@@ -648,16 +660,14 @@ button{
 	width:100%;
 	margin:0 0 10px 0;
 	padding:20px 40px 20px 40px;
-	background:rgba(255,255,255,0.95);
+	background:rgba(255,255,255,0.5);
 	font-size:2em;
 	font-weight:bold;
 	color:#333;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	-webkit-text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
-	-moz-text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
-	text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
+	text-shadow: 0 0 2px #fff;
 	transition: all 0.5s ease;
 	opacity:0;
 }
@@ -673,21 +683,22 @@ button{
 }
 .banners .item .info .info_btn{
 	position:absolute;
-	top:10px;
-	right:10px;
+	top:15px;
+	right:25px;
 	font-size:30px;
 	color:#000;
 }
 .banners .item .info .info_btn i{
-	-webkit-text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
-	-moz-text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
-	text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;
+	text-shadow: 0 0 2px #fff;
 }
 .banners .item .info .info_txt{
 	opacity:0;
-	background:rgba(255,255,255,0.8);
+	background:rgba(255,255,255,0.9);
 	color:#333;
-	padding:50px 30px 30px 30px;
+	margin:10px 10px 0 0;
+	padding:45px 20px 15px 20px;
+	-webkit-border-radius:5px;
+	border-radius: 5px;
 }
 
 /*owl.theme.default.css*/
@@ -696,13 +707,16 @@ button{
 	height:1;
 }
 .owl-theme .owl-nav [class*='owl-'] {
-    color:#d6d6d6;
+    color:#fff;
     font-size:30px;
-    background:rgba(255,255,255,0.5);
+    background:rgba(255,255,255,0);
 }
 .owl-theme .owl-nav [class*='owl-']:hover {
-	color:#a6a6a6;
-	background:rgba(255,255,255,0.5);
+	color:#ebebeb;
+	background:rgba(255,255,255,0);
+}
+.owl-theme .owl-nav [class*='owl-'] i::before{
+	text-shadow: 0 0 1px #000000;
 }
 .owl-theme .owl-nav .owl-prev{
 	position:absolute;
@@ -713,4 +727,13 @@ button{
 	position:absolute;
 	top:0;
 	right:0;
+}
+@media (min-width:1300px) {
+.wrapper{
+	margin: 0 auto;
+	max-width: 1300px;
+}
+.header{
+	padding:10px 0 10px 0;
+}
 }

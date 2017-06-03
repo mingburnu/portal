@@ -52,7 +52,7 @@ return [
 
     'banners_image_folder' => '/var/www/admedportal/public/',
 
-    'banner_image_width' => 1600,
+    'banner_image_width' => 1300,
 
     'url' => 'http://medportal.sydt.com.tw',
 

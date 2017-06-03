@@ -3,9 +3,6 @@
 @include('layout.head')
 <body>
 <div class="wrapper">
-    <!-- lang 區塊 Begin -->
-    @include('layout.lang')
-            <!-- lang 區塊 End -->
 
     <!-- header 區塊 Begin -->
     @include('layout.header')
@@ -43,6 +40,9 @@
     @include('layout.news')
             <!-- News 區塊 End -->
 
+    <!-- lang 區塊 Begin -->
+    @include('layout.lang')
+            <!-- lang 區塊 End -->
 
     <!-- footer 區塊 Begin -->
     @include('layout.footer')

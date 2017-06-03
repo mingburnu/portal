@@ -75,8 +75,8 @@
                     touchDrag: true
                 },
                 641: {
-                    margin: 50,
-                    stagePadding: 50,
+                    margin: 10,
+                    stagePadding: 0,
                     nav: true,
                     mouseDrag: false,
                     touchDrag: false

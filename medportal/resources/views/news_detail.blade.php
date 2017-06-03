@@ -4,10 +4,6 @@
 <body>
 <div class="wrapper">
 
-    <!-- lang 區塊 Begin -->
-    @include('layout.lang')
-            <!-- lang 區塊 End -->
-
     <!-- header 區塊 Begin -->
     @include('layout.header')
             <!-- header 區塊 End -->
@@ -24,7 +20,8 @@
     <!-- 麵包屑 區塊 Begin -->
     <div class="crumbs">
         <div class="innerwrapper">
-            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{$signal[0]->home}}</a> &gt; <a href="{{ route('news.list') }}">{{$signal[0]->board}}</a>
+            {{$signal[0]->location}}：<a href="{{ route('index') }}">{{$signal[0]->home}}</a> &gt; <a
+                    href="{{ route('news.list') }}">{{$signal[0]->board}}</a>
         </div>
     </div>
     <!-- 麵包屑 區塊 End -->
@@ -73,6 +70,10 @@
     </div>
     <!-- 主內容 區塊 End -->
 
+    <!-- lang 區塊 Begin -->
+    @include('layout.lang')
+            <!-- lang 區塊 End -->
+
     <!-- footer 區塊 Begin -->
     @include('layout.footer')
             <!-- footer 區塊 End -->
@@ -81,6 +82,6 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')
-<!-- 執行javascript 區塊 End -->
+        <!-- 執行javascript 區塊 End -->
 </body>
 </html>

@@ -29,7 +29,7 @@
                             <span class="active">1</span>
                             <span>2</span>
                         </div>
-                        <form id="book_id" method="POST" action="{{route('book.store')}}">
+                        <form id="book_id" method="POST" action="{{route('book.store')}}" enctype="multipart/form-data">
                             {!! Form::open(['method' => 'POST','route'=>['book.store']]) !!}
 
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">

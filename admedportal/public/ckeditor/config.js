@@ -14,6 +14,7 @@ CKEDITOR.editorConfig = function( config ) {
 	//
 	config.removeDialogTabs = 'link:advanced;image:advanced;table:advanced';
 	config.startupOutlineBlocks = true;
+	config.allowedContent = true;
 };
 
 CKEDITOR.stylesSet.add( 'default', [

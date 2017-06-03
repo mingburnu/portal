@@ -2,17 +2,24 @@
 <project version="4">
   <component name="PublishConfigData" serverName="192.168.21.66 admedportal" compareModeInSync="SIZE" showNewOnSourceInSync="false">
     <serverData>
-      <paths name="192.168.21.128">
+      <paths name="139.162.41.216 adgodportal2">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/roderick/adgodportal2" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="192.168.21.132">
+      <paths name="139.162.41.216 admedportal2">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/roderick/admedportal2" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="139.162.41.216 admin2">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/roderick/admin2" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
@@ -20,13 +27,6 @@
         <serverdata>
           <mappings>
             <mapping deploy="/var/www/admedportal" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="192.168.21.66 medportal">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

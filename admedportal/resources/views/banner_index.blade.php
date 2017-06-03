@@ -48,7 +48,7 @@
                                     <td>{{$row->title}}</td>
                                     <td><a>連結</a></td>
                                     <td>
-                                        @if($row->play)
+                                        @if($row->view)
                                             是
                                         @else
                                             否
