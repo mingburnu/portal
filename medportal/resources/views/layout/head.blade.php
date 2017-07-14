@@ -4,14 +4,10 @@
     <meta http-equiv="expires" content="0">
     <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1">
     <title>
-        @if(Cookie::get('language')==0)
-            {{ $webconfig[0]->site_name }}
+        @if($webconfig_i18n!=null && $webconfig_i18n[0]->site_name!=null)
+            {{$webconfig_i18n[0]->site_name }}
         @else
-            @if($webconfig_i18n[0]->site_name!=null)
-                {{$webconfig_i18n[0]->site_name }}
-            @else
-                {{ $webconfig[0]->site_name }}
-            @endif
+            {{ $webconfig[0]->site_name }}
         @endif
     </title>
     <link rel="icon" href="{{ asset('img/favicon.ico') }}">

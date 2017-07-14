@@ -106,37 +106,26 @@ class BannerController extends Controller
     {
         //
         $rules = null;
-        $messages = null;
         $upload_option = (boolean)Input::get('upload_option');
         if ($upload_option) {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'required|mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.required' => '<p>．請上傳Banner圖片。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'required|max:1024|image'
             );
         } else {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'img' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'img.required' => '<p>．請輸入圖檔網址。</p>',
-                'img.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'img' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         }
 
-        $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules, [], [
+            'title' => Language::first()->language . '-' . \Lang::get('ui.banner title'),
+            'url' => \Lang::get('ui.link'),
+            'upload_file' => \Lang::get('ui.banner image')
+        ]);
 
         $img = null;
         if (Input::hasFile('upload_file')) {
@@ -202,7 +191,7 @@ class BannerController extends Controller
         $banner->banner_i18ns()->saveMany($banner_i18ns);
 
         return redirect()->route('banner.index')
-            ->with('success', '新增資料成功');
+            ->with('successes', [\Lang::get('msg.insert data successfully')]);
     }
 
     /**
@@ -254,61 +243,37 @@ class BannerController extends Controller
         $upload_option = (boolean)Input::get('upload_option');
 
         $rules = null;
-        $messages = null;
         if ($db_upload_option && $upload_option) {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'max:1024|image'
             );
         } elseif ($db_upload_option && !$upload_option) {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'img' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'img.required' => '<p>．請輸入圖檔網址。</p>',
-                'img.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'img' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         } elseif (!$db_upload_option && $upload_option) {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'required|mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.required' => '<p>．請上傳Banner圖片。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'required|max:1024|image'
             );
         } else {
             $rules = array(
                 'title' => 'required',
-                'url' => 'regex:/^http([s]?):\/\/.*/',
-                'img' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入Banner標題。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'img.required' => '<p>．請輸入圖檔網址。</p>',
-                'img.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'url|regex:/^http([s]?):\/\/.*/',
+                'img' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         }
 
-        $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules, [], [
+            'title' => Language::first()->language . '-' . \Lang::get('ui.banner title'),
+            'url' => \Lang::get('ui.link'),
+            'upload_file' => \Lang::get('ui.banner image')
+        ]);
 
         $img = $banner->img;
         if ($db_upload_option && $upload_option) {
@@ -417,7 +382,7 @@ class BannerController extends Controller
         }
 
         return redirect()->route('banner.index')
-            ->with('success', '更新資料成功');
+            ->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     /**
@@ -439,6 +404,6 @@ class BannerController extends Controller
         Banner_i18n::whereBannerId($id)->delete();
         Banner::whereId($id)->delete();
 
-        return redirect()->route('banner.index')->with('success', '刪除資料成功');
+        return redirect()->route('banner.index')->with('successes', [\Lang::get('msg.delete data successfully')]);
     }
 }

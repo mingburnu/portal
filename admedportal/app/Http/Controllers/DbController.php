@@ -108,12 +108,11 @@ class DbController extends Controller
             'syntax' => 'required'
         );
 
-        $messages = array(
-            'database_name.required' => '<p>．請輸入資料庫名稱。</p>',
-            'syntax.required' => '<p>．請輸入嵌入語法。</p>'
-        );
-
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, [], [
+            'database_name' => $first_language . '-' . \Lang::get('ui database name'),
+            'syntax' => $first_language . '-' . \Lang::get('ui.embedded html')
+        ]);
 
         //   Log::info('data --------------------- ' . dump($input_data));
 
@@ -146,7 +145,7 @@ class DbController extends Controller
         $db->db_i18ns()->saveMany($db_i18ns);
 
         return redirect()->route('db.index')
-            ->with('success', '新增資料成功');
+            ->with('successes', [\Lang::get('msg.insert data successfully')]);
     }
 
     /**
@@ -203,12 +202,11 @@ class DbController extends Controller
             'syntax' => 'required'
         );
 
-        $messages = array(
-            'database_name.required' => '<p>．請輸入資料庫名稱。</p>',
-            'syntax.required' => '<p>．請輸入嵌入語法。</p>'
-        );
-
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, [], [
+            'database_name' => $first_language . '-' . \Lang::get('ui database name'),
+            'syntax' => $first_language . '-' . \Lang::get('ui.embedded html')
+        ]);
 
         //   Log::info('data --------------------- ' . dump($input_data));
 
@@ -244,7 +242,7 @@ class DbController extends Controller
         }
 
         return redirect()->route('db.index')
-            ->with('success', '更新資料成功');
+            ->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     /**
@@ -265,6 +263,6 @@ class DbController extends Controller
         Db::where('id', '=', $id)->delete();
 
         return redirect()->route('db.index')
-            ->with('success', '刪除資料成功');
+            ->with('successes', [\Lang::get('msg.delete data successfully')]);
     }
 }

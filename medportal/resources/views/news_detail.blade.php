@@ -32,36 +32,38 @@
             <!-- 內容 區塊 Begin -->
 
             <div class="title">
-                @if(Cookie::get('language')==0)
+                @if($signal[0]->id=='0')
                     {{ $news->title }}
                 @else
                     <?php
                     $title_i18n = $news->title;
-                    ?>
-                    @foreach($news->news_i18ns as $news_i18n)
-                        <?php
-                        if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
-                            $title_i18n = $news_i18n->title;
+                    foreach ($news->news_i18ns as $news_i18n) {
+                        if ($news_i18n->language == $signal[0]->id) {
+                            if ($news_i18n->title != null) {
+                                $title_i18n = $news_i18n->title;
+                            }
+                            break;
                         }
-                        ?>
-                    @endforeach
+                    }
+                    ?>
                     {{ $title_i18n }}
                 @endif
             </div>
             <div class="ck_htmlcode">
-                @if(Cookie::get('language')==0)
+                @if($signal[0]->id=='0')
                     {!! $news->content !!}
                 @else
                     <?php
                     $content_i18n = $news->content;
-                    ?>
-                    @foreach($news->news_i18ns as $news_i18n)
-                        <?php
-                        if ($news_i18n->language == Cookie::get('language') && $news_i18n->content != null) {
-                            $content_i18n = $news_i18n->content;
+                    foreach ($news->news_i18ns as $news_i18n) {
+                        if ($news_i18n->language == $signal[0]->id) {
+                            if ($news_i18n->content != null) {
+                                $content_i18n = $news_i18n->content;
+                            }
+                            break;
                         }
-                        ?>
-                    @endforeach
+                    }
+                    ?>
                     {!! $content_i18n !!}
                 @endif
             </div>

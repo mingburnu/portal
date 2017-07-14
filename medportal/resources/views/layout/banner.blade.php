@@ -9,19 +9,20 @@
                             <img src="{{$banner->img}}">
                             @if($banner->play)
                                 <div class="title">
-                                    @if(Cookie::get('language')==0)
+                                    @if($signal[0]->id=='0')
                                         {{$banner->title}}
                                     @else
                                         <?php
                                         $title_i18n = $banner->title;
-                                        ?>
-                                        @foreach($banner->banner_i18ns as $banner_i18n)
-                                            <?php
-                                            if ($banner_i18n->language == Cookie::get('language') && $banner_i18n->title != null) {
-                                                $title_i18n = $banner_i18n->title;
+                                        foreach ($banner->banner_i18ns as $banner_i18n) {
+                                            if ($banner_i18n->language == $signal[0]->id) {
+                                                if ($banner_i18n->title != null) {
+                                                    $title_i18n = $banner_i18n->title;
+                                                }
+                                                break;
                                             }
-                                            ?>
-                                        @endforeach
+                                        }
+                                        ?>
                                         {!! $title_i18n !!}
                                     @endif
                                 </div>
@@ -29,28 +30,37 @@
                             @endif
                         </a>
 
-                        @if(Cookie::get('language')==0 || Cookie::get('language')==null)
+                        @if($signal[0]->id=='0')
                             @if(!empty($banner->info))
                                 <div class="info">
                                     <div class="info_txt">
                                         {{$banner->info}}
                                     </div>
-                                    <a class="info_btn" href="javascript:void(0);" onClick="ShowInfo(this);"><i
-                                                class="fa fa-info-circle"></i></a>
+                                    <a class="info_btn" href="javascript:void(0);" onClick="ShowInfo(this);">
+                                        <i class="fa fa-info-circle"></i></a>
                                 </div>
                             @endif
                         @else
-                            @foreach($banner->banner_i18ns as $banner_i18n)
-                                @if(Cookie::get('language')==$banner_i18n->language && !empty($banner_i18n->info))
-                                    <div class="info">
-                                        <div class="info_txt">
-                                            {{$banner_i18n->info}}
-                                        </div>
-                                        <a class="info_btn" href="javascript:void(0);" onClick="ShowInfo(this);"><i
-                                                    class="fa fa-info-circle"></i></a>
+                            <?php
+                            $info_i18n = null;
+                            foreach ($banner->banner_i18ns as $banner_i18n) {
+                                if ($banner_i18n->language == $signal[0]->id) {
+                                    if (!empty($banner_i18n->info)) {
+                                        $info_i18n = $banner_i18n->info;
+                                    }
+                                    break;
+                                }
+                            }
+                            ?>
+                            @if(!empty($info_i18n))
+                                <div class="info">
+                                    <div class="info_txt">
+                                        {{$info_i18n}}
                                     </div>
-                                @endif
-                            @endforeach
+                                    <a class="info_btn" href="javascript:void(0);" onClick="ShowInfo(this);">
+                                        <i class="fa fa-info-circle"></i></a>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 @endforeach

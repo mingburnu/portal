@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="expires" content="0">
-<title>圖書館管理後台</title>
+<title>@lang('ui.library management backend')</title>
 <style type="text/css">
 
 
@@ -16,7 +16,7 @@
     border-radius: 0 !important;
     border:1px solid #000;
     background:#fff;
-    border-spacing: 0; 
+    border-spacing: 0;
     margin-bottom: 20px;
 }
 
@@ -34,7 +34,7 @@
     font-weight:normal;
     font-family: 'Noto Sans';
 }
-  
+
 .browser_box table td .browser_img{
     width:130px;
 }
@@ -45,46 +45,46 @@
 <body>
 <div class="browser_box">
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
-  <thead>  
+  <thead>
     <tr>
-        <th>年-月</th>
-        <th>帳號</th>
-        <th>權限身份</th>
-        <th>是否封鎖</th>
-        <th>登入次數</th>
-        <th>登出次數</th>
+        <th>@lang('ui.year-month')</th>
+        <th>@lang('ui.account')</th>
+        <th>@lang('ui.permission')</th>
+        <th>@lang('ui.blockade')</th>
+        <th>@lang('ui.login times')</th>
+        <th>@lang('ui.logout times')</th>
     </tr>
-  </thead>  
-  <tbody>  
-    
+  </thead>
+  <tbody>
+
     @if(count($report) > 0)
 
         @for($i = 0; $i <count($report); $i++)
 
-        <tr> 
+        <tr>
             <td>{{ $Year . '-' . $Month }}</td>
             <td>{{ $report[$i]->account_userid }}</td>
 
             @if( $report[$i]->perm == 1 )
-                <td>最高管理者</td>
+                <td>@lang('ui.administrator')</td>
             @elseif( $report[$i]->perm == 2 )
-                <td>一般管理者</td>                
+                <td>@lang('ui.standard user')</td>
             @endif
 
             @if( $report[$i]->lock == 1 )
-                <td>是</td>
+                <td>@lang('ui.true')</td>
             @elseif( $report[$i]->lock == 0)
-                <td>否</td>
-            @endif    
-        
+                <td>@lang('ui.false')</td>
+            @endif
+
             <td>{{ $report[$i]->login }}</td>
             <td>{{ $report[$i]->logout }}</td>
         </tr>
-    
-        @endfor           
+
+        @endfor
 
     @endif
-  </tbody> 
+  </tbody>
 </table>
 </div>
 </body>

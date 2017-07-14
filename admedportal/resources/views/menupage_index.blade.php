@@ -23,7 +23,7 @@
 
                     <!-- 功能 區塊 Begin -->
                     <div class="func_box">
-                        <a class="btn_02" href="{{ route('menupage.create') }}">新增</a>
+                        <a class="btn_02" href="{{ route('menupage.create') }}">@lang('ui.add')</a>
                     </div>
                     <!-- 功能 區塊 End -->
 
@@ -33,12 +33,12 @@
                         <table width="100%" border="1" cellpadding="0" cellspacing="0">
                             <thead>
                             <tr>
-                                <th>標題</th>
-                                <th>是否顯示</th>
-                                <th>排序<a href="{{route('menupage.sort')}}"><i class="{{$direction}}"></i></a></th>
-                                <th>建立時間</th>
-                                <th>修改時間</th>
-                                <th>功能</th>
+                                <th>@lang('ui.title')</th>
+                                <th>@lang('ui.display')</th>
+                                <th>@lang('ui.sort')<a href="{{route('menupage.sort')}}"><i class="{{$direction}}"></i></a></th>
+                                <th>@lang('ui.created at')</th>
+                                <th>@lang('ui.updated at')</th>
+                                <th>@lang('ui.action')</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -51,9 +51,9 @@
                                         {{$row['title']}}
                                     </td>
                                     <td>@if($row['view'])
-                                            是
+                                            @lang('ui.true')
                                         @else
-                                            否
+                                            @lang('ui.false')
                                         @endif
                                     </td>
                                     <td>{{$row['rank_id']}}</td>
@@ -62,9 +62,9 @@
                                     <td>
                                         {!! Form::open(['route' => ['menupage.destroy', $row[1]], 'method' => 'delete']) !!}
                                         <a class="btn_03"
-                                           onclick="del($(this).parent())">刪除</a>
+                                           onclick="del($(this).parent())">@lang('ui.delete')</a>
                                         <a class="btn_02"
-                                           href="{{ $url = route('menupage.edit', ['id' => $row[1] ] )}}">修改</a>
+                                           href="{{ $url = route('menupage.edit', ['id' => $row[1] ] )}}">@lang('ui.modify')</a>
                                         {!! Form::close() !!}
                                     </td>
                                 </tr>

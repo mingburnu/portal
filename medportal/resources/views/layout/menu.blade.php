@@ -13,9 +13,7 @@
                         </a>
                     @endif
                 </li>
-
                 @include('layout.list')
-
             </ul>
         </div>
 
@@ -28,7 +26,6 @@
                 @endif
 
                 @include('layout.select')
-
             </select>
         </div>
     </div>

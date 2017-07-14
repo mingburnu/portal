@@ -1,14 +1,7 @@
-<?php
-$languages = DB::table('languages')->where('display', true)->orderBy('sort', 'desc')->lists('language', 'id');
-?>
 <div class="lang">
     <div class="innerwrapper">
         {!! Form::open(['method' => 'POST','route'=>['locale']]) !!}
-        @if(Cookie::get('language')!=null)
-            {!! Form::select('lang_id',$languages,Cookie::get('language'),array('onchange'=>'change_lang()')) !!}
-        @else
-            {!! Form::select('lang_id',$languages,0,array('onchange'=>'change_lang()')) !!}
-        @endif
+        {!! Form::select('lang_id',$languages,$signal[0]->id,array('onchange'=>'change_lang()')) !!}
         {!! Form::close() !!}
     </div>
 </div>

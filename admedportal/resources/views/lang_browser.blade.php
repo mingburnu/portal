@@ -29,7 +29,7 @@
                                 @foreach($languages as $language)
                                     <th>{{$language->language}}</th>
                                 @endforeach
-                                <th>功能</th>
+                                <th>@lang('ui.action')</th>
                             </tr>
 
                             @foreach($table as  $i=>$row)
@@ -38,7 +38,7 @@
                                         <td>{{$cell}}</td>
                                     @endforeach
                                     <td><a class="btn_02"
-                                           href="{{ $url = route('lang.edit.label', ['label' => $i ]) }}">修改</a></td>
+                                           href="{{ $url = route('lang.edit.label', ['label' => $i ]) }}">@lang('ui.modify')</a></td>
                                 </tr>
                             @endforeach
 

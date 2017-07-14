@@ -5,8 +5,8 @@
                                                              width="170" height="60"></td>
             <td align="right">
                 <div class="header_func"><span>
-    <a href="{{ route('my.info') }}">我的個人資訊</a>
-    <a href="{{ route('logout.process') }}">登出</a>
+    <a href="{{ route('my.info') }}">@lang('ui.my information')</a>
+    <a href="{{ route('logout.process') }}">@lang('ui.logout')</a>
     </span></div>
             </td>
         </tr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Language;
+use App\User;
 use Auth;
 use Config;
 use DB;
@@ -32,36 +33,30 @@ class AdminController extends Controller
             $excel->sheet('Sheetname', function ($sheet) use ($report, $Year, $Month) {
 
                 $sheet->row(1, array(
-                    '年-月', '網頁名稱', '是否顯示', '進入次數'
+                    \Lang::get('ui.year-month'), \Lang::get('ui.webpage name'), \Lang::get('ui.display'), \Lang::get('ui.click times')
                 ));
 
                 for ($i = 0; $i < count($report); $i++) {
 
-
                     $view = '';
 
                     if ($report[$i]->view == 1) {
-                        $view = '是';
+                        $view = \Lang::get('ui.true');
                     } elseif ($report[$i]->view == 0) {
-                        $view = '否';
+                        $view = \Lang::get('ui.false');
                     }
 
                     $sheet->row($i + 2, array(
                         $Year . '-' . $Month, $report[$i]->title,
                         $view, $report[$i]->view_times
                     ));
-
                 }
-
             });
-
         })->download('csv');
-
     }
 
     public function state_C_output($Year, $Month)
     {
-
         $report = DB::select('SELECT *
             FROM month_login_pages_stat
             WHERE yearmonth like ?', ['%' . $Year . '-' . $Month . '%']
@@ -74,14 +69,11 @@ class AdminController extends Controller
         ]);
 
         return PDF::loadHTML($html)->download($Year . '-' . $Month . '.pdf');
-
-
     }
 
 
     public function state_A_output_csv($Year, $Month)
     {
-
         $report = DB::select('SELECT
             yearmonth,
             account_userid,
@@ -104,7 +96,7 @@ class AdminController extends Controller
             $excel->sheet('Sheetname', function ($sheet) use ($report, $Year, $Month) {
 
                 $sheet->row(1, array(
-                    '年-月', '帳號', '權限身份', '是否封鎖', '登入次數', '登入次數'
+                    \Lang::get('ui.year-month'), \Lang::get('ui.account'), \Lang::get('ui.permission'), \Lang::get('ui.blockade'), \Lang::get('ui.login times'), \Lang::get('ui.logout times')
                 ));
 
                 for ($i = 0; $i < count($report); $i++) {
@@ -113,37 +105,30 @@ class AdminController extends Controller
                     $perm = '';
 
                     if ($report[$i]->perm == 1) {
-                        $perm = '最高管理者';
+                        $perm = \Lang::get('ui.administrator');
                     } elseif ($report[$i]->perm == 2) {
-                        $perm = '一般管理者';
+                        $perm = \Lang::get('ui.standard user');
                     }
 
                     $lock = '';
 
                     if ($report[$i]->lock == 1) {
-                        $lock = '是';
+                        $lock = \Lang::get('ui.true');
                     } elseif ($report[$i]->lock == 0) {
-                        $lock = '否';
+                        $lock = \Lang::get('ui.false');
                     }
 
                     $sheet->row($i + 2, array(
                         $Year . '-' . $Month, $report[$i]->account_userid,
                         $perm, $lock, $report[$i]->login, $report[$i]->logout
                     ));
-
                 }
-
             });
-
-
         })->download('csv');
-
     }
 
     public function state_A_output($Year, $Month)
     {
-
-
         $report = DB::select('SELECT
             yearmonth,
             account_userid,
@@ -166,7 +151,6 @@ class AdminController extends Controller
         ]);
 
         return PDF::loadHTML($html)->download($Year . '-' . $Month . '.pdf');
-
     }
 
     public function forget_post(Request $request)
@@ -177,11 +161,11 @@ class AdminController extends Controller
 
         $library_name = db::table('webconfig')->get();
 
-        $subject = $library_name[0]->site_name . " 密碼函";
+        $subject = $library_name[0]->site_name . " " . \Lang::get('ui.password email');
 
         $email = trim($email_data['email']);
 
-        $rs_data = DB::table('users')->where('email', $email)->get();
+        $rs_data = User::where('email', $email)->get();
 
         //Log::info('data ==================== ' . dump($rs_data));
 
@@ -192,8 +176,7 @@ class AdminController extends Controller
 
             $timedata = DB::select('select now() as timedata');
 
-            DB::table('users')
-                ->where('email', $email)
+            User::where('email', $email)
                 ->update([
                     'password' => bcrypt($password),
                     'updated_at' => $timedata[0]->timedata
@@ -219,20 +202,16 @@ class AdminController extends Controller
         } else {
             return view('errors.404');
         }
-
     }
 
     public function forget()
     {
-
         return view('forget');
-
     }
 
 
     public function state_C_post(Request $request)
     {
-
         $state_C = $request->all();
 
         $Year = trim($state_C['Year']);
@@ -252,16 +231,12 @@ class AdminController extends Controller
             'Month' => $Month,
             'report' => $report
         ]);
-
-
     }
 
 
     public function state_A_post(Request $request)
     {
-
         $state_A = $request->all();
-
 
         $Year = trim($state_A['Year']);
 
@@ -306,13 +281,13 @@ class AdminController extends Controller
 
     public function admin_add_post(Request $request)
     {
-
-
         if (Auth::user()->perm == 1) {
-
+            $request->request->add(['mail' => Input::get('email'), 'pwd' => Input::get('password')]);
             $this->validate($request, [
-                'email' => 'required',
-                'password' => 'required'
+                'mail' => 'required|email',
+                'email' => 'unique:' . User::getModel()->getTable() . ',email',
+                'pwd' => 'required',
+                'password' => 'min:6'
             ]);
 
             $input_data = $request->all();
@@ -331,43 +306,20 @@ class AdminController extends Controller
 
             $note = trim($input_data['note']);
 
-            $add_users = DB::table('users')->where('email', '=', $email)->get();
+            User::insert([
+                'email' => $email,
+                'password' => $password,
+                'perm' => $perm,
+                'lock' => $lock,
+                'note' => $note
+            ]);
 
-            if ($add_users) {
-
-                return redirect()->route('admin.add')
-                    ->with('error', $email . ' 帳號已存在');
-
-
-            } else {
-
-
-                if (preg_match("|^[-_.0-9a-z]+@([-_0-9a-z][-_0-9a-z]+\.)+[a-z]{2,3}$|i", $email)) {
-
-                    DB::table('users')->insert([
-                        'email' => $email,
-                        'password' => $password,
-                        'perm' => $perm,
-                        'lock' => $lock,
-                        'note' => $note
-                    ]);
-
-                    return redirect()->route('admin.browser')
-                        ->with('success', '新增 ' . $email . ' 帳號成功');
-                } else {
-
-                    return redirect()->route('admin.add')
-                        ->with('error', $email . ' 格式不合法');
-
-                }
-
-            }
+            return redirect()->route('admin.browser')
+                ->with('successes', [\Lang::get('msg.add account successfully', ['account' => $email])]);
 
         } else {
             return view('errors.404');
         }
-
-
     }
 
     public function admin_add()
@@ -387,11 +339,9 @@ class AdminController extends Controller
     {
 
         if (Auth::user()->perm == 1) {
-
-//            $this->validate($request, [
-//                'ico' => 'mimes:ico',
-//                'logo' => 'mimes:png'
-//            ]);            
+            $this->validate($request, [
+                'password' => 'min:6'
+            ]);
 
             $input_data = $request->all();
 
@@ -414,9 +364,7 @@ class AdminController extends Controller
             //exit;
 
             if ($password) {
-
-                DB::table('users')
-                    ->where('id', $id)
+                User::whereId($id)
                     ->update([
                         'password' => bcrypt($password),
                         'perm' => $perm,
@@ -424,37 +372,29 @@ class AdminController extends Controller
                         'note' => $note,
                         'updated_at' => $timedata[0]->timedata
                     ]);
-
-
             } else {
-
-                DB::table('users')
-                    ->where('id', $id)
+                User::whereId($id)
                     ->update([
                         'perm' => $perm,
                         'lock' => $lock,
                         'note' => $note,
                         'updated_at' => $timedata[0]->timedata
                     ]);
-
             }
 
-            return redirect()->route('admin.browser')
-                ->with('success', '更新帳號成功');
+            return redirect()->route('admin.browser')->with('successes', [\Lang::get('msg.modify account successfully')]);
 
         } else {
             return view('errors.404');
         }
-
     }
 
     public function admin_edit($id)
     {
-
         if (Auth::user()->perm == 1) {
             $newid = trim($id);
 
-            $user = DB::table('users')->where('id', '=', $newid)->get();
+            $user = User::whereId($newid)->get();
 
             //Log::info('data -------------------------------- '. dump($user));
 
@@ -489,36 +429,33 @@ class AdminController extends Controller
 
     public function admin_browser_id_delete($id)
     {
-
         if (Auth::user()->perm == 1) {
             $newid = trim($id);
 
-            $perm = DB::table('users')->where('id', '=', $newid)->get();
-
-            if ($perm[0]->perm == 1) {
-
-                return redirect()->route('admin.browser')
-                    ->with('error', '無法刪除最高管理者帳號');
-
+            $perm = User::whereId($newid)->get();
+            $validator = \Validator::make(['perm' => $perm[0]->perm], ['perm' => 'ne:1']);
+            if ($validator->fails()) {
+                return redirect()->route('admin.browser')->withErrors($validator);
             } elseif ($perm[0]->perm == 2) {
-                DB::table('users')->where('id', '=', $newid)->delete();
+                User::whereId($newid)->delete();
 
                 return redirect()->route('admin.browser')
-                    ->with('success', '刪除帳號成功');
+                    ->with('successes', [\Lang::get('msg.delete account successfully')]);
             }
         } else {
             return view('errors.404');
         }
+    }
 
+    public function index()
+    {
+        return $this->admin_browser();
     }
 
     public function admin_browser()
     {
-
-
         if (Auth::user()->perm == 1) {
-            $user = DB::table('users')
-                ->orderBy('id', 'desc')
+            $user = User::orderBy('id', 'desc')
                 ->paginate(Config::get('app.pages_config'));
 
 
@@ -528,13 +465,6 @@ class AdminController extends Controller
         } else {
             return view('errors.404');
         }
-
-
-    }
-
-    public function index()
-    {
-        return $this->admin_browser();
     }
 
     public function sys_edit()
@@ -597,11 +527,7 @@ class AdminController extends Controller
                 'site_name' => 'required'
             );
 
-            $messages = array(
-                'site_name.required' => '．請輸入網站名稱。'
-            );
-
-            $this->validate($request, $rules, $messages);
+            $this->validate($request, $rules);
 
             $languages = DB::table('languages')->where('id', '>', 0)->get();
             $timedata = DB::select('select now() as timedata');
@@ -647,11 +573,30 @@ class AdminController extends Controller
         }
     }
 
-    public function sys_edit_3_next()
+    public function sys_edit_3_next(Request $request)
     {
         if (Auth::user()->perm == 1) {
-            $languages = DB::table('languages')->where('id', '>', 0)->get();
+            $languages = Language::where('id', '>', 0)->get();
             $timedata = DB::select('select now() as timedata');
+
+            $rules = ['logo' => 'max:1024|image'];
+            $messages = [];
+            $customAttributes = ['logo' => Language::first()->language . '-' . \Lang::get('ui.logo image')];
+            foreach ($languages as $language) {
+                $rules = $rules + [$language->id . '_logo' => 'max:1024|image'];
+                $messages = $messages + [
+                        $language->id . '_logo.max' => \Lang::get('validation.custom.logo.max'),
+                        $language->id . '_logo.image' => \Lang::get('validation.custom.logo.image'),
+                    ];
+                $customAttributes = $customAttributes + [
+                        $language->id . '_logo' => $language->language . '-' . \Lang::get('ui.logo image')
+                    ];
+            }
+
+            $validator = \Validator::make($request->all(), $rules, $messages, $customAttributes);
+            if ($validator->fails()) {
+                return redirect()->route('sys.edit.3')->withErrors($validator)->withInput();
+            }
 
             if (\Input::hasFile('logo')) {
                 \Input::file('logo')->move(
@@ -732,12 +677,11 @@ class AdminController extends Controller
                 'copyright' => 'required'
             );
 
-            $messages = array(
-                'copyright.required' => '．請輸入版權宣告。'
-            );
+            $this->validate($request, $rules, [], [
+                'copyright' => Language::first()->language . '-' . \Lang::get('ui.copyright content')
+            ]);
 
-            $this->validate($request, $rules, $messages);
-            $languages = DB::table('languages')->where('id', '>', 0)->get();
+            $languages = Language::where('id', '>', 0)->get();
             $timedata = DB::select('select now() as timedata');
 
             DB::table('webconfig')
@@ -787,8 +731,12 @@ class AdminController extends Controller
             $email = trim(\Input::get('email'));
             $icoName = "favicon.ico";
 
-            if (\Input::hasFile('ico')) {
+            $validator = \Validator::make(['email' => $email], ['email' => 'email']);
+            if ($validator->fails()) {
+                return redirect()->route('sys.edit.5')->withErrors($validator)->withInput();
+            }
 
+            if (\Input::hasFile('ico')) {
                 \Input::file('ico')->move(
                     base_path() . '/public/img/', $icoName
                 );
@@ -799,39 +747,34 @@ class AdminController extends Controller
 
             }
 
-            if (preg_match("|^[-_.0-9a-z]+@([-_0-9a-z][-_0-9a-z]+\.)+[a-z]{2,3}$|i", $email)) {
-                $timedata = DB::select('select now() as timedata');
-                $color = trim(\Input::get('color'));
-                $isCss = false;
+            $timedata = DB::select('select now() as timedata');
+            $color = trim(\Input::get('color'));
+            $isCss = false;
 
-                for ($i = 1; $i <= 7; $i++) {
-                    if ($color == 'S' . $i) {
-                        $isCss = true;
-                        break;
-                    }
+            for ($i = 1; $i <= 7; $i++) {
+                if ($color == 'S' . $i) {
+                    $isCss = true;
+                    break;
                 }
-
-                if (!$isCss) {
-                    $color = 'S1';
-                }
-
-                DB::table('webconfig')
-                    ->where('id', 1)
-                    ->update([
-                        'email' => $email,
-                        'ico' => $icoName,
-                        'color' => $color,
-                        'play' => (boolean)\Input::get('play'),
-                        'exhibition' => (boolean)\Input::get('exhibition'),
-                        'note' => trim(\Input::get('note')),
-                        'updated_at' => $timedata[0]->timedata
-                    ]);
-
-                return redirect()->route('sys.edit.5')->with('success', '資料更新成功');
-            } else {
-                return redirect()->route('sys.edit.5')
-                    ->with('error', ' 請輸入符合格式之電子信箱')->withInput();
             }
+
+            if (!$isCss) {
+                $color = 'S1';
+            }
+
+            DB::table('webconfig')
+                ->where('id', 1)
+                ->update([
+                    'email' => $email,
+                    'ico' => $icoName,
+                    'color' => $color,
+                    'play' => (boolean)\Input::get('play'),
+                    'exhibition' => (boolean)\Input::get('exhibition'),
+                    'note' => trim(\Input::get('note')),
+                    'updated_at' => $timedata[0]->timedata
+                ]);
+
+            return redirect()->route('sys.edit.5')->with('successes', [\Lang::get('msg.modify data successfully')]);
 
         } else {
             return view('errors.404');
@@ -840,7 +783,7 @@ class AdminController extends Controller
 
     public function lang_edit_label($label)
     {
-        $languages = DB::table('languages')->get();
+        $languages = DB::table(Language::getModel()->getTable())->get();
         $record = DB::table('label_update_time')->where('label', '=', $label)->get();
 
         $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
@@ -868,7 +811,8 @@ class AdminController extends Controller
 
     public function lang_edit_post(Request $request, $label)
     {
-        $languages = DB::table('languages')->get();
+        $language_table_name = Language::getModel()->getTable();
+        $languages = DB::table($language_table_name)->get();
 
         $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
         if ($label >= sizeof($table)) {
@@ -879,13 +823,9 @@ class AdminController extends Controller
             '0_title' => 'required'
         );
 
-        $messages = array(
-            '0_title.required' => '<p>．請輸入繁體中文訊息名稱。</p>'
-        );
+        $this->validate($request, $rules, array(), ['0_title' => $languages[0]->language]);
 
-        $this->validate($request, $rules, $messages);
-
-        $columns = \Schema::getColumnListing('languages');
+        $columns = \Schema::getColumnListing($language_table_name);
         $timedata = DB::select('select now() as timedata');
 
         for ($i = 0; $i < sizeof($languages); $i++) {
@@ -896,7 +836,7 @@ class AdminController extends Controller
             $values = array_combine(array_values($columns), array_values($lang_array));
             $values[$columns[$index]] = $signal;
 
-            DB::table('languages')->where('id', '=', $languages[$i]->id)->update($values);
+            DB::table($language_table_name)->where('id', '=', $languages[$i]->id)->update($values);
 
         }
 
@@ -913,12 +853,12 @@ class AdminController extends Controller
                 ]);
         }
 
-        return redirect()->route('lang.browser')->with('success', '更新資料成功');
+        return redirect()->route('lang.browser')->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     public function lang_browser()
     {
-        $languages = DB::table('languages')->get();
+        $languages = DB::table(Language::getModel()->getTable())->get();
 
         $table = new \SplFixedArray(sizeof(array_slice((array)$languages[0], 5)));
 
@@ -954,30 +894,6 @@ class AdminController extends Controller
     public
     function state_A()
     {
-
-
-//User {#245 ▼
-//  #table: "users"
-//  #fillable: array:3 [▶]
-//  #hidden: array:2 [▶]
-//  #connection: null
-//  #primaryKey: "id"
-//  #perPage: 15
-//  +incrementing: true
-//  +timestamps: true
-//  #attributes: array:10 [▼
-//    "id" => "5"
-//    "name" => "koha"
-//    "email" => "koha@sydt.com.tw"
-//    "password" => "$2y$10$UcRrAb.d/UiVgoOXLnmqvufwyFxsNDp6sDOG33hCMH9MI2ZHgDHAe"
-//    "lock" => "0"
-//    "note" => ""
-//    "remember_token" => "8To4WCeUlt0mq0RDvJ9ZfSELK4UIOnVpGDj6L5JecjRqHWcWREaAcO9FfQsQ"
-//    "perm" => "1"
-//    "created_at" => "2015-10-05 11:11:43"
-//    "updated_at" => "2015-10-27 13:48:38"
-//  ]
-
 //        $data = Auth::user();
 
 //        Log::info("ddddddddddddddddd". dump($data));
@@ -1020,11 +936,9 @@ class AdminController extends Controller
 
     }
 
-
     public
     function state_C()
     {
-
         $results = DB::select('select date_format(date_add( now(), interval -1 month), \'%Y\') as Year');
 
         $Year = $results[0]->Year;
@@ -1047,8 +961,6 @@ class AdminController extends Controller
             'Month' => $Month,
             'report' => $report
         ]);
-
-
     }
 
     public
@@ -1072,12 +984,8 @@ class AdminController extends Controller
         }
 
         return redirect()->route('my.info')
-            ->with('success', '密碼更新成功');
+            ->with('successes', [\Lang::get('msg.modify password successfully')]);
 
         //        Log::info("raw data ---------------- " . dump($input_data['password']));
-
-
     }
-
-
 }

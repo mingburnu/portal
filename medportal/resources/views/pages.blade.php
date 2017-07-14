@@ -22,19 +22,20 @@
         <div class="innerwrapper">
             {{$signal[0]->location}}：<a href="{{ route('index') }}">{{ $signal[0]->home }}</a> &gt; <a
                     href="{{ $url = route('pages.id', ['id' => $pages_data->id]) }}">
-                @if(Cookie::get('language')==0)
+                @if($signal[0]->id=='0')
                     {{ $pages_data->title }}
                 @else
                     <?php
                     $title_i18n = $pages_data->title;
-                    ?>
-                    @foreach($pages_data->menupage_i18ns as $pages_data_i18n)
-                        <?php
-                        if ($pages_data_i18n->language == Cookie::get('language') && $pages_data_i18n->title != null) {
-                            $title_i18n = $pages_data_i18n->title;
+                    foreach ($pages_data->menupage_i18ns as $pages_data_i18n) {
+                        if ($pages_data_i18n->language == $signal[0]->id) {
+                            if ($pages_data_i18n->title != null) {
+                                $title_i18n = $pages_data_i18n->title;
+                            }
+                            break;
                         }
-                        ?>
-                    @endforeach
+                    }
+                    ?>
                     {{ $title_i18n }}
                 @endif
             </a>
@@ -47,36 +48,38 @@
         <div class="innerwrapper">
             <!-- 內容 區塊 Begin -->
             <div class="title">
-                @if(Cookie::get('language')==0)
+                @if($signal[0]->id=='0')
                     {{ $pages_data->title }}
                 @else
                     <?php
                     $title_i18n = $pages_data->title;
-                    ?>
-                    @foreach($pages_data->menupage_i18ns as $page_i18n)
-                        <?php
-                        if ($page_i18n->language == Cookie::get('language') && $page_i18n->title != null) {
-                            $title_i18n = $page_i18n->title;
+                    foreach ($pages_data->menupage_i18ns as $page_i18n) {
+                        if ($page_i18n->language == $signal[0]->id) {
+                            if ($page_i18n->title != null) {
+                                $title_i18n = $page_i18n->title;
+                            }
+                            break;
                         }
-                        ?>
-                    @endforeach
+                    }
+                    ?>
                     {{ $title_i18n }}
                 @endif
             </div>
             <div class="ck_htmlcode">
-                @if(Cookie::get('language')==0)
+                @if($signal[0]->id=='0')
                     {!! $pages_data->content !!}
                 @else
                     <?php
                     $content_i18n = $pages_data->content;
-                    ?>
-                    @foreach($pages_data->menupage_i18ns as $page_i18n)
-                        <?php
-                        if ($page_i18n->language == Cookie::get('language') && $page_i18n->content != null) {
-                            $content_i18n = $page_i18n->content;
+                    foreach ($pages_data->menupage_i18ns as $page_i18n) {
+                        if ($page_i18n->language == $signal[0]->id) {
+                            if ($page_i18n->content != null) {
+                                $content_i18n = $page_i18n->content;
+                            }
+                            break;
                         }
-                        ?>
-                    @endforeach
+                    }
+                    ?>
                     {!! $content_i18n !!}
                 @endif
             </div>
@@ -94,7 +97,6 @@
             <!-- footer 區塊 End -->
 
 </div>
-
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')

@@ -25,7 +25,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span class="active">1</span>
                             <span>2</span>
                             <span>3</span>
@@ -35,7 +35,7 @@
                             {!! Form::model($querydatabase[0],['method' => 'PATCH','route'=>['db.update',$querydatabase[0]->id]]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>資料庫名稱</th>
+                                    <th>@lang('ui.database name')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language->id==0)
@@ -64,7 +64,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>嵌入語法</th>
+                                    <th>@lang('ui.embedded html')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language->id==0)
@@ -93,32 +93,32 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>是否顯示</th>
+                                    <th>@lang('ui.display')</th>
                                     <td>
-                                        <label>{!! Form::radio('view',true) !!}是</label>
-                                        <label>{!! Form::radio('view',false) !!}否</label>
+                                        <label>{!! Form::radio('view',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('view',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>排序</th>
+                                    <th>@lang('ui.sort')</th>
                                     <td>
                                         {!! Form::text('rank_id',null,['class'=>'v_00']) !!}
-                                        <div class="note_txt">數字愈大，順序愈前面。</div>
+                                        <div class="note_txt">@lang('ui.number order')</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>備註</th>
+                                    <th>@lang('ui.note')</th>
                                     <td> {!! Form::textarea('note',null,['rows'=>'5']) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())-1)">上一步</a>
+                                           onClick="step(parseInt($('span.active').html())-1)">@lang('ui.previous step')</a>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())+1)">下一步</a>
+                                           onClick="step(parseInt($('span.active').html())+1)">@lang('ui.next step')</a>
                                         <a class="btn_02"
-                                           onClick="document.getElementById('database_id').submit();">完成</a>
+                                           onClick="document.getElementById('database_id').submit();">@lang('ui.accomplish')</a>
                                     </td>
                                 </tr>
                             </table>
@@ -130,7 +130,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span
+                                    class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 
@@ -174,7 +175,7 @@
                 if ($("span.active").html() == "1") {
                     var database_name_ch = $("input[name='database_name']").val()
                     if (database_name_ch == null || database_name_ch.trim() == "") {
-                        message_show("<p>．請輸入資料庫名稱。</p>");
+                        message_show("<p>．@lang('validation.custom.database_name.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.database name')])</p>");
                         break;
                     }
                 }
@@ -201,7 +202,7 @@
                 if ($("span.active").html() == "2") {
                     var syntax_ch = $("textarea[name='syntax']").val()
                     if (syntax_ch == null || syntax_ch.trim() == "") {
-                        message_show("<p>．請輸入嵌入語法。</p>");
+                        message_show("<p>．@lang('validation.custom.syntax.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.embedded html')])</p>");
                         break;
                     }
                 }

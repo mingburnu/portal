@@ -24,7 +24,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span class="active">1</span>
                             <span>2</span>
                             <span>3</span>
@@ -35,18 +35,18 @@
                             {!! Form::open(['method' => 'POST','route'=>['sys.edit.next']]) !!}
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>語言設定</th>
+                                    <th>@lang('ui.language settings')</th>
                                     <td>
                                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                             <tr>
-                                                <th>語言</th>
-                                                <th>前端顯示</th>
-                                                <th>排序</th>
+                                                <th>@lang('ui.language')</th>
+                                                <th>@lang('ui.frontend display')</th>
+                                                <th>@lang('ui.sort')</th>
                                             </tr>
                                             @foreach($languages as $language)
                                                 <tr>
                                                     @if($language->id==0)
-                                                        <td>繁體中文(必選)</td>
+                                                        <td>{{$language->name}}(@lang('ui.required'))</td>
                                                         <td><input type="checkbox" checked disabled></td>
                                                         <td>{!! Form::text('sort',$language->sort,['class'=>'v_01','style'=>'width:50px;']) !!}</td>
                                                     @else
@@ -58,9 +58,9 @@
                                             @endforeach
                                         </table>
                                         <div class="note_txt">
-                                            前台顯示欄位：如欲顯示則需打勾選。<BR>
-                                            排序欄位：數字愈大，順序愈前面。<BR>
-                                            排序數字最大而且前台顯示也打勾選的語系即是預設語系。
+                                            @lang('ui.frontend display field')<BR>
+                                            @lang('ui.sort field')<BR>
+                                            @lang('ui.sort tip')
                                         </div>
                                     </td>
                                 </tr>
@@ -68,7 +68,7 @@
                                     <th>&nbsp;</th>
                                     <td>
                                         <a class="btn_02" href="javascript:void(0);"
-                                           onclick="document.getElementById('webconfig').submit();">下一步</a>
+                                           onclick="document.getElementById('webconfig').submit();">@lang('ui.next step')</a>
                                     </td>
                                 </tr>
                             </table>
@@ -80,7 +80,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')
+                        </div>
                     </div>
                     <!-- Note 區塊 End -->
 

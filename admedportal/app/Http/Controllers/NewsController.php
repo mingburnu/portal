@@ -78,22 +78,11 @@ class NewsController extends Controller
             'publish_ss' => 'required|date_format:"s"'
         );
 
-        $messages = array(
-            'title.required' => '<p>．請輸入標題。</p>',
-            'content.required' => '<p>．請輸入繁體中文的內容。</p>',
-            'publish_day.required' => '<p>．請輸入公告日期。</p>',
-            'publish_day.date_format' => '<p>．請輸入正確格式公告日期。</p>',
-            'publish_day.after' => '<p>．公告日期太早。</p>',
-            'publish_day.before' => '<p>．公告日期太晚。</p>',
-            'publish_hh.required' => '<p>．公告時必須填。</p>',
-            'publish_ii.required' => '<p>．公告分必須填。</p>',
-            'publish_ss.required' => '<p>．公告秒必須填。</p>',
-            'publish_hh.date_format' => '<p>．請輸入正確格式公告時。</p>',
-            'publish_ii.date_format' => '<p>．請輸入正確格式公告分。</p>',
-            'publish_ss.date_format' => '<p>．請輸入正確格式公告秒。</p>'
-        );
-
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, [], [
+            'title' => $first_language . '-' . \Lang::get('ui.title'),
+            'content' => $first_language . '-' . \Lang::get('ui.content')
+        ]);
 
         Input::merge(array(
             'publish_time' => Input::get('publish_day') . " " . Input::get('publish_hh') . ":" . Input::get('publish_ii') . ":" . Input::get('publish_ss'),
@@ -108,20 +97,7 @@ class NewsController extends Controller
                 'end_ss' => 'required|date_format:"s"'
             );
 
-            $messages = array(
-                'end_day.required' => '<p>．請輸入結束日期。</p>',
-                'end_date.date_format' => '<p>．請輸入正確格式結束日期。</p>',
-                'end_date.after' => '<p>．結束日期太早。</p>',
-                'end_date.before' => '<p>．結束日期太晚。</p>',
-                'end_hh.required' => '<p>．結束時必須填。</p>',
-                'end_ii.required' => '<p>．結束分必須填。</p>',
-                'end_ss.required' => '<p>．結束秒必須填。</p>',
-                'end_hh.date_format' => '<p>．請輸入正確格式結束時。</p>',
-                'end_ii.date_format' => '<p>．請輸入正確格式結束分。</p>',
-                'end_ss.date_format' => '<p>．請輸入正確格式結束秒。</p>'
-            );
-
-            $this->validate($request, $rules, $messages);
+            $this->validate($request, $rules);
 
             Input::merge(array(
                 'end_time' => Input::get('end_day') . " " . Input::get('end_hh') . ":" . Input::get('end_ii') . ":" . Input::get('end_ss'),
@@ -131,11 +107,7 @@ class NewsController extends Controller
                 'end_time' => 'after:publish_time'
             );
 
-            $messages = array(
-                'end_time.after' => '<p>．公告時間必須早於結束時間。</p>'
-            );
-
-            $this->validate($request, $rules, $messages);
+            $this->validate($request, $rules);
         }
 
         $languages = Language::where('id', '>', 0)->get();
@@ -167,7 +139,7 @@ class NewsController extends Controller
         $news->news_i18ns()->saveMany($news_i18ns);
 
         return redirect()->route('news.index')
-            ->with('success', '新增資料成功');
+            ->with('successes', [\Lang::get('msg.insert data successfully')]);
     }
 
     /**
@@ -271,22 +243,11 @@ class NewsController extends Controller
             'publish_ss' => 'required|date_format:"s"'
         );
 
-        $messages = array(
-            'title.required' => '<p>．請輸入標題。</p>',
-            'content.required' => '<p>．請輸入繁體中文的內容。</p>',
-            'publish_day.required' => '<p>．請輸入公告日期。</p>',
-            'publish_day.date_format' => '<p>．請輸入正確格式公告日期。</p>',
-            'publish_day.after' => '<p>．公告日期太早。</p>',
-            'publish_day.before' => '<p>．公告日期太晚。</p>',
-            'publish_hh.required' => '<p>．公告時必須填。</p>',
-            'publish_ii.required' => '<p>．公告分必須填。</p>',
-            'publish_ss.required' => '<p>．公告秒必須填。</p>',
-            'publish_hh.date_format' => '<p>．請輸入正確格式公告時。</p>',
-            'publish_ii.date_format' => '<p>．請輸入正確格式公告分。</p>',
-            'publish_ss.date_format' => '<p>．請輸入正確格式公告秒。</p>'
-        );
-
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, [], [
+            'title' => $first_language . '-' . \Lang::get('ui.title'),
+            'content' => $first_language . '-' . \Lang::get('ui.content')
+        ]);
 
         Input::merge(array(
             'publish_time' => Input::get('publish_day') . " " . Input::get('publish_hh') . ":" . Input::get('publish_ii') . ":" . Input::get('publish_ss'),
@@ -301,20 +262,7 @@ class NewsController extends Controller
                 'end_ss' => 'required|date_format:"s"'
             );
 
-            $messages = array(
-                'end_day.required' => '<p>．請輸入結束日期。</p>',
-                'end_day.date_format' => '<p>．請輸入正確格式結束日期。</p>',
-                'end_day.after' => '<p>．結束日期太早。</p>',
-                'end_day.before' => '<p>．結束日期太晚。</p>',
-                'end_hh.required' => '<p>．結束時必須填。</p>',
-                'end_ii.required' => '<p>．結束分必須填。</p>',
-                'end_ss.required' => '<p>．結束秒必須填。</p>',
-                'end_hh.date_format' => '<p>．請輸入正確格式結束時。</p>',
-                'end_ii.date_format' => '<p>．請輸入正確格式結束分。</p>',
-                'end_ss.date_format' => '<p>．請輸入正確格式結束秒。</p>'
-            );
-
-            $this->validate($request, $rules, $messages);
+            $this->validate($request, $rules);
 
             Input::merge(array(
                 'end_time' => Input::get('end_day') . " " . Input::get('end_hh') . ":" . Input::get('end_ii') . ":" . Input::get('end_ss'),
@@ -324,11 +272,7 @@ class NewsController extends Controller
                 'end_time' => 'after:publish_time'
             );
 
-            $messages = array(
-                'end_time.after' => '<p>．公告時間必須早於結束時間。</p>'
-            );
-
-            $this->validate($request, $rules, $messages);
+            $this->validate($request, $rules);
         }
 
         $languages = Language::where('id', '>', 0)->get();
@@ -364,7 +308,7 @@ class NewsController extends Controller
         }
 
         return redirect()->route('news.index')
-            ->with('success', '更新資料成功');
+            ->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     /**
@@ -385,6 +329,6 @@ class NewsController extends Controller
         News::whereId($id)->delete();
 
         return redirect()->route('news.index')
-            ->with('success', '刪除資料成功');
+            ->with('successes', [\Lang::get('msg.delete data successfully')]);
     }
 }

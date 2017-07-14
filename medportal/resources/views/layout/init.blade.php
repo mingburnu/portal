@@ -18,23 +18,23 @@
         var books = [];
         @if(isset($book))
         @for($i = 0; $i < count($book); $i++)
-            @if(Cookie::get('language')==0)
+            @if($signal[0]->id=='0')
                 <?php
-                $book_name = $book[$i]->book_name
+                    $book_name = $book[$i]->book_name
                 ?>
             @else
                 <?php
-                $book_name = $book[$i]->book_name;
-                ?>
-                @foreach($book[$i]->book_i18ns as $book_i18n)
-                    <?php
-                    if ($book_i18n->language == Cookie::get('language') && $book_i18n->book_name != null) {
-                        $book_name = $book_i18n->book_name;
+                    $book_name = $book[$i]->book_name;
+                    foreach ($book[$i]->book_i18ns as $book_i18n) {
+                        if ($book_i18n->language == $signal[0]->id) {
+                            if($book_i18n->book_name != null) {
+                                $book_name = $book_i18n->book_name;
+                            }
+                            break;
+                        }
                     }
-                    ?>
-                @endforeach
+                ?>
             @endif
-
         books.push(['{{ $book_name }}', '{{ $book[$i]->url }}', '{{ $book[$i]->cover }}']);
         @endfor
         @endif
@@ -44,12 +44,11 @@
         setTimeout(function () {
             begin_owlCarousel();
         }, 500);
-
     });
 
     //cssom
     $(window).bind('load', function () {
-        SearchBox_show('load');
+        SearchBox_show('{{$queryDb[0]->id}}');
         Book_load_resize();
     });
 

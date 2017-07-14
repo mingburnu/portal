@@ -18,107 +18,76 @@
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
+                    @include('layout.message')
+                            <!-- message 區塊 End -->
 
-                    @if(Session::get('success'))
-
-                        <div class="message_print_ok">
-                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                <tr valign="top">
-                                    <td class="message_text"><p>{{ Session::get('success') }}</p></td>
-                                    <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                                                 onClick="message_print_ok_hide();">關閉</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-                    @endif
-
-                    @if(Session::get('error'))
-
-                        <div class="message_print_errer">
-                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                <tr valign="top">
-                                    <td class="message_text"><p>{{ Session::get('error') }}</p></td>
-                                    <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                                                 onClick="message_print_errer_hide();">關閉</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        @endif
-
-                                <!-- message 區塊 End -->
-
-                        <!-- 功能 區塊 Begin -->
-                        <div class="func_box">
-                            <a class="btn_02" href="{{ route('admin.add') }}">新增</a>
-                        </div>
-                        <!-- 功能 區塊 End -->
+                    <!-- 功能 區塊 Begin -->
+                    <div class="func_box">
+                        <a class="btn_02" href="{{ route('admin.add') }}">@lang('ui.add')</a>
+                    </div>
+                    <!-- 功能 區塊 End -->
 
 
-                        <!-- 瀏覽 區塊 Begin -->
-                        <div class="browser_box">
-                            <table width="100%" border="1" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <th>帳號</th>
-                                    <th>權限身份</th>
-                                    <th>是否封鎖</th>
-                                    <th>備註</th>
-                                    <th>建立時間</th>
-                                    <th>修改時間</th>
-                                    <th>功能</th>
-                                </tr>
+                    <!-- 瀏覽 區塊 Begin -->
+                    <div class="browser_box">
+                        <table width="100%" border="1" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <th>@lang('ui.account')</th>
+                                <th>@lang('ui.permission')</th>
+                                <th>@lang('ui.blockade')</th>
+                                <th>@lang('ui.note')</th>
+                                <th>@lang('ui.created at')</th>
+                                <th>@lang('ui.updated at')</th>
+                                <th>@lang('ui.action')</th>
+                            </tr>
 
-                                @if(count($user))
+                            @if(count($user))
 
-                                    @for($i = 0; $i < count($user); $i++)
-                                        <tr>
-                                            <td>{{ $user[$i]->email}}</td>
+                                @for($i = 0; $i < count($user); $i++)
+                                    <tr>
+                                        <td>{{ $user[$i]->email}}</td>
 
-                                            @if($user[$i]->perm == 1)
-                                                <td>最高管理者</td>
-                                            @elseif($user[$i]->perm == 2)
-                                                <td>一般管理者</td>
-                                            @endif
+                                        @if($user[$i]->perm == 1)
+                                            <td>@lang('ui.administrator')</td>
+                                        @elseif($user[$i]->perm == 2)
+                                            <td>@lang('ui.standard user')</td>
+                                        @endif
 
-                                            @if($user[$i]->lock == 1)
-                                                <td>是</td>
-                                            @elseif($user[$i]->lock == 0)
-                                                <td>否</td>
-                                            @endif
+                                        @if($user[$i]->lock == 1)
+                                            <td>@lang('ui.true')</td>
+                                        @elseif($user[$i]->lock == 0)
+                                            <td>@lang('ui.false')</td>
+                                        @endif
 
-                                            @if($user[$i]->note)
-                                                <td>{{ $user[$i]->note }}</td>
-                                            @else
-                                                <td>&nbsp;</td>
-                                            @endif
+                                        @if($user[$i]->note)
+                                            <td>{{ $user[$i]->note }}</td>
+                                        @else
+                                            <td>&nbsp;</td>
+                                        @endif
 
-                                            <td>{{ $user[$i]->created_at }}</td>
-                                            <td>{{ $user[$i]->updated_at }}</td>
-                                            <td>
-                                                <a class="btn_03"
-                                                   href="{{ $url = route('admin.broweser.id.delete', ['id' => $user[$i]->id ] ) }}">刪除</a>
-                                                <a class="btn_02"
-                                                   href="{{ $url = route('admin.edit', ['id' => $user[$i]->id ] ) }}">修改</a>
-                                            </td>
-                                        </tr>
-                                    @endfor
+                                        <td>{{ $user[$i]->created_at }}</td>
+                                        <td>{{ $user[$i]->updated_at }}</td>
+                                        <td>
+                                            <a class="btn_03"
+                                               href="{{ $url = route('admin.broweser.id.delete', ['id' => $user[$i]->id ] ) }}">@lang('ui.delete')</a>
+                                            <a class="btn_02"
+                                               href="{{ $url = route('admin.edit', ['id' => $user[$i]->id ] ) }}">@lang('ui.modify')</a>
+                                        </td>
+                                    </tr>
+                                @endfor
 
-                                @endif
+                            @endif
 
-                            </table>
-                        </div>
+                        </table>
+                    </div>
 
-                        <!-- 分頁 區塊 Begin -->
-                        @include('layout.pagination',['table'=>$user])
-                                <!-- 分頁 區塊 End -->
-                        <!-- 瀏覽 區塊 End -->
+                    <!-- 分頁 區塊 Begin -->
+                    @include('layout.pagination',['table'=>$user])
+                            <!-- 分頁 區塊 End -->
+                    <!-- 瀏覽 區塊 End -->
 
 
-
-                        <!-- 內容 區塊 End -->
+                    <!-- 內容 區塊 End -->
                 </td>
             </tr>
         </table>

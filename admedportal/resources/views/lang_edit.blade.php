@@ -41,7 +41,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <th>最後修改時間</th>
+                                    <th>@lang('ui.last modification')</th>
                                     <td>
                                         @if(sizeof($record)!=0)
                                             {{$record[0]->updated_at}}
@@ -51,7 +51,7 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="javascript:void(0);" onclick="form_submit();">更新</a>
+                                        <a class="btn_02" href="javascript:void(0);" onclick="form_submit();">@lang('ui.update')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -63,7 +63,7 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 

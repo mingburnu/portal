@@ -51,7 +51,7 @@
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
   <thead>  
     <tr>
-        <th>年-月</th>
+        <th>@lang('ui.year-month')</th>
         <th>排名</th>
         <th>關鍵字名稱</th>
         <th>資料庫查詢</th>

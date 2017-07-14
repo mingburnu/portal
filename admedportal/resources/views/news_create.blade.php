@@ -25,7 +25,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span class="active">1</span>
                             <span>2</span>
                             <span>3</span>
@@ -35,7 +35,7 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
-                                    <th>標題</th>
+                                    <th>@lang('ui.title')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language->id==0)
@@ -55,7 +55,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>內容</th>
+                                    <th>@lang('ui.content')</th>
                                     <td>
                                         <div class="accordion_01">
                                             @foreach($languages as $language)
@@ -76,55 +76,55 @@
                                         </div>
 
                                         <div class="note_txt">
-                                            注意事項:<BR/>
-                                            ▲編輯內文的連結時，連結的顏色儘量不手動設定，前台系統會自動預設。<BR/>
-                                            ▲插入影像圖時，為了保持手機版品質，寬度建議設定為600px。<BR/>
-                                            ▲插入影像圖時，為了保持手機版品質，建議該圖左右側邊為空白，而且放置中間。<BR/>
+                                            @lang('ui.caution'):<BR/>
+                                            ▲@lang('ui.link text color')<BR/>
+                                            ▲@lang('ui.recommended image width')<BR/>
+                                            ▲@lang('ui.recommended image center')<BR/>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>公告開始時間(•)</th>
+                                    <th>@lang('ui.published start time')(•)</th>
                                     <td>
                                         {!! Form::text('publish_day',null,array('id'=>'datepicker','class'=>'v_01','style'=>'width:180px;')) !!}
-                                        {!! Form::select('publish_hh', $hours) !!} 時
-                                        {!! Form::select('publish_ii', $minuteSeconds) !!} 分
-                                        {!! Form::select('publish_ss', $minuteSeconds) !!} 秒
+                                        {!! Form::select('publish_hh', $hours) !!} @lang('ui.hour')
+                                        {!! Form::select('publish_ii', $minuteSeconds) !!} @lang('ui.minute')
+                                        {!! Form::select('publish_ss', $minuteSeconds) !!} @lang('ui.seconds')
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>公告結束時間(•)</th>
+                                    <th>@lang('ui.published end time')(•)</th>
                                     <td>
-                                        <label>{!! Form::radio('forever',true,['checked'=>true]) !!}常駐</label>
+                                        <label>{!! Form::radio('forever',true,['checked'=>true]) !!}@lang('ui.forever')</label>
                                         <label>
                                             {!! Form::radio('forever',false) !!}
                                             {!! Form::text('end_day',null,array('id'=>'datepicker_2','class'=>'v_02','style'=>'width:180px;')) !!}
-                                            {!! Form::select('end_hh', $hours) !!} 時
-                                            {!! Form::select('end_ii', $minuteSeconds) !!} 分
-                                            {!! Form::select('end_ss', $minuteSeconds) !!} 秒
+                                            {!! Form::select('end_hh', $hours) !!} @lang('ui.hour')
+                                            {!! Form::select('end_ii', $minuteSeconds) !!} @lang('ui.minute')
+                                            {!! Form::select('end_ss', $minuteSeconds) !!} @lang('ui.seconds')
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>是否顯示</th>
+                                    <th>@lang('ui.display')</th>
                                     <td>
-                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}是</label>
-                                        <label>{!! Form::radio('view',false) !!}否</label>
+                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('view',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>備註</th>
+                                    <th>@lang('ui.note')</th>
                                     <td>{!! Form::textarea('note',null,['rows'=>'5']) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())-1)">上一步</a>
+                                           onClick="step(parseInt($('span.active').html())-1)">@lang('ui.previous step')</a>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())+1)">下一步</a>
+                                           onClick="step(parseInt($('span.active').html())+1)">@lang('ui.next step')</a>
                                         <a class="btn_02"
-                                           onClick="submit();">完成</a>
+                                           onClick="submit();">@lang('ui.accomplish')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -137,7 +137,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span
+                                    class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 
@@ -168,7 +169,7 @@
         $("a.btn_02:eq(2)").hide();
 
         @foreach($languages as $language)
-        CKEDITOR.replace("{{'editor'.$language->id}}");
+        CKEDITOR.replace("{{'editor'.$language->id}}", lang());
         @endforeach
 
         //
@@ -202,7 +203,7 @@
                 if ($("span.active").html() == "1") {
                     var title_ch = $("input[name='title']").val()
                     if (title_ch == null || title_ch.trim() == "") {
-                        message_show("<p>．請輸入標題。</p>");
+                        message_show("<p>．@lang('validation.custom.title.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.title')])</p>");
                         break;
                     }
                 }
@@ -226,7 +227,7 @@
             case 3:
                 if ($("span.active").html() == "2") {
                     if (CKEDITOR.instances.editor0.getData().length == 0) {
-                        message_show("<p>．請輸入繁體中文的內容。</p>");
+                        message_show("<p>．@lang('validation.custom.content.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.content')])</p>");
                         break;
                     }
                 }
@@ -266,60 +267,73 @@
         var is_no_end = forever != null && forever.trim() != "" && forever != "0" && forever != 0;
 
         if (publish_day == null || publish_day.trim() == "") {
-            msg = msg + "<p>．請輸入公告日期。</p>";
+            msg = msg + "<p>．@lang('validation.custom.publish_day.required')</p>";
         } else {
             if (publish_day.match(dayRegEx) == null) {
-                msg = msg + "<p>．請輸入正確格式公告日期。</p>";
+                msg = msg + "<p>．@lang('validation.custom.publish_day.date_format')</p>";
             } else {
                 var publishDate = new Date(publish_day.match(dayRegEx));
                 if (Object.prototype.toString.call(publishDate) === "[object Date]") {
                     if (isNaN(publishDate)) {
-                        msg = msg + "<p>．請輸入正確格式公告日期。</p>";
+                        msg = msg + "<p>．@lang('validation.custom.publish_day.date_format')</p>";
                     }
                 }
             }
         }
 
         if (publish_hh == null || publish_ii == null || publish_ss == null || publish_hh == "" || publish_ii == "" || publish_ss == "") {
-            msg = msg + "<p>．請輸入公告時間。</p>";
+            msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
+                    + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                    + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
+            message_show(msg);
         } else {
             if (publish_hh.match(timeRegEx) == null || publish_ii.match(timeRegEx) == null || publish_ss.match(timeRegEx) == null) {
-                msg = msg + "<p>．請輸入正確格式公告時、分、秒。</p>";
+                msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
+                        + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                        + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
             } else {
                 var publishTime = new Date(1970, 0, 1, publish_hh, publish_ii, publish_ss, 0);
                 if (Object.prototype.toString.call(publishTime) === "[object Date]") {
                     if (isNaN(publishTime)) {
-                        msg = msg + "<p>．請輸入正確格式公告時、分、秒。</p>";
+                        msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
+                                + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                                + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
                     }
                 }
             }
 
             if (!is_no_end) {
                 if (end_day == null || end_day.trim() == "") {
-                    msg = msg + "<p>．請輸入結束日期。</p>";
+                    msg = msg + "<p>．@lang('validation.custom.end_day.required')</p>";
                 } else {
                     if (end_day.match(dayRegEx) == null) {
-                        msg = msg + "<p>．請輸入正確格式結束日期。</p>";
+                        msg = msg + "<p>．@lang('validation.custom.end_day.date_format')</p>";
                     } else {
                         var endDate = new Date(end_day.match(dayRegEx));
                         if (Object.prototype.toString.call(endDate) === "[object Date]") {
                             if (isNaN(endDate)) {
-                                msg = msg + "<p>．請輸入正確格式結束日期。</p>";
+                                msg = msg + "<p>．@lang('validation.custom.end_day.date_format')</p>";
                             }
                         }
                     }
                 }
 
                 if (end_hh == null || end_ii == null || end_ss == null || end_hh == "" || end_ii == "" || end_ss == "") {
-                    msg = msg + "<p>．請輸入結束時間。</p>";
+                    msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
+                            + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                            + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                 } else {
                     if (end_hh.match(timeRegEx) == null || end_ii.match(timeRegEx) == null || end_ss.match(timeRegEx) == null) {
-                        msg = msg + "<p>．請輸入正確格式結束時、分、秒。</p>";
+                        msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
+                                + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                                + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                     } else {
                         var endTime = new Date(1970, 0, 1, end_hh, end_ii, end_ss, 0);
                         if (Object.prototype.toString.call(endTime) === "[object Date]") {
                             if (isNaN(endTime)) {
-                                msg = msg + "<p>．請輸入正確格式結束時、分、秒。</p>";
+                                msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
+                                        + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                                        + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                             }
                         }
                     }
@@ -330,7 +344,7 @@
                     var after = new Date(end_day + " " + end_hh + ":" + end_ii + ":" + end_ss);
 
                     if (begin.getTime() >= after.getTime()) {
-                        msg = msg + "<p>．公告時間必須早於結束時間。</p>";
+                        msg = msg + "<p>．@lang('validation.custom.end_time.after')</p>";
                     }
                 }
             }

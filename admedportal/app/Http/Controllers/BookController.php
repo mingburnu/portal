@@ -105,39 +105,26 @@ class BookController extends Controller
     {
         //
         $rules = null;
-        $messages = null;
         $upload_option = (boolean)Input::get('upload_option');
         if ($upload_option) {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'required|mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.required' => '<p>．請上傳書封。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'required|max:1024|image'
             );
         } else {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'cover.required' => '<p>．請輸入書封。</p>',
-                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         }
 
-        $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules, [], [
+            'book_name' => Language::first()->language . '-' . \Lang::get('ui.book name'),
+            'url' => \Lang::get('ui.link'),
+            'upload_file' => \Lang::get('ui.book cover')
+        ]);
 
         //Log::info("data --------------------------- " . dump($request));
 
@@ -168,7 +155,6 @@ class BookController extends Controller
             Image::make(base_path() . '/public/books/' . $imageName)
                 ->resize(\Config::get('app.books_image_width'), $new_height)
                 ->save(public_path('books/' . $imageName));
-
 
             $cover = "books/$imageName";
 
@@ -207,7 +193,7 @@ class BookController extends Controller
         $book->book_i18ns()->saveMany($book_i18ns);
 
         return redirect()->route('book.index')
-            ->with('success', '新增資料成功');
+            ->with('successes', [\Lang::get('msg.insert data successfully')]);
     }
 
     /**
@@ -260,65 +246,37 @@ class BookController extends Controller
         $upload_option = (boolean)Input::get('upload_option');
 
         $rules = null;
-        $messages = null;
         if ($db_upload_option && $upload_option) {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'max:1024|image'
             );
         } elseif ($db_upload_option && !$upload_option) {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'cover.required' => '<p>．請輸入書封。</p>',
-                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         } elseif (!$db_upload_option && $upload_option) {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'upload_file' => 'required|mimes:png,jpeg,gif'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'upload_file.required' => '<p>．請上傳書封。</p>',
-                'upload_file.mimes' => '<p>．請上傳正確格式圖片。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'upload_file' => 'required|max:1024|image'
             );
         } else {
             $rules = array(
                 'book_name' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
-                'cover' => 'required|regex:/^http([s]?):\/\/.*/'
-            );
-
-            $messages = array(
-                'book_name.required' => '<p>．請輸入書名。</p>',
-                'url.required' => '<p>．請輸入連結。</p>',
-                'url.regex' => '<p>．連結格式必須為網址(含http://)。</p>',
-                'cover.required' => '<p>．請輸入書封。</p>',
-                'cover.regex' => '<p>．圖檔網址格式必須為網址(含http://)。</p>'
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
+                'cover' => 'required|url|regex:/^http([s]?):\/\/.*/'
             );
         }
 
-        $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules, [], [
+            'book_name' => Language::first()->language . '-' . \Lang::get('ui.book name'),
+            'url' => \Lang::get('ui.link'),
+            'upload_file' => \Lang::get('ui.book cover')
+        ]);
 
         //Log::info("data --------------------------- " . dump($request));
 
@@ -392,7 +350,6 @@ class BookController extends Controller
                 ->resize(\Config::get('app.books_image_width'), $new_height)
                 ->save(public_path('books/' . $imageName));
 
-
             $cover = "books/$imageName";
 
         } else {
@@ -431,7 +388,7 @@ class BookController extends Controller
         }
 
         return redirect()->route('book.index')
-            ->with('success', '更新資料成功');
+            ->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     /**
@@ -454,6 +411,6 @@ class BookController extends Controller
         Book::whereId($id)->delete();
 
         return redirect()->route('book.index')
-            ->with('success', '刪除資料成功');
+            ->with('successes', [\Lang::get('msg.delete data successfully')]);
     }
 }

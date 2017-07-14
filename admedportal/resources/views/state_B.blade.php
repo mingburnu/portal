@@ -53,7 +53,7 @@
                     <form id="state_B" method="POST" action="/state_B/post">
 
                         <div class="func_box">
-                            年份
+                            @lang('ui.year')
                             <select name="Year">
 
                                 @for($i = 2015; $i< 2020; $i++)
@@ -68,7 +68,7 @@
 
                             </select>
                             &nbsp;&nbsp;
-                            月份
+                            @lang('ui.month')
                             <select name="Month">
 
                                 @for($i = 1; $i < 13; $i++)
@@ -95,7 +95,7 @@
                             &nbsp;&nbsp;
 
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <a class="btn_02" onClick="document.getElementById('state_B').submit();">查詢</a>
+                            <a class="btn_02" onClick="document.getElementById('state_B').submit();">@lang('ui.query')</a>
                         </div>
                         <!-- 功能 區塊 End -->
 
@@ -104,9 +104,9 @@
                         <div class="browser_box">
                             <table width="100%" border="1" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>年-月</th>
-                                    <th>資料庫名稱</th>
-                                    <th>是否顯示</th>
+                                    <th>@lang('ui.year-month')</th>
+                                    <th>@lang('ui.database name')</th>
+                                    <th>@lang('ui.display')</th>
                                     <th>查詢次數</th>
                                 </tr>
 
@@ -120,9 +120,9 @@
                                             <td>{{ $report[$i]->database_name }}</td>
 
                                             @if( $report[$i]->view == 1 )
-                                                <td>是</td>
+                                                <td>@lang('ui.true')</td>
                                             @elseif( $report[$i]->view == 0 )
-                                                <td>否</td>
+                                                <td>@lang('ui.false')</td>
                                             @endif
 
                                             <td>{{ $report[$i]->query_times }}</td>
@@ -145,7 +145,7 @@
                     @if(count($report) > 0 )
 
                         <div class="func_box">
-                            <a class="btn_02" href="{{ url('/state_B_output/' . $Year . '/' . $Month) }}">匯出</a>
+                            <a class="btn_02" href="{{ url('/state_B_output/' . $Year . '/' . $Month) }}">@lang('ui.export')</a>
                         </div>
 
                         @endif

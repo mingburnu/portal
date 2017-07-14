@@ -24,7 +24,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span>1</span>
                             <span>2</span>
                             <span>3</span>
@@ -36,7 +36,7 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
-                                    <th>版權宣告</th>
+                                    <th>@lang('ui.copyright content')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language->id==0)
@@ -58,9 +58,9 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="/sys_edit_3">上一步</a>
+                                        <a class="btn_02" href="/sys_edit_3">@lang('ui.previous step')</a>
                                         <a class="btn_02" href="javascript:void(0);"
-                                           onclick="document.getElementById('webconfig').submit();">下一步</a>
+                                           onclick="document.getElementById('webconfig').submit();">@lang('ui.next step')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -73,7 +73,7 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 

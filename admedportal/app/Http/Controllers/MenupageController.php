@@ -112,7 +112,7 @@ class MenupageController extends Controller
     public function create()
     {
         //
-        $top = array('' => '不設定(單一網頁)');
+        $top = array('' => \Lang::get('ui.single webpage'));
         $titles = Menupage::where('parent_id', '=', null)->lists('title', 'id')->toArray();
         $select = $top + $titles;
         $languages = Language::all();
@@ -131,6 +131,8 @@ class MenupageController extends Controller
         $type = (boolean)Input::get('type');
         $ids = Menupage::select('id')->where('parent_id', '=', null)->lists('id')->toArray();
 
+        $messages = [];
+        $i18n_url = [];
         $languages = Language::where('id', '>', 0)->get();
         if ($type) {
             $rules = array(
@@ -138,33 +140,31 @@ class MenupageController extends Controller
                 'content' => 'required',
                 'parent_id' => 'in:' . implode(',', $ids)
             );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入項目名稱。</p>',
-                'content.required' => '<p>．請輸入繁體中文的網頁內容。</p>',
-                'parent_id.in' => '<p>．位置不正確</p>'
-            );
         } else {
             $rules = array(
                 'title' => 'required',
-                'url' => 'required|regex:/^http([s]?):\/\/.*/',
+                'url' => 'required|url|regex:/^http([s]?):\/\/.*/',
                 'parent_id' => 'in:' . implode(',', $ids)
             );
 
-            $messages = array(
-                'title.required' => '<p>．請輸入項目名稱。</p>',
-                'url.required' => '<p>．請輸入繁體中文的網頁連結。</p>',
-                'url.regex' => '<p>．繁體中文的網頁連結格式必須為網址(含http://)。</p>',
-                'parent_id.in' => '<p>．位置不正確</p>'
-            );
-
             foreach ($languages as $language) {
-                $rules = $rules + array('menupage_i18ns.' . $language->id . '.url' => 'regex:/^http([s]?):\/\/.*/');
-                $messages = $messages + array('menupage_i18ns.' . $language->id . '.url.regex' => '<p>．' . $language->language . '的網頁連結格式必須為網址(含http://)。</p>');
+                $rules = $rules + array('menupage_i18ns.' . $language->id . '.url' => 'url|regex:/^http([s]?):\/\/.*/');
+                $messages = $messages +
+                    [
+                        'menupage_i18ns.' . $language->id . '.url.url' => \Lang::get('validation.custom.url.url'),
+                        'menupage_i18ns.' . $language->id . '.url.regex' => \Lang::get('validation.custom.url.url'),
+                    ];
+
+                $i18n_url = $i18n_url + ['menupage_i18ns.' . $language->id . '.url' => $language->language . '-' . \Lang::get('ui.link')];
             }
         }
 
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, $messages, [
+                'title' => $first_language . \Lang::get('ui.menu name'),
+                'content' => $first_language . \Lang::get('ui.webpage content'),
+                'url' => $first_language . \Lang::get('ui.link')
+            ] + $i18n_url);
 
         //    Log::info('data ------------------ ' . dump($paper));
 
@@ -213,7 +213,7 @@ class MenupageController extends Controller
         }
 
         return redirect()->route('menupage.index')
-            ->with('success', '新增資料成功');
+            ->with('successes', [\Lang::get('msg.insert data successfully')]);
     }
 
     /**
@@ -243,7 +243,7 @@ class MenupageController extends Controller
 
         $paper = Menupage::find($id);
 
-        $top = array('' => '不設定(單一網頁)');
+        $top = array('' => \Lang::get('ui.single webpage'));
         $select = $top;
 
         if (Menupage::whereParentId($id)->count() == 0) {
@@ -269,21 +269,16 @@ class MenupageController extends Controller
             return view('errors.404');
         }
 
-        $languages = Language::where('id', '>', 0)->get();
-
         $type = (boolean)Input::get('type');
 
+        $i18n_url = [];
+        $messages = [];
+        $languages = Language::where('id', '>', 0)->get();
         if ($type) {
             $rules = array(
                 'title' => 'required',
                 'content' => 'required',
                 'parent_id' => 'node'
-            );
-
-            $messages = array(
-                'title.required' => '<p>．請輸入項目名稱。</p>',
-                'content.required' => '<p>．請輸入繁體中文的網頁內容。</p>',
-                'parent_id.node' => '<p>．位置不正確</p>'
             );
         } else {
             $rules = array(
@@ -292,20 +287,25 @@ class MenupageController extends Controller
                 'parent_id' => 'node'
             );
 
-            $messages = array(
-                'title.required' => '<p>．請輸入項目名稱。</p>',
-                'url.required' => '<p>．請輸入繁體中文的網頁連結。</p>',
-                'url.regex' => '<p>．繁體中文的網頁連結格式必須為網址(含http://)。</p>',
-                'parent_id.node' => '<p>．位置不正確</p>'
-            );
-
             foreach ($languages as $language) {
-                $rules = $rules + array('menupage_i18ns.' . $language->id . '.url' => 'regex:/^http([s]?):\/\/.*/');
-                $messages = $messages + array('menupage_i18ns.' . $language->id . '.url.regex' => '<p>．' . $language->language . '的網頁連結格式必須為網址(含http://)。</p>');
+                $rules = $rules + array('menupage_i18ns.' . $language->id . '.url' => 'url|regex:/^http([s]?):\/\/.*/');
+
+                $messages = $messages +
+                    [
+                        'menupage_i18ns.' . $language->id . '.url.url' => \Lang::get('validation.custom.url.url'),
+                        'menupage_i18ns.' . $language->id . '.url.regex' => \Lang::get('validation.custom.url.url'),
+                    ];
+
+                $i18n_url = $i18n_url + ['menupage_i18ns.' . $language->id . '.url' => $language->language . '-' . \Lang::get('ui.link')];
             }
         }
 
-        $this->validate($request, $rules, $messages);
+        $first_language = Language::first()->language;
+        $this->validate($request, $rules, $messages, [
+                'title' => $first_language . '-' . \Lang::get('ui.menu name'),
+                'content' => $first_language . '-' . \Lang::get('ui.webpage content'),
+                'url' => $first_language . '-' . \Lang::get('ui.link')
+            ] + $i18n_url);
 
         $i18ns = Input::get('menupage_i18ns');
 
@@ -354,8 +354,7 @@ class MenupageController extends Controller
         }
 
         return redirect()->route('menupage.index')
-            ->with('success', '更新資料成功');
-
+            ->with('successes', [\Lang::get('msg.modify data successfully')]);
     }
 
     /**
@@ -381,6 +380,6 @@ class MenupageController extends Controller
         Menupage::whereId($id)->delete();
 
         return redirect()->route('menupage.index')
-            ->with('success', '刪除資料成功');
+            ->with('successes', [\Lang::get('msg.delete data successfully')]);
     }
 }

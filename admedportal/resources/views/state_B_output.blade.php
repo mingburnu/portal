@@ -51,9 +51,9 @@
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
   <thead>  
     <tr>
-        <th>年-月</th>
-        <th>資料庫名稱</th>
-        <th>是否顯示</th>
+        <th>@lang('ui.year-month')</th>
+        <th>@lang('ui.database name')</th>
+        <th>@lang('ui.display')</th>
         <th>查詢次數</th>
     </tr>
   </thead>  
@@ -69,9 +69,9 @@
             <td>{{ $report[$i]->database_name }}</td>
 
             @if( $report[$i]->view == 1 )
-                <td>是</td>
+                <td>@lang('ui.true')</td>
             @elseif( $report[$i]->view == 0 )
-                <td>否</td>
+                <td>@lang('ui.false')</td>
             @endif
 
             <td>{{ $report[$i]->query_times }}</td>

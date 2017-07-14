@@ -24,7 +24,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span>1</span>
                             <span>2</span>
                             <span class="active">3</span>
@@ -36,33 +36,36 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
-                                    <th>Logo圖檔</th>
+                                    <th>@lang('ui.logo image')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             <h3>{{$language->language}}</h3>
 
                                             <div>
                                                 @if($language->id==0)
-                                                    <a target="_blank" href="{{ asset('img/logo.png') }}">檢視圖檔</a><BR/>
-                                                    {!! Form::file('logo')!!}
+                                                    <a target="_blank"
+                                                       href="{{ asset('img/logo.png') }}">@lang('ui.view image')</a>
+                                                    <BR/>
+                                                    {!! Form::file('logo',['accept'=>'image/*'])!!}
                                                 @else
                                                     <a target="_blank"
-                                                       href="{{ asset('img/logo_'.$language->id.'.png') }}">檢視圖檔</a>
+                                                       href="{{ asset('img/logo_'.$language->id.'.png') }}">@lang('ui.view image')</a>
                                                     <BR/>
-                                                    {!! Form::file($language->id.'_logo')!!}
+                                                    {!! Form::file($language->id.'_logo',['accept'=>'image/*'])!!}
                                                 @endif
                                             </div>
                                         @endforeach
 
-                                        <div class="note_txt">圖檔尺寸大小不限，以900px X 130px為佳。</div>
+                                        <div class="note_txt">@lang('ui.better image size',['width'=>'900','height'=>'130'])</div>
+                                        <div class="note_txt">@lang('ui.max upload size')</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="/sys_edit_2">上一步</a>
+                                        <a class="btn_02" href="/sys_edit_2">@lang('ui.previous step')</a>
                                         <a class="btn_02" href="javascript:void(0);"
-                                           onclick="document.getElementById('webconfig').submit();">下一步</a>
+                                           onclick="submit()">@lang('ui.next step')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -75,7 +78,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span
+                                    class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 
@@ -92,5 +96,45 @@
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
         <!-- 執行javascript 區塊 End -->
+<script>
+    function submit() {
+        var msg = "";
+            @foreach($languages as $language)
+                @if ($language->id ==0)
+                    var input = document.getElementsByName('logo')[0].files[0];
+                        if (input != null && input.size > 1024 * 1024) {
+                            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
+                        }
+                @else
+                    var input_{{$language->id}}    = document.getElementsByName('{{$language->id}}_logo')[0].files[0];
+                        if (input_{{$language->id}} != null && input_{{$language->id}}.size > 1024 * 1024) {
+                            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
+                    }
+                @endif
+            @endforeach
+
+        if (msg != "") {
+            message_show(msg);
+        } else {
+            document.getElementById('webconfig').submit();
+        }
+    }
+
+    function isImage() {
+        var URL = window.URL || window.webkitURL;
+        var input = document.getElementsByName('logo');
+        var file = input[0].files[0];
+
+        if (file) {
+            var image = new Image();
+            image.onload = function () {
+                alert(true);
+            };
+
+            image.src = URL.createObjectURL(file);
+        }
+
+    }
+</script>
 </body>
 </html>

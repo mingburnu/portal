@@ -15,18 +15,18 @@
     <td>
     <div><img src="{{ asset('templates/images/404.png') }}"></div>
     <div class="txt_01">
-SORRY，找不到此頁面！<BR />
-很抱歉！您所要進入的頁面連結可能有誤或權限不足，<BR />
-您可返回上一頁或是直接跟客服人員聯繫。<BR />
+@lang('ui.not found')<BR />
+@lang('ui.link error or forbidden')<BR />
+@lang('ui.go back or contact customer support')<BR />
     </div>
     
     <div class="txt_02">
-客戶服務中心<BR />
+@lang('ui.customer support center')<BR />
 <a href="http://www.customer-support.com.tw" target="_blank">http://www.customer-support.com.tw</a><BR />
-服務電話: 02-82280288 ext. 3015<BR />
-服務信箱: services@customer-support.com.tw
+@lang('ui.customer support phone') 02-82280288 ext. 3015<BR />
+@lang('ui.customer support email') services@customer-support.com.tw
     </div>
-    <div><a class="btn_04" href="javascript:history.go(-1);">返回上一頁</a></div>
+    <div><a class="btn_04" href="javascript:history.go(-1);">@lang('ui.go back previous page')</a></div>
     </td>
   </tr>
 </table>

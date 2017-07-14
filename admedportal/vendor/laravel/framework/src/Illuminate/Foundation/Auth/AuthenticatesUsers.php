@@ -70,8 +70,11 @@ trait AuthenticatesUsers
 
 //        exit();
 
+        $request->request->add(['account'=>\Input::get('email')]);
         $this->validate($request, [
-            $this->loginUsername() => 'required', 'password' => 'required',
+//            $this->loginUsername() => 'required',
+            'account' => 'required',
+            'password' => 'required',
         ]);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle

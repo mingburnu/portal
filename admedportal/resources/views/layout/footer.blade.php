@@ -1,1 +1,1 @@
-<div class="footer">本系統由碩陽數位科技有限公司 版權所有 Copyright &copy; Shou Yang Technology Co., Ltd.</div>
+<div class="footer">@lang('ui.footer copyright') Copyright &copy; Shou Yang Technology Co., Ltd.</div>

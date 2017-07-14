@@ -4,21 +4,11 @@
             <tr valign="top">
                 <td class="message_text">
                     @foreach ($errors->all() as $error)
-                        {!! $error !!}
-                    @endforeach</td>
-                <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_hide();">關閉</a>
+                        <p>．{{ $error }}</p>
+                    @endforeach
                 </td>
-            </tr>
-        </table>
-    </div>
-@elseif(Session::get('error'))
-    <div class="message" style="display: block;" >
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr valign="top">
-                <td class="message_text">{{ Session::get('error') }}</td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_hide();">關閉</a>
+                                                             onClick="message_hide();">@lang('ui.close')</a>
                 </td>
             </tr>
         </table>
@@ -29,20 +19,24 @@
             <tr valign="top">
                 <td class="message_text"></td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_hide();">關閉</a>
+                                                             onClick="message_hide();">@lang('ui.close')</a>
                 </td>
             </tr>
         </table>
     </div>
 @endif
 
-@if(Session::get('success'))
+@if(Session::get('successes'))
     <div class="message_print_ok" style="display: block;">
         <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr valign="top">
-                <td class="message_text">{{ Session::get('success') }}</td>
+                <td class="message_text">
+                    @foreach (Session::get('successes') as $success)
+                        <p>．{{ $success }}</p>
+                    @endforeach
+                </td>
                 <td class="message_close" valign="middle"><a href="javascript:void(0);"
-                                                             onClick="message_print_ok_hide();">關閉</a>
+                                                             onClick="message_print_ok_hide();">@lang('ui.close')</a>
                 </td>
             </tr>
         </table>

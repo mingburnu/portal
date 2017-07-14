@@ -25,7 +25,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span class="active">1</span>
                             <span>2</span>
                         </div>
@@ -35,7 +35,7 @@
 
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>書名</th>
+                                    <th>@lang('ui.book name')</th>
                                     <td>
                                         @foreach($languages as $language)
                                             @if($language->id==0)
@@ -64,58 +64,60 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>書封(&#8226;)</th>
+                                    <th>@lang('ui.book cover')(&#8226;)</th>
                                     <td>
                                         <img class="bookcover" src="{{ asset($book->cover) }}"><BR/>
 
                                         <div>
-                                            使用方式：
+                                            @lang('ui.select type')：
                                             <label>{!! Form::radio('upload_option',true,true,['onclick'=>'chgShowField("group_02","pic");']) !!}
-                                                上傳圖檔</label>
+                                                @lang('ui.upload image')</label>
                                             <label>{!! Form::radio('upload_option',false,false,['onclick'=>'chgShowField("group_02","url");']) !!}
-                                                圖檔網址</label>
+                                                @lang('ui.image url')</label>
                                         </div>
 
-                                        <div class="group_02 pic">上傳圖檔：{!! Form::file('upload_file') !!}</div>
+                                        <div class="group_02 pic">@lang('ui.upload image')
+                                            ：{!! Form::file('upload_file',['accept'=>'image/*']) !!}</div>
                                         <div class="group_02 url" style="display:none;">
-                                            圖檔網址： {!! Form::text('cover',null) !!}</div>
-                                        <div class="note_txt">圖檔尺寸大小不限制，前台會自動調整尺寸。</div>
+                                            @lang('ui.image url')： {!! Form::text('cover',null) !!}</div>
+                                        <div class="note_txt">@lang('ui.frontend automatic resize')</div>
+                                        <div class="note_txt">@lang('ui.max upload size')</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>連結(&#8226;)</th>
+                                    <th>@lang('ui.link')(&#8226;)</th>
                                     <td>{!! Form::text('url',null) !!}
 
-                                        <div class="note_txt">格式必須為網址(含http://)，例如:http://www.google.com.tw</div>
+                                        <div class="note_txt">@lang('ui.url format')：</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>是否顯示</th>
+                                    <th>@lang('ui.display')</th>
                                     <td>
-                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}是</label>
-                                        <label>{!! Form::radio('view',false) !!}否</label>
+                                        <label>{!! Form::radio('view',true,['checked'=>true]) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('view',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>排序</th>
+                                    <th>@lang('ui.sort')</th>
                                     <td>{!! Form::text('rand_id',null,['class'=>'v_00']) !!}
 
-                                        <div class="note_txt">數字愈大，順序愈前面。</div>
+                                        <div class="note_txt">@lang('ui.number order')</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>備註</th>
+                                    <th>@lang('ui.note')</th>
                                     <td>{!! Form::textarea('note',null,['rows'=>'5']) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())-1)">上一步</a>
+                                           onClick="step(parseInt($('span.active').html())-1)">@lang('ui.previous step')</a>
                                         <a class="btn_02"
-                                           onClick="step(parseInt($('span.active').html())+1)">下一步</a>
+                                           onClick="step(parseInt($('span.active').html())+1)">@lang('ui.next step')</a>
                                         <a class="btn_02"
-                                           onClick="submit()">完成</a>
+                                           onClick="submit()">@lang('ui.accomplish')</a>
                                     </td>
                                 </tr>
                             </table>
@@ -128,7 +130,7 @@
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
                         <div class="detail_note_content">
-                            <span class="required">(&#8226;)</span>為必填欄位
+                            <span class="required">(&#8226;)</span>@lang('ui.required field')
                         </div>
                     </div>
                     <!-- Note 區塊 End -->
@@ -186,7 +188,7 @@
                 if ($("span.active").html() == "1") {
                     var book_name_ch = $("input[name='book_name']").val()
                     if (book_name_ch == null || book_name_ch.trim() == "") {
-                        message_show("<p>．請輸入書名。</p>");
+                        message_show("<p>．@lang('validation.custom.book_name.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.book name')])</p>");
                         break;
                     }
                 }
@@ -218,47 +220,46 @@
         if (db_option && option) {
             if ($("input[name='upload_file']").val() != null && $("input[name='upload_file']").val() != "") {
                 if (window.FileReader && window.Blob) {
-                    var mime = document.getElementsByName('upload_file')[0].files[0].type;
-                    if (mime != "image/png" && mime != "image/jpeg" && mime != "image/gif") {
-                        msg = msg.concat("<p>．請上傳書封。</p>");
+                    var input = document.getElementsByName('upload_file')[0].files[0];
+                    if (input != null && input.size > 1024 * 1024) {
+                        msg = msg.concat("<p>．@lang('validation.custom.upload_file.max',['attribute'=>Lang::get('ui.book cover')])</p>");
                     }
                 }
             }
-
         } else if (db_option && !option) {
             if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
-                msg = msg.concat("<p>．請輸入書封。</p>");
+                msg = msg.concat("<p>．@lang('validation.custom.cover.required')</p>");
             } else {
                 if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
-                    msg = msg.concat("<p>．圖檔網址格式必須為網址(含http://)。</p>");
+                    msg = msg.concat("<p>．@lang('validation.custom.cover.url')</p>");
                 }
             }
         } else if (!db_option && option) {
             if ($("input[name='upload_file']").val() == null || $("input[name='upload_file']").val() == "") {
-                msg = msg.concat("<p>．請上傳書封。</p>");
+                msg = msg.concat("<p>．@lang('validation.custom.upload_file.required',['attribute'=>Lang::get('ui.book cover')])</p>");
             } else {
                 if (window.FileReader && window.Blob) {
-                    var mime = document.getElementsByName('upload_file')[0].files[0].type;
-                    if (mime != "image/png" && mime != "image/jpeg" && mime != "image/gif") {
-                        msg = msg.concat("<p>．請上傳書封。</p>");
+                    var input = document.getElementsByName('upload_file')[0].files[0];
+                    if (input != null && input.size > 1024 * 1024) {
+                        msg = msg.concat("<p>．@lang('validation.custom.upload_file.max',['attribute'=>Lang::get('ui.book cover')])</p>");
                     }
                 }
             }
         } else {
             if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
-                msg = msg.concat("<p>．請輸入書封。</p>");
+                msg = msg.concat("<p>．@lang('validation.custom.cover.required')</p>");
             } else {
                 if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
-                    msg = msg.concat("<p>．圖檔網址格式必須為網址(含http://)。</p>");
+                    msg = msg.concat("<p>．@lang('validation.custom.cover.url')</p>");
                 }
             }
         }
 
         if ($('input[name="url"]').val() == null || $('input[name="url"]').val().trim() == "") {
-            msg = msg.concat("<p>．請輸入連結。</p>");
+            msg = msg.concat("<p>．@lang('validation.custom.url.required',['attribute'=>Lang::get('ui.link')])</p>");
         } else {
             if (!$('input[name="url"]').val().match(/^http([s]?):\/\/.*/)) {
-                msg = msg.concat("<p>．連結格式必須為網址(含http://)。</p>");
+                msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute'=>Lang::get('ui.link')])</p>");
             }
         }
 

@@ -53,7 +53,7 @@
                     <form id="state_D" method="POST" action="/state_D/post">
 
                         <div class="func_box">
-                            年份
+                            @lang('ui.year')
                             <select name="Year">
 
                                 @for($i = 2015; $i< 2020; $i++)
@@ -68,7 +68,7 @@
 
                             </select>
                             &nbsp;&nbsp;
-                            月份
+                            @lang('ui.month')
                             <select name="Month">
 
                                 @for($i = 1; $i < 13; $i++)
@@ -113,7 +113,7 @@
                             &nbsp;&nbsp;
 
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <a class="btn_02" onClick="document.getElementById('state_D').submit();">查詢</a>
+                            <a class="btn_02" onClick="document.getElementById('state_D').submit();">@lang('ui.query')</a>
 
 
                         </div>
@@ -125,7 +125,7 @@
                         <div class="browser_box">
                             <table width="100%" border="1" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>年-月</th>
+                                    <th>@lang('ui.year-month')</th>
                                     <th>排名</th>
                                     <th>關鍵字名稱</th>
                                     <th>資料庫查詢</th>
@@ -158,7 +158,7 @@
 
                     @if(count($report) > 0 )
                         <div class="func_box">
-                            <a class="btn_02" href="{{ url('/state_D_output/' . $Year . '/' . $Month . '/' . $q_b) }}">匯出</a>
+                            <a class="btn_02" href="{{ url('/state_D_output/' . $Year . '/' . $Month . '/' . $q_b) }}">@lang('ui.export')</a>
                         </div>
                         @endif
 

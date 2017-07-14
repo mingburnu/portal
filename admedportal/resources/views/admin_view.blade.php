@@ -35,37 +35,37 @@
                         <form>
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <th>帳號</th>
+                                    <th>@lang('ui.account')</th>
                                     <td>{{ $user[0]->email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>密碼</th>
+                                    <th>@lang('ui.password')</th>
                                     <td>{{ $user[0]->password }}</td>
                                 </tr>
                                 <tr>
-                                    <th>權限身份</th>
+                                    <th>@lang('ui.permission')</th>
                                     @if( $user[0]->perm == 1 )
-                                        <td>最高管理者</td>
+                                        <td>@lang('ui.administrator')</td>
                                     @elseif( $user[0]->perm == 2)
-                                        <td>一般管理者</td>
+                                        <td>@lang('ui.standard user')</td>
                                     @endif
                                 </tr>
                                 <tr>
-                                    <th>是否封鎖</th>
+                                    <th>@lang('ui.blockade')</th>
                                     @if( $user[0]->lock == 1 )
-                                        <td>是</td>
+                                        <td>@lang('ui.true')</td>
                                     @elseif( $user[0]->lock == 0)
-                                        <td>否</td>
+                                        <td>@lang('ui.false')</td>
                                     @endif
                                 </tr>
                                 <tr>
-                                    <th>備註</th>
+                                    <th>@lang('ui.note')</th>
                                     <td>{{ $user[0]->note }}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="javascript:history.go(-1);">返回</a>
+                                        <a class="btn_02" href="javascript:history.go(-1);">@lang('ui.back')</a>
                                     </td>
                                 </tr>
                             </table>

@@ -22,7 +22,7 @@
                             <!-- message 區塊 End -->
 
                     <div class="func_box">
-                        <a class="btn_02" href="{{route('banner.create')}}">新增</a>
+                        <a class="btn_02" href="{{route('banner.create')}}">@lang('ui.add')</a>
                     </div>
 
                     <!-- 瀏覽 區塊 Begin -->
@@ -30,14 +30,14 @@
                         <table width="100%" border="1" cellpadding="0" cellspacing="0">
                             <tbody>
                             <tr>
-                                <th>Banner圖片</th>
-                                <th>Banner標題</th>
-                                <th>連結</th>
-                                <th>是否顯示</th>
-                                <th>排序<a href="{{route('banner.sort')}}"><i class="{{$direction}}"></i></a></th>
-                                <th>建立時間</th>
-                                <th>修改時間</th>
-                                <th>功能</th>
+                                <th>@lang('ui.banner image')</th>
+                                <th>@lang('ui.banner title')</th>
+                                <th>@lang('ui.link')</th>
+                                <th>@lang('ui.display')</th>
+                                <th>@lang('ui.sort')<a href="{{route('banner.sort')}}"><i class="{{$direction}}"></i></a></th>
+                                <th>@lang('ui.created at')</th>
+                                <th>@lang('ui.updated at')</th>
+                                <th>@lang('ui.action')</th>
                             </tr>
 
                             @foreach($table as  $i=>$row)
@@ -46,12 +46,16 @@
                                         <img class="browser_img_2" src="{{ asset($row->img) }}">
                                     </td>
                                     <td>{{$row->title}}</td>
-                                    <td><a>連結</a></td>
+                                    <td>
+                                        @if($row->url!=null)
+                                            <a target="_blank" href="{{ $row->url }}">@lang('ui.link')</a>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($row->view)
-                                            是
+                                            @lang('ui.true')
                                         @else
-                                            否
+                                            @lang('ui.false')
                                         @endif
                                     </td>
                                     <td>{{$row->rank_id}}</td>
@@ -60,9 +64,9 @@
                                     <td>
                                         {!! Form::open(['route' => ['banner.destroy', $row->id], 'method' => 'delete']) !!}
                                         <a class="btn_03"
-                                           onclick="del($(this).parent())">刪除</a>
+                                           onclick="del($(this).parent())">@lang('ui.delete')</a>
                                         <a class="btn_02"
-                                           href="{{ $url = route('banner.edit', ['id' => $row->id ]) }}">修改</a>
+                                           href="{{ $url = route('banner.edit', ['id' => $row->id ]) }}">@lang('ui.modify')</a>
                                         {!! Form::close() !!}
                                     </td>
                                 </tr>

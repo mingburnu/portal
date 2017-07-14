@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="expires" content="0">
-<title>圖書館管理後台</title>
+<title>@lang('ui.library management backend')</title>
 <style type="text/css">
 
 .browser_box{
@@ -46,10 +46,10 @@
 <table width="100%" border="1" cellpadding="0" cellspacing="0">
   <thead>  
     <tr>
-        <th>年-月</th>
-        <th>網頁名稱</th>
-        <th>是否顯示</th>
-        <th>進入次數</th>
+        <th>@lang('ui.year-month')</th>
+        <th>@lang('ui.webpage name')</th>
+        <th>@lang('ui.display')</th>
+        <th>@lang('ui.click times')</th>
     </tr>
   </thead>  
   <tbody>  
@@ -64,9 +64,9 @@
             <td>{{ $report[$i]->title }}</td>
 
             @if( $report[$i]->view == 1 )
-                <td>是</td>
+                <td>@lang('ui.true')</td>
             @elseif( $report[$i]->view == 0 )
-                <td>否</td>
+                <td>@lang('ui.false')</td>
             @endif
 
             <td>{{ $report[$i]->view_times }}</td>

@@ -27,24 +27,24 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
 
                                 <tr>
-                                    <th>帳號</th>
+                                    <th>@lang('ui.account')</th>
                                     <td>{{ $email }}</td>
                                 </tr>
 
                                 <tr>
 
-                                    <th>權限身份</th>
+                                    <th>@lang('ui.permission')</th>
 
                                     @if($perm == 1)
-                                        <td>最高管理者</td>
+                                        <td>@lang('ui.administrator')</td>
                                     @elseif($perm == 2)
-                                        <td>一般管理者</td>
+                                        <td>@lang('ui.standard user')</td>
                                     @endif
 
                                 </tr>
 
                                 <tr>
-                                    <th>密碼</th>
+                                    <th>@lang('ui.password')</th>
                                     <td><input class="v_01" type="text" name="password"></td>
                                 </tr>
 
@@ -54,7 +54,7 @@
                                     <th>&nbsp;</th>
                                     <td>
                                         <a class="btn_02"
-                                           onClick="document.getElementById('my_info_edit').submit();">更新</a>
+                                           onClick="document.getElementById('my_info_edit').submit();">@lang('ui.update')</a>
                                     </td>
                                 </tr>
                             </table>

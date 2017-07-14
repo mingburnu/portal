@@ -33,37 +33,33 @@
 
 
             <table width="100%" border="0" cellpadding="0" cellspacing="0" class="news_box_list">
-
                 @foreach($news as $data)
-
                     <tr>
                         <?php list($newt1, $newt2) = explode(" ", $data->publish_time); ?>
                         <th>{{ $newt1 }}</th>
                         <td>
                             <a href="{{ $url = route('news.detail.id', ['id' => $data->id ]) }}">
-                                @if(Cookie::get('language')==0)
+                                @if($signal[0]->id=='0')
                                     {{ $data->title }}
                                 @else
                                     <?php
                                     $title_i18n = $data->title;
-                                    ?>
-                                    @foreach($data->news_i18ns as $news_i18n)
-                                        <?php
-                                        if ($news_i18n->language == Cookie::get('language') && $news_i18n->title != null) {
-                                            $title_i18n = $news_i18n->title;
+                                    foreach ($data->news_i18ns as $news_i18n) {
+                                        if ($news_i18n->language == $signal[0]->id) {
+                                            if ($news_i18n->title != null) {
+                                                $title_i18n = $news_i18n->title;
+                                            }
+                                            break;
                                         }
-                                        ?>
-                                    @endforeach
+                                    }
+                                    ?>
                                     {{ $title_i18n }}
                                 @endif
                             </a>
                         </td>
                     </tr>
-
                 @endforeach
-
             </table>
-
 
             <!-- 內容 區塊 End -->
         </div>
@@ -79,7 +75,6 @@
             <!-- footer 區塊 End -->
 
 </div>
-
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.init')

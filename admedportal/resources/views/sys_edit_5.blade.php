@@ -24,7 +24,7 @@
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
                         <div class="steps_box">
-                            <span class="title">步驟</span>
+                            <span class="title">@lang('ui.step')</span>
                             <span>1</span>
                             <span>2</span>
                             <span>3</span>
@@ -37,20 +37,20 @@
                             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                 <tbody>
                                 <tr>
-                                    <th>系統管理電子信箱(•)</th>
+                                    <th>@lang('ui.system email')(•)</th>
                                     <td>
                                         {!! Form::text('email',null,['class'=>'v_01']) !!}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Ico圖</th>
-                                    <td><a target="_blank" href="{{ asset('img/favicon.ico') }}">檢視圖檔</a><BR/>
+                                    <th>@lang('ui.ico image')</th>
+                                    <td><a target="_blank" href="{{ asset('img/favicon.ico') }}">@lang('ui.view image')</a><BR/>
                                         {!! Form::file('ico') !!}
-                                        <div class="note_txt">圖檔尺寸大小不限，以128px X 128px為佳。</div>
+                                        <div class="note_txt">@lang('ui.better image size',['width'=>'128','height'=>'128'])</div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>版面配色</th>
+                                    <th>@lang('ui.layout color')</th>
                                     <td>
                                         @for($i=1;$i<=7;$i++)
                                             <label>
@@ -61,21 +61,21 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Banner是否顯示</th>
+                                    <th>@lang('ui.banner display')</th>
                                     <td>
-                                        <label>{!! Form::radio('play',true) !!}是</label>
-                                        <label>{!! Form::radio('play',false) !!}否</label>
+                                        <label>{!! Form::radio('play',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('play',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>書籍是否顯示</th>
+                                    <th>@lang('ui.book display')</th>
                                     <td>
-                                        <label>{!! Form::radio('exhibition',true) !!}是</label>
-                                        <label>{!! Form::radio('exhibition',false) !!}否</label>
+                                        <label>{!! Form::radio('exhibition',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('exhibition',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>備註</th>
+                                    <th>@lang('ui.note')</th>
                                     <td>
                                         {!! Form::textarea('note',null,['rows'=>'5']) !!}
                                     </td>
@@ -83,9 +83,9 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="{{route('sys.edit.4')}}">上一步</a>
+                                        <a class="btn_02" href="{{route('sys.edit.4')}}">@lang('ui.previous step')</a>
                                         <a class="btn_02" href="javascript:void(0);"
-                                           onclick="document.getElementById('webconfig').submit();">完成</a>
+                                           onclick="document.getElementById('webconfig').submit();">@lang('ui.accomplish')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -98,7 +98,7 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>為必填欄位</div>
+                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 

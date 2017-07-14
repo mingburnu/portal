@@ -23,7 +23,7 @@
 
                     <!-- 功能 區塊 Begin -->
                     <div class="func_box">
-                        <a class="btn_02" href="{{ route('news.create') }}">新增</a>
+                        <a class="btn_02" href="{{ route('news.create') }}">@lang('ui.add')</a>
                     </div>
                     <!-- 功能 區塊 End -->
 
@@ -32,10 +32,10 @@
                     <div class="browser_box">
                         <table width="100%" border="1" cellpadding="0" cellspacing="0">
                             <tr>
-                                <th>公告時間</th>
-                                <th>標題</th>
-                                <th>是否顯示</th>
-                                <th>功能</th>
+                                <th>@lang('ui.published time')</th>
+                                <th>@lang('ui.title')</th>
+                                <th>@lang('ui.display')</th>
+                                <th>@lang('ui.action')</th>
                             </tr>
 
                             @foreach($table as  $i=>$row)
@@ -44,17 +44,17 @@
                                     <td>{{ $row->title }}</td>
 
                                     @if( $row->view)
-                                        <td>是</td>
+                                        <td>@lang('ui.true')</td>
                                     @else
-                                        <td>否</td>
+                                        <td>@lang('ui.false')</td>
                                     @endif
 
                                     <td>
                                         {!! Form::open(['route' => ['news.destroy', $row->id], 'method' => 'delete']) !!}
                                         <a class="btn_03"
-                                           onclick="del($(this).parent())">刪除</a>
+                                           onclick="del($(this).parent())">@lang('ui.delete')</a>
                                         <a class="btn_02"
-                                           href="{{ $url = route('news.edit', ['id' => $row->id ] )}}">修改</a>
+                                           href="{{ $url = route('news.edit', ['id' => $row->id ] )}}">@lang('ui.modify')</a>
                                         {!! Form::close() !!}
                                     </td>
                                 </tr>

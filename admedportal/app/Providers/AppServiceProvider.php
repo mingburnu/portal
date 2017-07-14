@@ -27,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
                 return in_array($parent_id, $ids);
             }
         });
+
+        \Validator::extend('ne', function ($attribute, $value, $parameters) {
+            return $value != $parameters[0];
+        });
     }
 
     /**
