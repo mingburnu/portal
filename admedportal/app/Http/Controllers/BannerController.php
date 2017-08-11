@@ -135,25 +135,22 @@ class BannerController extends Controller
             $imageName = time() . "-" . $imageName->getClientOriginalName();
 
             Input::file('upload_file')->move(
-                base_path() . '/public/banners/', $imageName
+                public_path('banners/'), $imageName
             );
 
+            $img = "banners/$imageName";
+            $path = public_path($img);
+
             // width 固定
-
-            $width = Image::make(base_path() . '/public/banners/' . $imageName)->width();
-
-            $height = Image::make(base_path() . '/public/banners/' . $imageName)->height();
-
+            $width = Image::make($path)->width();
+            $height = Image::make($path)->height();
             $new_height = \Config::get('app.banners_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-            Image::make(base_path() . '/public/banners/' . $imageName)
+            Image::make($path)
                 ->resize(\Config::get('app.banners_image_width'), $new_height)
-                ->save(public_path('banners/' . $imageName));
-
-
-            $img = "banners/$imageName";
+                ->save($path);
 
         } else {
             $img = Input::get('img');
@@ -284,28 +281,25 @@ class BannerController extends Controller
                 $imageName = time() . "-" . $imageName->getClientOriginalName();
 
                 Input::file('upload_file')->move(
-                    base_path() . '/public/banners/', $imageName
+                    public_path('banners/'), $imageName
                 );
 
+                $img = "banners/$imageName";
+                $path = public_path($img);
+
                 // width 固定
-
-                $width = Image::make(base_path() . '/public/banners/' . $imageName)->width();
-
-                $height = Image::make(base_path() . '/public/banners/' . $imageName)->height();
-
+                $width = Image::make($path)->width();
+                $height = Image::make($path)->height();
                 $new_height = \Config::get('app.banners_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-                Image::make(base_path() . '/public/banners/' . $imageName)
+                Image::make($path)
                     ->resize(\Config::get('app.banners_image_width'), $new_height)
-                    ->save(public_path('banners/' . $imageName));
-
-                $img = "banners/$imageName";
+                    ->save($path);
 
                 // 需要刪除舊有 image 檔案
-
-                File::delete(\Config::get('app.banners_image_folder') . $banner->img);
+                File::delete(public_path($banner->img));
             } else {
                 // $img = $banner->img;
             }
@@ -315,8 +309,7 @@ class BannerController extends Controller
             $img = Input::get('img');
 
             // 需要刪除舊有 image 檔案
-
-            File::delete(\Config::get('app.banners_image_folder') . $banner->img);
+            File::delete(public_path($banner->img));
 
         } elseif (!$db_upload_option && $upload_option) {
 
@@ -325,25 +318,22 @@ class BannerController extends Controller
             $imageName = time() . "-" . $imageName->getClientOriginalName();
 
             Input::file('upload_file')->move(
-                base_path() . '/public/banners/', $imageName
+                public_path('banners/'), $imageName
             );
 
+            $img = "banners/$imageName";
+            $path = public_path($img);
+
             // width 固定
-
-            $width = Image::make(base_path() . '/public/banners/' . $imageName)->width();
-
-            $height = Image::make(base_path() . '/public/banners/' . $imageName)->height();
-
+            $width = Image::make($path)->width();
+            $height = Image::make($path)->height();
             $new_height = \Config::get('app.banners_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-            Image::make(base_path() . '/public/banners/' . $imageName)
+            Image::make($path)
                 ->resize(\Config::get('app.banners_image_width'), $new_height)
-                ->save(public_path('banners/' . $imageName));
-
-
-            $img = "banners/$imageName";
+                ->save($path);
 
         } else {
             $img = Input::get('img');
@@ -399,7 +389,7 @@ class BannerController extends Controller
         }
 
         $banner = new Banner(Banner::find($id)->toArray());
-        File::delete(\Config::get('app.banners_image_folder') . $banner->img);
+        File::delete(public_path($banner->img));
 
         Banner_i18n::whereBannerId($id)->delete();
         Banner::whereId($id)->delete();

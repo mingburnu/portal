@@ -139,24 +139,22 @@ class BookController extends Controller
             $imageName = time() . "-" . $imageName->getClientOriginalName();
 
             Input::file('upload_file')->move(
-                base_path() . '/public/books/', $imageName
+                public_path('books/'), $imageName
             );
 
+            $cover = "books/$imageName";
+            $path = public_path($cover);
+
             // width 固定
-
-            $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
-
-            $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
-
+            $width = Image::make($path)->width();
+            $height = Image::make($path)->height();
             $new_height = \Config::get('app.books_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-            Image::make(base_path() . '/public/books/' . $imageName)
+            Image::make($path)
                 ->resize(\Config::get('app.books_image_width'), $new_height)
-                ->save(public_path('books/' . $imageName));
-
-            $cover = "books/$imageName";
+                ->save($path);
 
         } else {
             $cover = Input::get('cover');
@@ -291,29 +289,26 @@ class BookController extends Controller
                 $imageName = time() . "-" . $imageName->getClientOriginalName();
 
                 Input::file('upload_file')->move(
-                    base_path() . '/public/books/', $imageName
+                    public_path('books/'), $imageName
                 );
 
+                $cover = "books/$imageName";
+                $path = public_path($cover);
+
                 // width 固定
-
-                $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
-
-                $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
-
+                $width = Image::make($path)->width();
+                $height = Image::make($path)->height();
                 $new_height = \Config::get('app.books_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-                Image::make(base_path() . '/public/books/' . $imageName)
+                Image::make($path)
                     ->resize(\Config::get('app.books_image_width'), $new_height)
-                    ->save(public_path('books/' . $imageName));
+                    ->save($path);
 
-
-                $cover = "books/$imageName";
 
                 // 需要刪除舊有 image 檔案
-
-                File::delete(\Config::get('app.books_image_folder') . $book->cover);
+                File::delete(public_path($book->cover));
             } else {
                 //$cover = $book->cover;
             }
@@ -323,8 +318,7 @@ class BookController extends Controller
             $cover = Input::get('cover');
 
             // 需要刪除舊有 image 檔案
-
-            File::delete(\Config::get('app.books_image_folder') . $book->cover);
+            File::delete(public_path($book->cover));
 
         } elseif (!$db_upload_option && $upload_option) {
 
@@ -333,24 +327,22 @@ class BookController extends Controller
             $imageName = time() . "-" . $imageName->getClientOriginalName();
 
             Input::file('upload_file')->move(
-                base_path() . '/public/books/', $imageName
+                public_path('books/'), $imageName
             );
 
+            $cover = "books/$imageName";
+            $path = public_path($cover);
+
             // width 固定
-
-            $width = Image::make(base_path() . '/public/books/' . $imageName)->width();
-
-            $height = Image::make(base_path() . '/public/books/' . $imageName)->height();
-
+            $width = Image::make($path)->width();
+            $height = Image::make($path)->height();
             $new_height = \Config::get('app.books_image_width') * $height / $width;
 
 //                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
-            Image::make(base_path() . '/public/books/' . $imageName)
+            Image::make($path)
                 ->resize(\Config::get('app.books_image_width'), $new_height)
-                ->save(public_path('books/' . $imageName));
-
-            $cover = "books/$imageName";
+                ->save($path);
 
         } else {
             $cover = Input::get('cover');
@@ -405,7 +397,7 @@ class BookController extends Controller
         }
 
         $book = new Book(Book::find($id)->toArray());
-        File::delete(\Config::get('app.books_image_folder') . $book->cover);
+        File::delete(public_path($book->cover));
 
         Book_i18n::whereBookId($id)->delete();
         Book::whereId($id)->delete();

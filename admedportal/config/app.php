@@ -32,8 +32,6 @@ return [
 
     // image
 
-    'books_image_folder' => '/var/www/admedportal/public/',
-
     'books_image_width' => 130,
 
     // logo image
@@ -49,8 +47,6 @@ return [
     'ico_image_height' => 128,
 
     //banner image
-
-    'banners_image_folder' => '/var/www/admedportal/public/',
 
     'banner_image_width' => 1300,
 
