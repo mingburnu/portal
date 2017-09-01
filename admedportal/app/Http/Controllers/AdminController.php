@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Language;
 use App\User;
 use Auth;
@@ -12,7 +11,6 @@ use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Image;
-use Log;
 use Mail;
 use PDF;
 
@@ -770,6 +768,7 @@ class AdminController extends Controller
                     'color' => $color,
                     'play' => (boolean)\Input::get('play'),
                     'exhibition' => (boolean)\Input::get('exhibition'),
+                    'count_visitors' => (boolean)\Input::get('count_visitors'),
                     'note' => trim(\Input::get('note')),
                     'updated_at' => $timedata[0]->timedata
                 ]);

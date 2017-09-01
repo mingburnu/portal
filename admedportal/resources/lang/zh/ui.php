@@ -124,6 +124,7 @@ $ui = [
     'customer support email' => '服務信箱:',
     'go back previous page' => '返回上一頁',
     'single webpage' => '不設定(單一網頁)',
+    'visitors display'=>'網站訪客人數是否顯示',
 ];
 
 $doc = [

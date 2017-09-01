@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereTitle($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereContent($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Menupage_i18n whereUrl($value)
+ * @property-read \App\Menupage $menupage
  */
 class Menupage_i18n extends Model
 {

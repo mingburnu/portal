@@ -75,6 +75,13 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>@lang('ui.visitors display')</th>
+                                    <td>
+                                        <label>{!! Form::radio('count_visitors',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('count_visitors',false) !!}@lang('ui.false')</label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>@lang('ui.note')</th>
                                     <td>
                                         {!! Form::textarea('note',null,['rows'=>'5']) !!}

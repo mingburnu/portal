@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Language;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Menupage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __construct(){
+    public function __construct()
+    {
         $webconfig = \DB::table('webconfig')->get();
         $webconfig_i18n = null;
 
@@ -32,5 +34,11 @@ abstract class Controller extends BaseController
         \View::share('webconfig_i18n', $webconfig_i18n);
         \View::share('signal', $signal);
         \View::share('languages', $languages);
+        \View::share('queryDb', \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get());
+        \View::share('menus', Menupage::whereView(true)->whereParentId(null)->orderBy('rank_id', 'desc')->get());
+
+        if ($webconfig[0]->count_visitors) {
+            \View::share('totalc', \DB::table('webcounter')->count());
+        }
     }
 }

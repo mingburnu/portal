@@ -30,6 +30,3 @@ Route::get('/news_list',
 Route::get('/pages/{id}',
     ['as' => 'pages.id', 'uses' => 'WebController@pages']
 )->where('id', '[0-9]+');
-
-
-

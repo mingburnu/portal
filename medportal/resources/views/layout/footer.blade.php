@@ -1,8 +1,11 @@
 <div class="footer">
     <div class="innerwrapper">
-        <span class="counter">
-            {!! $signal[0]->visitor !!} ：{{ sprintf("%08d", $totalc) }}
-        </span>
+        @if($webconfig[0]->count_visitors)
+            <span class="counter">
+                {!! $signal[0]->visitor !!} ：{{ sprintf("%08d", $totalc) }}
+            </span>
+        @endif
+
         @if($webconfig_i18n!=null && $webconfig_i18n[0]->copyright!=null)
             {!! $webconfig_i18n[0]->copyright !!}
         @else

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Banner;
 use App\Book;
-use App\Http\Requests;
 use App\Language;
 use App\Menupage;
 use App\News;
@@ -32,19 +31,8 @@ class WebController extends Controller
         );
 
         if ($pages_data->type) {
-            $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
-
-            $menus = Menupage::whereView(true)
-                ->whereParentId(null)
-                ->orderBy('rank_id', 'desc')->get();
-
-            $totalc = DB::table('webcounter')->count();
-
             return view('pages', [
-                'queryDb' => $queryDb,
                 'pages_data' => $pages_data,
-                'menus' => $menus,
-                'totalc' => $totalc,
             ]);
         } else {
             $url = $pages_data->url;
@@ -64,8 +52,6 @@ class WebController extends Controller
 
     public function news_list()
     {
-        $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
-
         $news = News::whereView(true)
             ->where('publish_time', '<=', Carbon::now()->toDateTimeString())
             ->where(function ($q) {
@@ -73,17 +59,8 @@ class WebController extends Controller
             })
             ->orderBy('publish_time', 'desc')->get();
 
-        $menus = Menupage::whereView(true)
-            ->whereParentId(null)
-            ->orderBy('rank_id', 'desc')->get();
-
-        $totalc = DB::table('webcounter')->count();
-
         return view('news_list', [
-            'queryDb' => $queryDb,
             'news' => $news,
-            'menus' => $menus,
-            'totalc' => $totalc,
         ]);
 
     }
@@ -107,20 +84,8 @@ class WebController extends Controller
             })
             ->find($id);
 
-
-        $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
-
-        $menus = Menupage::whereView(true)
-            ->whereParentId(null)
-            ->orderBy('rank_id', 'desc')->get();
-
-        $totalc = DB::table('webcounter')->count();
-
         return view('news_detail', [
-            'queryDb' => $queryDb,
             'news' => $news,
-            'menus' => $menus,
-            'totalc' => $totalc,
         ]);
 
     }
@@ -144,8 +109,6 @@ class WebController extends Controller
             ]
         );
 
-        $queryDb = \App\Db::whereView(true)->orderBy('rank_id', 'desc')->get();
-
         $book = Book::whereView(true)
             ->orderBy('rand_id', 'desc')
             ->get();
@@ -157,21 +120,12 @@ class WebController extends Controller
             })
             ->orderBy('publish_time', 'desc')->take(5)->skip(0)->get();
 
-        $menus = Menupage::whereView(true)
-            ->whereParentId(null)
-            ->orderBy('rank_id', 'desc')->get();
-
         $banners = Banner::whereView(true)->get();
-
-        $totalc = DB::table('webcounter')->count();
 
         return view('index', [
             'banners' => $banners,
-            'queryDb' => $queryDb,
             'book' => $book,
             'news' => $news,
-            'menus' => $menus,
-            'totalc' => $totalc,
         ]);
     }
 
