@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Banner;
 use App\Banner_i18n;
-use App\Http\Requests;
 use App\Language;
 use App\Sort;
 use Config;

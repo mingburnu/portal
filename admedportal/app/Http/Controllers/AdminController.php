@@ -447,7 +447,11 @@ class AdminController extends Controller
 
     public function index()
     {
-        return $this->admin_browser();
+        if (Auth::user()->perm == 1) {
+            return $this->admin_browser();
+        } else {
+            return $this->my_info();
+        }
     }
 
     public function admin_browser()
@@ -463,6 +467,19 @@ class AdminController extends Controller
         } else {
             return view('errors.404');
         }
+    }
+
+    public
+    function my_info()
+    {
+        $user = Auth::user();
+
+        return view('my_info', [
+            'email' => $user['attributes']['email'],
+            'perm' => $user['attributes']['perm']
+        ]);
+
+
     }
 
     public function sys_edit()
@@ -875,19 +892,6 @@ class AdminController extends Controller
         }
 
         return view('lang_browser')->with('languages', $languages)->with('table', $table);
-    }
-
-    public
-    function my_info()
-    {
-        $user = Auth::user();
-
-        return view('my_info', [
-            'email' => $user['attributes']['email'],
-            'perm' => $user['attributes']['perm']
-        ]);
-
-
     }
 
     public

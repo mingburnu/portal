@@ -31,7 +31,7 @@
                                 </tr>
                                 <tr>
                                     <th>@lang('ui.password')(&#8226;)</th>
-                                    <td><input class="v_02" type="text" name="password" value=""></td>
+                                    <td><input class="v_02" type="password" name="password" value=""></td>
                                 </tr>
                                 <tr>
                                     <th>@lang('ui.permission')</th>

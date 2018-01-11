@@ -184,11 +184,11 @@ Route::group(['middleware' => 'auth'], function () {
                 }
             } elseif (sizeof($params) == 1 && $params[0]->getName() == 'id') {
                 if ($methodName == 'destroy') {
-                    Route::delete($urlPrefix . $methodName . '/{id}',
+                    Route::delete($urlPrefix . '{id}/' . $methodName,
                         ['as' => $routePrefix . $methodName, 'uses' => $action]
                     )->where('id', '[0-9]+');
                 } else {
-                    Route::get($urlPrefix . $methodName . '/{id}',
+                    Route::get($urlPrefix . '{id}/' . $methodName,
                         ['as' => $routePrefix . $methodName, 'uses' => $action]
                     )->where('id', '[0-9]+');
                 }
@@ -219,7 +219,7 @@ Route::group(['middleware' => 'auth'], function () {
                 }
 
                 if ($isPatch) {
-                    Route::patch($urlPrefix . $methodName . '/{id}',
+                    Route::patch($urlPrefix . '{id}/' . $methodName,
                         ['as' => $routePrefix . $methodName, 'uses' => $action]
                     )->where('id', '[0-9]+');
                 }

@@ -45,7 +45,7 @@
 
                                 <tr>
                                     <th>@lang('ui.password')</th>
-                                    <td><input class="v_01" type="text" name="password"></td>
+                                    <td><input class="v_01" type="password" name="password"></td>
                                 </tr>
 
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">

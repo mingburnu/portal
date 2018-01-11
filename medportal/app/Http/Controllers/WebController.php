@@ -94,7 +94,7 @@ class WebController extends Controller
     {
         DB::table('login_pages_stat')->insert(
             [
-                'title' => Language::first()->language,
+                'title' => Language::first()->home,
                 'view' => 1,
                 'view_times' => 1
             ]
