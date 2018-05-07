@@ -1,7 +1,8 @@
 //本檔案為網頁設計師撰寫,非人請勿修改,以免未來維護困難,如果需修改可請找網頁設計師討論,感謝~
 //cssom
-$(window).bind('load resize', function() {
+$(window).bind('load resize', function() {	
 	Menu_load_resize();
+	Ad_load_resize();
 });
 
 //查詢區
@@ -23,8 +24,8 @@ function SearchBox_show(arg){
 			arg = temp[3];
 		}
 	}
-
-
+	
+	
 	//選擇資料庫之設定
 	//radio
 	$("input[name=search_db_radio]").prop('checked',false);
@@ -35,8 +36,8 @@ function SearchBox_show(arg){
 			$(item).prop('selected', true);
 		}
 	});
-
-
+	
+	
 	//內容設定
 	$(".search_box").hide();
 	for(var i=0 ; i < SearchBox_arr.length ; i++){
@@ -55,7 +56,7 @@ function Menu_load_resize(){
 		MenuWidth += $(item).width();
 	});
 	MenuWidth += 40;
-
+	
 	if (window.matchMedia("(max-width:" + MenuWidth + "px)").matches) {
 		//Menu寬度超過視窗時
 		$(".menu").css({
@@ -111,76 +112,82 @@ function BooksBox_show(arg){
 	BooksBox_current_pageNum = arg;
 	//
 	var newHtml = '';
-
+	
 	if (window.matchMedia("(max-width:640px)").matches) {
 		//0~640px
-
-		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 2)-1;
+		var book_num = 2;
+		var book_width = "50%";
+		
+		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / book_num)-1;
 		//
-		for(var i=(BooksBox_current_pageNum * 2) ; i < ((BooksBox_current_pageNum * 2) + 2) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:50%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
 			}else{
-				newHtml +='<td style="width:50%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 		newHtml += "</tr><tr>";
-		for(var i=(BooksBox_current_pageNum * 2) ; i < ((BooksBox_current_pageNum * 2) + 2) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:50%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
 			}else{
-				newHtml +='<td style="width:50%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 	} else if (window.matchMedia("(max-width:960px)").matches) {
 		//640px~960px
-
-		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 5)-1;
+		var book_num = 3;
+		var book_width = "10%";
+		
+		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / book_num)-1;
 		//
-		for(var i=(BooksBox_current_pageNum * 5) ; i < ((BooksBox_current_pageNum * 5) + 5) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:20%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
 			}else{
-				newHtml +='<td style="width:20%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 		newHtml += "</tr><tr>";
-		for(var i=(BooksBox_current_pageNum * 5) ; i < ((BooksBox_current_pageNum * 5) + 5) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:20%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
 			}else{
-				newHtml +='<td style="width:20%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 	} else {
 		//960px~9999
-
-		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / 7)-1;
+		var book_num = 5;
+		var book_width = "20%";
+		
+		BooksBox_max_pageNum = Math.ceil(BooksBox_arr.length / book_num)-1;
 		//
-		for(var i=(BooksBox_current_pageNum * 7) ; i < ((BooksBox_current_pageNum * 7) + 7) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:14.2%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><img src="' + BooksBox_arr[i][2] + '" /></a></td>';
 			}else{
-				newHtml +='<td style="width:14.2%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 		newHtml += "</tr><tr>";
-		for(var i=(BooksBox_current_pageNum * 7) ; i < ((BooksBox_current_pageNum * 7) + 7) ; i++){
+		for(var i=(BooksBox_current_pageNum * book_num) ; i < ((BooksBox_current_pageNum * book_num) + book_num) ; i++){
 			if(i < BooksBox_arr.length){
-				newHtml +='<td style="width:14.2%;" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
+				newHtml +='<td style="width:' + book_width + ';" align="center"><a target="_blank" href="' + BooksBox_arr[i][1] + '"><div>' + BooksBox_arr[i][0] + '</div></a></td>';
 			}else{
-				newHtml +='<td style="width:14.2%;" align="center"> </td>';
-			}
+				newHtml +='<td style="width:' + book_width + ';" align="center"> </td>';
+			}	
 		}
 	}
 
-
+	
 	if(newHtml != ""){
 		$(".books_box_list").empty();
 		$(".books_box_list").html('<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>' + newHtml + '</tr></table>');
 	}
 
-
+	
 	//上一頁
 	if(BooksBox_current_pageNum == 0){
 		$(".books_pager_prev").css("visibility","hidden");
@@ -217,11 +224,11 @@ function Book_load_resize(){
 	}else{
 		temp = "960-9999";
 	}
-
+	
 	if(BooksBox_current_width != temp){
 		BooksBox_show(0);
 	}
-
+	
 	BooksBox_current_width = temp;
 }
 function books_pager_prev(){
@@ -242,5 +249,13 @@ function ShowInfo(arg){
 	}else{
 		$(arg).parent().css("width","500px");
 		t.css("opacity","1");
+	}
+}
+
+/*Ad區*/
+function Ad_load_resize(){
+	if($(".ad").length == 0){
+		$(".books").css("margin-right","0px");
+		$(".news_home").css("margin-right","0px");
 	}
 }

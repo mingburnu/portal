@@ -2,6 +2,7 @@
 <script src="{{ asset('templates/jquery-ui.js') }}"></script>
 <script src="{{ asset('templates/art.js') }}"></script>
 <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('templates/common.js')}}"></script>
 <script>
     function lang() {
         return {

@@ -9,7 +9,7 @@
         //SearchBox 初始化
         var data = [];
         @for($i = 0; $i < count($queryDb); $i++)
-            data.push(['search_box_in_{{ $queryDb[$i]->id }}']);
+        data.push(['search_box_in_{{ $queryDb[$i]->id }}']);
         @endfor
 
         SearchBox_init(data);
@@ -18,24 +18,29 @@
         var books = [];
         @if(isset($book))
         @for($i = 0; $i < count($book); $i++)
-            @if($signal[0]->id=='0')
-                <?php
-                    $book_name = $book[$i]->book_name
-                ?>
-            @else
-                <?php
-                    $book_name = $book[$i]->book_name;
-                    foreach ($book[$i]->book_i18ns as $book_i18n) {
-                        if ($book_i18n->language == $signal[0]->id) {
-                            if($book_i18n->book_name != null) {
-                                $book_name = $book_i18n->book_name;
-                            }
-                            break;
-                        }
-                    }
-                ?>
-            @endif
+        @if($signal[0]->id=='0')
+        <?php
+        $book_name = $book[$i]->book_name
+        ?>
+        @else
+        <?php
+        $book_name = $book[$i]->book_name;
+        foreach ($book[$i]->book_i18ns as $book_i18n) {
+            if ($book_i18n->language == $signal[0]->id) {
+                if ($book_i18n->book_name != null) {
+                    $book_name = $book_i18n->book_name;
+                }
+                break;
+            }
+        }
+        ?>
+        @endif
+
+        @if($book[$i]->upload_option)
+        books.push(['{{ $book_name }}', '{{ $book[$i]->url }}', '{{ asset($book[$i]->cover) }}']);
+        @else
         books.push(['{{ $book_name }}', '{{ $book[$i]->url }}', '{{ $book[$i]->cover }}']);
+        @endif
         @endfor
         @endif
         BooksBox_init(books);
@@ -89,6 +94,7 @@
             }, 500);
         });
     }
+
     function bug_owlCarousel() {
         if ($(".owl-theme .owl-nav").css("top") != null) {
             $(".owl-nav .owl-prev").css("top", ($(".owl-height").height() / 2) - 40 + "px");

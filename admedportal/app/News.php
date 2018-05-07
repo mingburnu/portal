@@ -19,6 +19,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\News_i18n[] $news_i18ns
+ * @property bool forever
+ * @property  string publish_day
+ * @property string publish_hh
+ * @property string publish_ii
+ * @property string publish_ss
+ * @property string end_day
+ * @property string end_hh
+ * @property string end_ii
+ * @property string end_ss
  * @method static \Illuminate\Database\Query\Builder|\App\News whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\News wherePublishTime($value)
  * @method static \Illuminate\Database\Query\Builder|\App\News whereEndTime($value)

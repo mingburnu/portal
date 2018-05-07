@@ -29,6 +29,7 @@ button{
 
 /* lang 區塊 */
 .lang{
+	padding:10px 0 0 0;
 	position:static;
 	text-align:center;
 }
@@ -148,7 +149,6 @@ button{
 .footer{
 	font-size:0.5em;
 	padding:10px 0;
-	margin:50px 0 0 0;
 }
 .footer .counter{
 	font-size:1.8em;

@@ -140,12 +140,9 @@ class BannerController extends Controller
             $img = "banners/$imageName";
             $path = public_path($img);
 
-            // width 固定
             $width = Image::make($path)->width();
             $height = Image::make($path)->height();
             $new_height = \Config::get('app.banners_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
             Image::make($path)
                 ->resize(\Config::get('app.banners_image_width'), $new_height)
@@ -199,7 +196,7 @@ class BannerController extends Controller
     public function show($id)
     {
         //TODO
-        return view('errors.404');
+        return view('errors.404')->with('id', $id);
     }
 
     /**
@@ -286,28 +283,21 @@ class BannerController extends Controller
                 $img = "banners/$imageName";
                 $path = public_path($img);
 
-                // width 固定
                 $width = Image::make($path)->width();
                 $height = Image::make($path)->height();
                 $new_height = \Config::get('app.banners_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
                 Image::make($path)
                     ->resize(\Config::get('app.banners_image_width'), $new_height)
                     ->save($path);
 
-                // 需要刪除舊有 image 檔案
                 File::delete(public_path($banner->img));
-            } else {
-                // $img = $banner->img;
             }
 
         } elseif ($db_upload_option && !$upload_option) {
 
             $img = Input::get('img');
 
-            // 需要刪除舊有 image 檔案
             File::delete(public_path($banner->img));
 
         } elseif (!$db_upload_option && $upload_option) {
@@ -323,12 +313,9 @@ class BannerController extends Controller
             $img = "banners/$imageName";
             $path = public_path($img);
 
-            // width 固定
             $width = Image::make($path)->width();
             $height = Image::make($path)->height();
             $new_height = \Config::get('app.banners_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
             Image::make($path)
                 ->resize(\Config::get('app.banners_image_width'), $new_height)
@@ -350,7 +337,7 @@ class BannerController extends Controller
         ));
         Input::merge(array_map('trim', Input::all()));
 
-        $banner->fill(Input::all());
+        $banner = new Banner(Input::all());
         Banner::whereId($id)->update($banner->toArray());
 
         for ($i = 0; $i < sizeof($languages); $i++) {

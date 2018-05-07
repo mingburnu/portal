@@ -124,7 +124,14 @@ $ui = [
     'customer support email' => '服务信箱:',
     'go back previous page' => '返回上一页',
     'single webpage' => '不设定(单一网页)',
-    'visitors display'=>'网站访客人数是否显示',
+    'visitors display' => '网站访客人数是否显示',
+    'db display' => '查询资料库是否显示',
+    'ad display' => '广告是否显示',
+    'ad management' => '广告管理',
+    'ad image' => '广告图片',
+    'ad title' => '广告标题',
+    'advertisement start time' => '刊登开始时间',
+    'advertisement end time' => '刊登结束时间',
 ];
 
 $doc = [

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Book;
 use App\Book_i18n;
-use App\Http\Requests;
 use App\Language;
 use App\Sort;
 use Config;
@@ -145,12 +144,9 @@ class BookController extends Controller
             $cover = "books/$imageName";
             $path = public_path($cover);
 
-            // width 固定
             $width = Image::make($path)->width();
             $height = Image::make($path)->height();
             $new_height = \Config::get('app.books_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
             Image::make($path)
                 ->resize(\Config::get('app.books_image_width'), $new_height)
@@ -276,10 +272,6 @@ class BookController extends Controller
             'upload_file' => \Lang::get('ui.book cover')
         ]);
 
-        //Log::info("data --------------------------- " . dump($request));
-
-        // 2 不用處理檔案 copy , 1 要處理檔案 copy
-
         $cover = $book->cover;
         if ($db_upload_option && $upload_option) {
             if (Input::hasFile('upload_file')) {
@@ -295,29 +287,21 @@ class BookController extends Controller
                 $cover = "books/$imageName";
                 $path = public_path($cover);
 
-                // width 固定
                 $width = Image::make($path)->width();
                 $height = Image::make($path)->height();
                 $new_height = \Config::get('app.books_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
                 Image::make($path)
                     ->resize(\Config::get('app.books_image_width'), $new_height)
                     ->save($path);
 
-
-                // 需要刪除舊有 image 檔案
                 File::delete(public_path($book->cover));
-            } else {
-                //$cover = $book->cover;
             }
 
         } elseif ($db_upload_option && !$upload_option) {
 
             $cover = Input::get('cover');
 
-            // 需要刪除舊有 image 檔案
             File::delete(public_path($book->cover));
 
         } elseif (!$db_upload_option && $upload_option) {
@@ -333,12 +317,9 @@ class BookController extends Controller
             $cover = "books/$imageName";
             $path = public_path($cover);
 
-            // width 固定
             $width = Image::make($path)->width();
             $height = Image::make($path)->height();
             $new_height = \Config::get('app.books_image_width') * $height / $width;
-
-//                Log::info('height - ' . $height . ', width - ' . $width . ", new_height " . $new_height);
 
             Image::make($path)
                 ->resize(\Config::get('app.books_image_width'), $new_height)
@@ -359,7 +340,7 @@ class BookController extends Controller
         ));
         Input::merge(array_map('trim', Input::all()));
 
-        $book->fill(Input::all());
+        $book = new Book(Input::all());
         Book::whereId($id)->update($book->toArray());
 
         for ($i = 0; $i < sizeof($languages); $i++) {

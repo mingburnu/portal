@@ -11,15 +11,15 @@
             <tr valign="top">
                 <td class="td_1">
                     <!-- menu 區塊 Begin -->
-                    @include('layout.menu')
-                            <!-- menu 區塊 End -->
+                @include('layout.menu')
+                <!-- menu 區塊 End -->
                 </td>
                 <td class="td_2">
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
-                    @include('layout.message')
-                            <!-- message 區塊 End -->
+                @include('layout.message')
+                <!-- message 區塊 End -->
 
 
                     <!-- detail 區塊 Begin -->
@@ -57,7 +57,7 @@
                                                 <h3>{{$language->language}}</h3>
 
                                                 <div>
-                                                    {!! Form::text('book_i18ns['.$language->id.'][book_name]',$i18n_bkName,['cols'=>'80','rows'=>'10','class'=>'v_01']) !!}
+                                                    {!! Form::text('book_i18ns['.$language->id.'][book_name]',$i18n_bkName,['cols'=>'80','rows'=>'10']) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -77,16 +77,16 @@
                                         </div>
 
                                         <div class="group_02 pic">@lang('ui.upload image')
-                                            ：{!! Form::file('upload_file',['accept'=>'image/*']) !!}</div>
+                                            ：{!! Form::file('upload_file',['class'=>'v_01','accept'=>'image/*']) !!}</div>
                                         <div class="group_02 url" style="display:none;">
-                                            @lang('ui.image url')： {!! Form::text('cover',null) !!}</div>
+                                            @lang('ui.image url')： {!! Form::text('cover',null,['class'=>'v_02']) !!}</div>
                                         <div class="note_txt">@lang('ui.frontend automatic resize')</div>
                                         <div class="note_txt">@lang('ui.max upload size')</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>@lang('ui.link')(&#8226;)</th>
-                                    <td>{!! Form::text('url',null) !!}
+                                    <td>{!! Form::text('url',null,['class'=>'v_03']) !!}
 
                                         <div class="note_txt">@lang('ui.url format')：</div>
                                     </td>
@@ -147,7 +147,7 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
-        <!-- 執行javascript 區塊 End -->
+<!-- 執行javascript 區塊 End -->
 <script>
     init();
 
@@ -157,56 +157,55 @@
         }
 
         var value = $("input[name='upload_option']:checked").val();
-        var option = value != null && value.trim() != "" && value != "0" && value != 0;
+        var option = value != null && value.trim() !== "" && value !== "0" && value !== 0;
         if (option) {
             chgShowField("group_02", "pic");
         } else {
             chgShowField("group_02", "url");
         }
 
-        $("a.btn_02:eq(0)").hide();
-        $("a.btn_02:eq(2)").hide();
+        btn0.hide();
+        btn2.hide();
     }
 
-    function step(i) {
-        switch (i) {
-            case 1 :
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
+    function step(s) {
+        var i = 0;
+
+        switch (s) {
+            case 1:
+                start(s);
                 $("form table tr:eq(0)").show();
-                for (var i = 1; i <= 5; i++) {
+
+                for (i = 1; i <= 5; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
-                $("div.message").hide();
-                $("a.btn_02:eq(0)").hide();
-                $("a.btn_02:eq(1)").show();
-                $("a.btn_02:eq(2)").hide();
+                btn0.hide();
+                btn1.show();
+                btn2.hide();
                 break;
 
             case 2:
-                if ($("span.active").html() == "1") {
-                    var book_name_ch = $("input[name='book_name']").val()
-                    if (book_name_ch == null || book_name_ch.trim() == "") {
-                        message_show("<p>．@lang('validation.custom.book_name.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.book name')])</p>");
-                        break;
+                var book_name_ch = $("input[name='book_name']").val();
+
+                if (book_name_ch == null || book_name_ch.trim() === "") {
+                    message_show("<p>．@lang('validation.custom.book_name.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.book name')])</p>");
+                    break;
+                }
+
+                start(s);
+
+                for (i = 0; i <= 5; i++) {
+                    if (i !== 0) {
+                        $("form table tr:eq(" + i + ")").show();
+                    } else {
+                        $("form table tr:eq(" + i + ")").hide();
                     }
                 }
 
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 0; i++) {
-                    $("form table tr:eq(" + i + ")").hide();
-                }
-
-                for (var i = 1; i <= 5; i++) {
-                    $("form table tr:eq(" + i + ")").show();
-                }
-
-                message_hide();
-                $("a.btn_02:eq(0)").show();
-                $("a.btn_02:eq(1)").hide();
-                $("a.btn_02:eq(2)").show();
+                btn0.show();
+                btn1.hide();
+                btn2.show();
                 break;
         }
     }
@@ -214,56 +213,58 @@
     function submit() {
         var msg = "";
         var value = $("input[name='upload_option']:checked").val();
-        var option = value != null && value.trim() != "" && value != "0" && value != 0;
-        var db_option = "{{$book->upload_option}}" == "1";
+        var option = value != null && value.trim() !== "" && value !== "0" && value !== 0;
+        var db_option = "{{$book->upload_option}}" === "1";
+        var input = document.getElementsByName('upload_file')[0].files[0];
+        var upload_file = $("input[name='upload_file']");
+        var cover = $('input[name="cover"]');
+        var url = $('input[name="url"]');
 
         if (db_option && option) {
-            if ($("input[name='upload_file']").val() != null && $("input[name='upload_file']").val() != "") {
+            if (upload_file.val() != null && upload_file.val() !== "") {
                 if (window.FileReader && window.Blob) {
-                    var input = document.getElementsByName('upload_file')[0].files[0];
                     if (input != null && input.size > 1024 * 1024) {
                         msg = msg.concat("<p>．@lang('validation.custom.upload_file.max',['attribute'=>Lang::get('ui.book cover')])</p>");
                     }
                 }
             }
         } else if (db_option && !option) {
-            if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
+            if (cover.val() == null || cover.val().trim() === "") {
                 msg = msg.concat("<p>．@lang('validation.custom.cover.required')</p>");
             } else {
-                if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
+                if (!cover.val().match(/^http([s]?):\/\/.*/)) {
                     msg = msg.concat("<p>．@lang('validation.custom.cover.url')</p>");
                 }
             }
         } else if (!db_option && option) {
-            if ($("input[name='upload_file']").val() == null || $("input[name='upload_file']").val() == "") {
+            if (upload_file.val() == null || upload_file.val() === "") {
                 msg = msg.concat("<p>．@lang('validation.custom.upload_file.required',['attribute'=>Lang::get('ui.book cover')])</p>");
             } else {
                 if (window.FileReader && window.Blob) {
-                    var input = document.getElementsByName('upload_file')[0].files[0];
                     if (input != null && input.size > 1024 * 1024) {
                         msg = msg.concat("<p>．@lang('validation.custom.upload_file.max',['attribute'=>Lang::get('ui.book cover')])</p>");
                     }
                 }
             }
         } else {
-            if ($('input[name="cover"]').val() == null || $('input[name="cover"]').val().trim() == "") {
+            if (cover.val() == null || cover.val().trim() === "") {
                 msg = msg.concat("<p>．@lang('validation.custom.cover.required')</p>");
             } else {
-                if (!$('input[name="cover"]').val().match(/^http([s]?):\/\/.*/)) {
+                if (!cover.val().match(/^http([s]?):\/\/.*/)) {
                     msg = msg.concat("<p>．@lang('validation.custom.cover.url')</p>");
                 }
             }
         }
 
-        if ($('input[name="url"]').val() == null || $('input[name="url"]').val().trim() == "") {
+        if (url.val() == null || url.val().trim() === "") {
             msg = msg.concat("<p>．@lang('validation.custom.url.required',['attribute'=>Lang::get('ui.link')])</p>");
         } else {
-            if (!$('input[name="url"]').val().match(/^http([s]?):\/\/.*/)) {
+            if (!url.val().match(/^http([s]?):\/\/.*/)) {
                 msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute'=>Lang::get('ui.link')])</p>");
             }
         }
 
-        if (msg != "") {
+        if (msg !== "") {
             message_show(msg);
         } else {
             document.getElementById('book_id').submit();

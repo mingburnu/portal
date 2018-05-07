@@ -11,15 +11,15 @@
             <tr valign="top">
                 <td class="td_1">
                     <!-- menu 區塊 Begin -->
-                    @include('layout.menu')
-                            <!-- menu 區塊 End -->
+                @include('layout.menu')
+                <!-- menu 區塊 End -->
                 </td>
                 <td class="td_2">
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
-                    @include('layout.message')
-                            <!-- message 區塊 End -->
+                @include('layout.message')
+                <!-- message 區塊 End -->
 
 
                     <!-- detail 區塊 Begin -->
@@ -157,14 +157,14 @@
                                 </tr>
                                 <tr>
                                     <th>@lang('ui.sort')</th>
-                                    <td><input class="v_00" name="rank_id" type="text" value="{{ $paper->rank_id }}">
-
+                                    <td>
+                                        {!! Form::text('rank_id',$paper->rank_id,['class'=>'v_00']) !!}
                                         <div class="note_txt">@lang('ui.number order')</div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>@lang('ui.note')</th>
-                                    <td><textarea rows="5" name="note">{{ $paper->note }}</textarea></td>
+                                    <td>{!! Form::textarea('note',$paper->note,['rows'=>'5']) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>&nbsp;</th>
@@ -185,7 +185,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')</div>
+                        <div class="detail_note_content"><span
+                                    class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 
@@ -202,7 +203,7 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
-        <!-- 執行javascript 區塊 End -->
+<!-- 執行javascript 區塊 End -->
 <script>
     init();
 
@@ -211,8 +212,8 @@
             $("form table tr:eq(" + i + ")").hide();
         }
 
-        $("a.btn_02:eq(0)").hide();
-        $("a.btn_02:eq(2)").hide();
+        btn0.hide();
+        btn2.hide();
 
         @foreach($languages as $language)
         CKEDITOR.replace("{{'editor'.$language->id}}", lang());
@@ -225,104 +226,105 @@
         });
     }
 
-    function step(i) {
-        switch (i) {
-            case 1 :
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
-                $("form table tr:eq(0)").show();
-                for (var i = 1; i <= 7; i++) {
-                    $("form table tr:eq(" + i + ")").hide();
+    function step(s) {
+        var i = 0;
+        var type = $("input[name='type']:checked").val();
+        var option = type != null && type.trim() !== "" && type !== "0" && type !== 0;
+
+        switch (s) {
+            case 1:
+                start(s);
+
+                for (i = 0; i <= 7; i++) {
+                    if (i !== 0) {
+                        $("form table tr:eq(" + i + ")").hide();
+                    } else {
+                        $("form table tr:eq(" + i + ")").show();
+                    }
                 }
 
-                $("div.message").hide();
-                $("a.btn_02:eq(0)").hide();
-                $("a.btn_02:eq(1)").show();
-                $("a.btn_02:eq(2)").hide();
+                btn0.hide();
+                btn1.show();
+                btn2.hide();
                 break;
-            case 2 :
-                if ($("span.active").html() == "1") {
+            case 2:
+                if (getCurrentStep() === "1") {
                     var title_ch = $("input[name='title']").val();
-                    if (title_ch == null || title_ch.trim() == "") {
+
+                    if (title_ch == null || title_ch.trim() === "") {
                         message_show("<p>．@lang('validation.custom.title.required',['attribute' => Lang::get('ui.menu name')])</p>");
                         break;
                     }
                 }
 
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
+                start(s);
                 $("form table tr:eq(0)").hide();
                 $("form table tr:eq(1)").show();
-                for (var i = 4; i <= 7; i++) {
+
+                for (i = 4; i <= 7; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
-                var value = $("input[name='type']:checked").val();
-                var option = value != null && value.trim() != "" && value != "0" && value != 0;
                 if (option) {
                     chgShowField("url", "txt");
                 } else {
                     chgShowField("txt", "url");
                 }
 
-                message_hide();
-                $("a.btn_02:eq(0)").show();
-                $("a.btn_02:eq(1)").show();
-                $("a.btn_02:eq(2)").hide();
+                btn0.show();
+                btn1.show();
+                btn2.hide();
                 break;
 
             case 3:
-                if ($("span.active").html() == "2") {
-                    var msg = "";
-                    var value = $("input[name='type']:checked").val();
-                    var option = value != null && value.trim() != "" && value != "0" && value != 0;
+                var msg = "";
 
-                    if (option) {
-                        if (CKEDITOR.instances.editor0.getData().length == 0) {
-                            msg = msg.concat("<p>．@lang('validation.custom.content.required',['attribute'=>$languages[0]->language . \Lang::get('ui.webpage content')])</p>");
-                        }
-                    } else {
-                        @foreach ($languages as $language)
-                            @if ($language->id ==0)
-                                var url_ch = $("input[name='url']").val();
-                                if (url_ch == null || url_ch.trim() == "") {
-                                    msg = msg.concat("<p>．@lang('validation.custom.url.required',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
-                                } else {
-                                    if (!url_ch.match(/^http([s]?):\/\/.*/)) {
-                                        msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
-                                    }
-                                }
-                            @else
-                                var url_{{$language->id}} = $("input[name='menupage_i18ns[{{$language->id}}][url]']").val();
-                                if (url_{{$language->id}} != null && url_{{$language->id}}.trim() != "") {
-                                    if (!url_{{$language->id}}.match(/^http([s]?):\/\/.*/)) {
-                                        msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
-                                    }
-                                }
-                            @endif
-                        @endforeach
+                if (option) {
+                    if (CKEDITOR.instances.editor0.getData().length === 0) {
+                        msg = msg.concat("<p>．@lang('validation.custom.content.required',['attribute'=>$languages[0]->language . \Lang::get('ui.webpage content')])</p>");
                     }
+                } else {
+                            @foreach ($languages as $language)
+                            @if ($language->id ==0)
+                    var url_ch = $("input[name='url']").val();
+
+                    if (url_ch == null || url_ch.trim() === "") {
+                        msg = msg.concat("<p>．@lang('validation.custom.url.required',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
+                    } else {
+                        if (!url_ch.match(/^http([s]?):\/\/.*/)) {
+                            msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
+                        }
+                    }
+                            @else
+                    var url_{{$language->id}} = $("input[name='menupage_i18ns[{{$language->id}}][url]']").val();
+
+                    if (url_{{$language->id}} != null && url_{{$language->id}}.trim() !== "") {
+                        if (!url_{{$language->id}}.match(/^http([s]?):\/\/.*/)) {
+                            msg = msg.concat("<p>．@lang('validation.custom.url.url',['attribute' => $language->language.'-'.Lang::get('ui.link')])</p>");
+                        }
+                    }
+                    @endif
+                    @endforeach
                 }
 
-                if (msg != "") {
+                if (msg !== "") {
                     message_show(msg);
                     break;
                 }
 
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 3; i++) {
-                    $("form table tr:eq(" + i + ")").hide();
+                start(s);
+
+                for (i = 0; i <= 7; i++) {
+                    if (i > 3) {
+                        $("form table tr:eq(" + i + ")").show();
+                    } else {
+                        $("form table tr:eq(" + i + ")").hide();
+                    }
                 }
 
-                for (var i = 4; i <= 7; i++) {
-                    $("form table tr:eq(" + i + ")").show();
-                }
-
-                message_hide();
-                $("a.btn_02:eq(0)").show();
-                $("a.btn_02:eq(1)").hide();
-                $("a.btn_02:eq(2)").show();
+                btn0.show();
+                btn1.hide();
+                btn2.show();
                 break;
         }
     }

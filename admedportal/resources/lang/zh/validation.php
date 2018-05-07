@@ -163,9 +163,7 @@ return [
             'date_format' => '請輸入正確格式公告秒。'
         ],
         'end_day' => [
-            'required' => '請輸入結束日期。'
-        ],
-        'end_date' => [
+            'required' => '請輸入結束日期。',
             'date_format' => '請輸入正確格式結束日期。',
             'after' => '結束日期太早。',
             'before' => '結束日期太晚。'

@@ -11,15 +11,15 @@
             <tr valign="top">
                 <td class="td_1">
                     <!-- menu 區塊 Begin -->
-                    @include('layout.menu')
-                            <!-- menu 區塊 End -->
+                @include('layout.menu')
+                <!-- menu 區塊 End -->
                 </td>
                 <td class="td_2">
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
-                    @include('layout.message')
-                            <!-- message 區塊 End -->
+                @include('layout.message')
+                <!-- message 區塊 End -->
 
 
                     <!-- detail 區塊 Begin -->
@@ -43,7 +43,7 @@
                                                 <h3>{{$language->language}} (&#8226;)</h3>
 
                                                 <div>
-                                                    {!! Form::text('title',$news->title) !!}
+                                                    {!! Form::text('title',$news->title,['class'=>'v_01']) !!}
                                                 </div>
                                             @else
                                                 <?php
@@ -172,7 +172,7 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
-        <!-- 執行javascript 區塊 End -->
+<!-- 執行javascript 區塊 End -->
 
 <script>
     init();
@@ -182,8 +182,8 @@
             $("form table tr:eq(" + i + ")").hide();
         }
 
-        $("a.btn_02:eq(0)").hide();
-        $("a.btn_02:eq(2)").hide();
+        btn0.hide();
+        btn2.hide();
 
         @foreach($languages as $language)
         CKEDITOR.replace("{{'editor'.$language->id}}", lang());
@@ -200,68 +200,66 @@
         });
     }
 
-    function step(i) {
-        switch (i) {
-            case 1 :
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
+    function step(s) {
+        var i = 0;
+
+        switch (s) {
+            case 1:
+                start(s);
                 $("form table tr:eq(0)").show();
-                for (var i = 1; i <= 5; i++) {
+
+                for (i = 1; i <= 5; i++) {
                     $("form table tr:eq(" + i + ")").hide();
                 }
 
-                $("div.message").hide();
-                $("a.btn_02:eq(0)").hide();
-                $("a.btn_02:eq(1)").show();
-                $("a.btn_02:eq(2)").hide();
+                btn0.hide();
+                btn1.show();
+                btn2.hide();
                 break;
-            case 2 :
-                if ($("span.active").html() == "1") {
-                    var title_ch = $("input[name='title']").val()
-                    if (title_ch == null || title_ch.trim() == "") {
+            case 2:
+                if (getCurrentStep() === "1") {
+                    var title_ch = $("input[name='title']").val();
+
+                    if (title_ch == null || title_ch.trim() === "") {
                         message_show("<p>．@lang('validation.custom.title.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.title')])</p>");
                         break;
                     }
                 }
 
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 5; i++) {
-                    if (i != 1) {
+                start(s);
+
+                for (i = 0; i <= 5; i++) {
+                    if (i !== 1) {
                         $("form table tr:eq(" + i + ")").hide();
                     } else {
                         $("form table tr:eq(" + i + ")").show();
                     }
                 }
 
-                message_hide();
-                $("a.btn_02:eq(0)").show();
-                $("a.btn_02:eq(1)").show();
-                $("a.btn_02:eq(2)").hide();
+                btn0.show();
+                btn1.show();
+                btn2.hide();
                 break;
 
             case 3:
-                if ($("span.active").html() == "2") {
-                    if (CKEDITOR.instances.editor0.getData().length == 0) {
-                        message_show("<p>．@lang('validation.custom.content.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.content')])</p>");
-                        break;
+                if (CKEDITOR.instances.editor0.getData().length === 0) {
+                    message_show("<p>．@lang('validation.custom.content.required',['attribute'=>$languages[0]->language.'-'.Lang::get('ui.content')])</p>");
+                    break;
+                }
+
+                start(s);
+
+                for (i = 0; i <= 5; i++) {
+                    if (i > 1) {
+                        $("form table tr:eq(" + i + ")").show();
+                    } else {
+                        $("form table tr:eq(" + i + ")").hide();
                     }
                 }
 
-                $("span.active").removeClass();
-                $("div.steps_box span:eq(" + i + ")").addClass("active");
-                for (var i = 0; i <= 1; i++) {
-                    $("form table tr:eq(" + i + ")").hide();
-                }
-
-                for (var i = 2; i <= 5; i++) {
-                    $("form table tr:eq(" + i + ")").show();
-                }
-
-                message_hide();
-                $("a.btn_02:eq(0)").show();
-                $("a.btn_02:eq(1)").hide();
-                $("a.btn_02:eq(2)").show();
+                btn0.show();
+                btn1.hide();
+                btn2.show();
                 break;
         }
     }
@@ -278,84 +276,79 @@
         var end_ss = $("select[name='end_ss']").val();
         var dayRegEx = /^\d{4}-\d{2}-\d{2}$/;
         var timeRegEx = /^\d{2}$/;
-
         var forever = $("input[name='forever']:checked").val();
-        var is_no_end = forever != null && forever.trim() != "" && forever != "0" && forever != 0;
+        var is_no_end = forever != null && forever.trim() !== "" && forever !== "0" && forever !== 0;
 
-        if (publish_day == null || publish_day.trim() == "") {
+        if (publish_day == null || publish_day.trim() === "") {
             msg = msg + "<p>．@lang('validation.custom.publish_day.required')</p>";
         } else {
             if (publish_day.match(dayRegEx) == null) {
                 msg = msg + "<p>．@lang('validation.custom.publish_day.date_format')</p>";
             } else {
                 var publishDate = new Date(publish_day.match(dayRegEx));
-                if (Object.prototype.toString.call(publishDate) === "[object Date]") {
-                    if (isNaN(publishDate)) {
-                        msg = msg + "<p>．@lang('validation.custom.publish_day.date_format')</p>";
-                    }
+
+                if (isNaN(publishDate)) {
+                    msg = msg + "<p>．@lang('validation.custom.publish_day.date_format')</p>";
                 }
             }
         }
 
-        if (publish_hh == null || publish_ii == null || publish_ss == null || publish_hh == "" || publish_ii == "" || publish_ss == "") {
+        if (publish_hh == null || publish_ii == null || publish_ss == null || publish_hh === "" || publish_ii === "" || publish_ss === "") {
             msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
-                    + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
-                    + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
+                + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
             message_show(msg);
         } else {
             if (publish_hh.match(timeRegEx) == null || publish_ii.match(timeRegEx) == null || publish_ss.match(timeRegEx) == null) {
                 msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
-                        + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
-                        + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
+                    + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                    + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
             } else {
                 var publishTime = new Date(1970, 0, 1, publish_hh, publish_ii, publish_ss, 0);
-                if (Object.prototype.toString.call(publishTime) === "[object Date]") {
-                    if (isNaN(publishTime)) {
-                        msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
-                                + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
-                                + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
-                    }
+
+                if (isNaN(publishTime)) {
+                    msg = msg + "<p>．@lang('validation.custom.publish_hh.date_format')</p>"
+                        + "<p>．@lang('validation.custom.publish_ii.date_format')</p>"
+                        + "<p>．@lang('validation.custom.publish_ss.date_format')</p>";
                 }
             }
 
             if (!is_no_end) {
-                if (end_day == null || end_day.trim() == "") {
+                if (end_day == null || end_day.trim() === "") {
                     msg = msg + "<p>．@lang('validation.custom.end_day.required')</p>";
                 } else {
                     if (end_day.match(dayRegEx) == null) {
                         msg = msg + "<p>．@lang('validation.custom.end_day.date_format')</p>";
                     } else {
                         var endDate = new Date(end_day.match(dayRegEx));
-                        if (Object.prototype.toString.call(endDate) === "[object Date]") {
-                            if (isNaN(endDate)) {
-                                msg = msg + "<p>．@lang('validation.custom.end_day.date_format')</p>";
-                            }
+
+                        if (isNaN(endDate)) {
+                            msg = msg + "<p>．@lang('validation.custom.end_day.date_format')</p>";
                         }
                     }
                 }
 
-                if (end_hh == null || end_ii == null || end_ss == null || end_hh == "" || end_ii == "" || end_ss == "") {
+                if (end_hh == null || end_ii == null || end_ss == null || end_hh === "" || end_ii === "" || end_ss === "") {
                     msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
-                            + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
-                            + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
+                        + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                        + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                 } else {
                     if (end_hh.match(timeRegEx) == null || end_ii.match(timeRegEx) == null || end_ss.match(timeRegEx) == null) {
                         msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
-                                + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
-                                + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
+                            + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                            + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                     } else {
                         var endTime = new Date(1970, 0, 1, end_hh, end_ii, end_ss, 0);
-                        if (Object.prototype.toString.call(endTime) === "[object Date]") {
-                            if (isNaN(endTime)) {
-                                msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
-                                        + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
-                                        + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
-                            }
+
+                        if (isNaN(endTime)) {
+                            msg = msg + "<p>．@lang('validation.custom.end_hh.date_format')</p>"
+                                + "<p>．@lang('validation.custom.end_ii.date_format')</p>"
+                                + "<p>．@lang('validation.custom.end_ss.date_format')</p>";
                         }
                     }
                 }
 
-                if (msg == "") {
+                if (msg === "") {
                     var begin = new Date(publish_day + " " + publish_hh + ":" + publish_ii + ":" + publish_ss);
                     var after = new Date(end_day + " " + end_hh + ":" + end_ii + ":" + end_ss);
 
@@ -365,7 +358,7 @@
                 }
             }
 
-            if (msg != "") {
+            if (msg !== "") {
                 message_show(msg);
             } else {
                 document.getElementById('news_edit').submit();

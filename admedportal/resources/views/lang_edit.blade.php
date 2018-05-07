@@ -11,15 +11,15 @@
             <tr valign="top">
                 <td class="td_1">
                     <!-- menu 區塊 Begin -->
-                    @include('layout.menu')
-                            <!-- menu 區塊 End -->
+                @include('layout.menu')
+                <!-- menu 區塊 End -->
                 </td>
                 <td class="td_2">
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
-                    @include('layout.message')
-                            <!-- message 區塊 End -->
+                @include('layout.message')
+                <!-- message 區塊 End -->
 
 
                     <!-- detail 區塊 Begin -->
@@ -32,12 +32,16 @@
                                     <tr>
                                         @if($language->id==0)
                                             <th>{{$language->language}} (&#8226;)</th>
+                                            <td>
+                                                {!! Form::text($i.'_title',$row[$i],['class'=>'v_01']) !!}
+                                            </td>
                                         @else
                                             <th>{{$language->language}}</th>
+                                            <td>
+                                                {!! Form::text($i.'_title',$row[$i]) !!}
+                                            </td>
                                         @endif
-                                        <td>
-                                            {!! Form::text($i.'_title',$row[$i]) !!}
-                                        </td>
+
                                     </tr>
                                 @endforeach
                                 <tr>
@@ -51,7 +55,8 @@
                                 <tr>
                                     <th>&nbsp;</th>
                                     <td>
-                                        <a class="btn_02" href="javascript:void(0);" onclick="form_submit();">@lang('ui.update')</a>
+                                        <a class="btn_02" href="javascript:void(0);"
+                                           onclick="form_submit();">@lang('ui.update')</a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -63,7 +68,8 @@
                     <!-- Note 區塊 Begin -->
                     <div class="detail_note">
                         <div class="detail_note_title">Note</div>
-                        <div class="detail_note_content"><span class="required">(&#8226;)</span>@lang('ui.required field')</div>
+                        <div class="detail_note_content"><span
+                                    class="required">(&#8226;)</span>@lang('ui.required field')</div>
                     </div>
                     <!-- Note 區塊 End -->
 
@@ -80,7 +86,7 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
-        <!-- 執行javascript 區塊 End -->
+<!-- 執行javascript 區塊 End -->
 
 <script>
     function form_submit() {

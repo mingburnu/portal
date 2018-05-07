@@ -6,7 +6,11 @@
                 @foreach($banners as $banner)
                     <div class="item">
                         <a href="{{$banner->url}}">
-                            <img src="{{$banner->img}}">
+                            @if($banner->upload_option)
+                                <img src="{{asset($banner->img)}}">
+                            @else
+                                <img src="{{$banner->img}}">
+                            @endif
                             @if($banner->play)
                                 <div class="title">
                                     @if($signal[0]->id=='0')

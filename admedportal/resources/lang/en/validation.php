@@ -163,9 +163,7 @@ return [
             'date_format' => 'Please input valid announcement seconds'
         ],
         'end_day' => [
-            'required' => 'Please input a legal end time .'
-        ],
-        'end_date' => [
+            'required' => 'Please input a legal end time .',
             'date_format' => 'Please input a legal end time .',
             'after' => 'The end time is too early .',
             'before' => 'The end time is too late .'

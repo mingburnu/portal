@@ -126,6 +126,13 @@ $ui = [
     'go back previous page' => 'back to previous page',
     'single webpage' => 'single webpage',
     'visitors display' => 'Site visitors statistics',
+    'db display' => 'db visible',
+    'ad display' => 'ad visible',
+    'ad management'=>'Ad management',
+    'ad image' => 'ad image',
+    'ad title' => 'ad title',
+    'advertisement start time' => 'advertisement start time',
+    'advertisement end time' => 'advertisement end time',
 
     // for en
     'Library Portal' => 'Library Portal',

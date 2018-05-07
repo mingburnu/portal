@@ -11,15 +11,15 @@
             <tr valign="top">
                 <td class="td_1">
                     <!-- menu 區塊 Begin -->
-                    @include('layout.menu')
-                            <!-- menu 區塊 End -->
+                @include('layout.menu')
+                <!-- menu 區塊 End -->
                 </td>
                 <td class="td_2">
                     <!-- 內容 區塊 Begin -->
 
                     <!-- message 區塊 Begin -->
-                    @include('layout.message')
-                            <!-- message 區塊 End -->
+                @include('layout.message')
+                <!-- message 區塊 End -->
 
                     <!-- detail 區塊 Begin -->
                     <div class="detail_box">
@@ -95,45 +95,29 @@
 
 <!-- 執行javascript 區塊 Begin -->
 @include('layout.javascript')
-        <!-- 執行javascript 區塊 End -->
+<!-- 執行javascript 區塊 End -->
 <script>
     function submit() {
         var msg = "";
-            @foreach($languages as $language)
+                @foreach($languages as $language)
                 @if ($language->id ==0)
-                    var input = document.getElementsByName('logo')[0].files[0];
-                        if (input != null && input.size > 1024 * 1024) {
-                            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
-                        }
+        var input = document.getElementsByName('logo')[0].files[0];
+        if (input != null && input.size > 1024 * 1024) {
+            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
+        }
                 @else
-                    var input_{{$language->id}}    = document.getElementsByName('{{$language->id}}_logo')[0].files[0];
-                        if (input_{{$language->id}} != null && input_{{$language->id}}.size > 1024 * 1024) {
-                            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
-                    }
-                @endif
-            @endforeach
+        var input_{{$language->id}}    = document.getElementsByName('{{$language->id}}_logo')[0].files[0];
+        if (input_{{$language->id}} != null && input_{{$language->id}}.size > 1024 * 1024) {
+            msg = msg.concat("<p>．@lang('validation.custom.logo.max',['attribute'=>$language->language.'-'.\Lang::get('ui.logo image')])</p>");
+        }
+        @endif
+                @endforeach
 
-        if (msg != "") {
+        if (msg !== "") {
             message_show(msg);
         } else {
             document.getElementById('webconfig').submit();
         }
-    }
-
-    function isImage() {
-        var URL = window.URL || window.webkitURL;
-        var input = document.getElementsByName('logo');
-        var file = input[0].files[0];
-
-        if (file) {
-            var image = new Image();
-            image.onload = function () {
-                alert(true);
-            };
-
-            image.src = URL.createObjectURL(file);
-        }
-
     }
 </script>
 </body>

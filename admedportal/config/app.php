@@ -48,7 +48,10 @@ return [
 
     //banner image
 
-    'banner_image_width' => 1300,
+    'banners_image_width' => 1300,
+
+    //ad image
+    'ads_image_width' => 640,
 
     'url' => 'http://medportal.sydt.com.tw',
 
@@ -179,7 +182,7 @@ return [
 
         Intervention\Image\ImageServiceProvider::class,
 
-        // Excel 
+        // Excel
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 

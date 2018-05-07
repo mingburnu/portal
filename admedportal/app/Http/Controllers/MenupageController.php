@@ -225,7 +225,7 @@ class MenupageController extends Controller
     public function show($id)
     {
         //TODO
-        return view('errors.404');
+        return view('errors.404')->with('id', $id);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Language;
 use App\News;
 use App\News_i18n;
@@ -152,7 +151,7 @@ class NewsController extends Controller
     function show($id)
     {
         //TODO
-        return view('errors.404');
+        return view('errors.404')->with('id', $id);
     }
 
     /**

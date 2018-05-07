@@ -786,6 +786,8 @@ class AdminController extends Controller
                     'play' => (boolean)\Input::get('play'),
                     'exhibition' => (boolean)\Input::get('exhibition'),
                     'count_visitors' => (boolean)\Input::get('count_visitors'),
+                    'list_db' => (boolean)\Input::get('list_db'),
+                    'list_ad' => (boolean)\Input::get('list_ad'),
                     'note' => trim(\Input::get('note')),
                     'updated_at' => $timedata[0]->timedata
                 ]);

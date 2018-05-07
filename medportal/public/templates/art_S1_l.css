@@ -267,6 +267,13 @@ button{
 	color:#333333;
 }
 
+
+/* Main 區塊 */
+.main_contents{
+	position:relative;
+}
+
+
 /* Books 區塊 */
 .books{
 	margin:0;
@@ -347,7 +354,7 @@ button{
 
 /* news_home 區塊 */
 .news_home{
-	margin:0 0 20px 0;
+	margin:0 0 0 0;
 	padding:20px 0 20px 0;
 	position:relative;
 }
@@ -357,7 +364,7 @@ button{
 	-moz-border-radius: 18px;
 	border-radius: 18px;
 	color:#ffffff;
-	margin:0 20px 10px 20px;
+	margin:0 0 10px 0;
 	padding:0 20px;
 	line-height:26px;
 	height:26px;
@@ -372,7 +379,7 @@ button{
 	content:"\f1ea\00a0";
 }
 .news_home .news_box{
-	margin:0 20px;
+	margin:0 0;
 	border-top:2px solid #bb0808;
 }
 .news_home .news_box .news_box_list{
@@ -427,7 +434,7 @@ button{
 .news_home .news_box .news_box_buttom{
 	position:absolute;
 	top:20px;
-	right:30px;
+	right:10px;
 }
 .news_home .news_box .news_box_buttom .btn_01:before{
 	display:inline-block;
@@ -437,6 +444,62 @@ button{
 	-moz-osx-font-smoothing:grayscale;
 	content:"\f03a\00a0";
 }
+
+
+/* Ad 區塊 */
+.books,
+.news_home{
+	margin-right:220px;
+}
+.ad{
+	margin:0 0 0 0;
+	padding:20px 0 20px 0;
+	overflow:auto;
+	right:0;
+	top:0;
+	width:220px;
+	position:absolute;
+}
+.ad .ad_box{
+	margin:0;
+	padding:0;
+}
+.ad .ad_box .item{
+	box-sizing: border-box;
+	margin:0 0 5px 0;
+}
+.ad .ad_box .item a{
+	text-decoration:none;
+	display:block;
+	line-height:0;
+}
+.ad .ad_box .item a img{
+	width:100%;
+}
+@media (max-width: 960px){
+.books,
+.news_home{
+	margin-right:0;
+}
+.ad{
+	width:100%;
+	position:relative;
+}
+.ad .innerwrapper{
+	padding:0 0;
+}
+.ad .ad_box .item{
+	float:left;
+	width:25%;
+	padding:0 5px;
+}
+}
+@media (max-width: 640px){
+.ad .ad_box .item{
+	width:100%;
+}
+}
+
 
 /* 主內容 區塊 */
 .container{
@@ -513,6 +576,7 @@ button{
 	text-align:center;
 	color:#555;
 	font-size:1em;
+	margin:20px 0 0 0;
 	padding:5px 0;
 	line-height:1.2em;
 }

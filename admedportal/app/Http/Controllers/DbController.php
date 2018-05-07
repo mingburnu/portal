@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Db;
 use App\Db_i18n;
-use App\Http\Requests;
 use App\Language;
 use App\Sort;
 use Illuminate\Http\Request;
@@ -259,8 +258,8 @@ class DbController extends Controller
             return view('errors.404');
         }
 
-        Db_i18n::where('db_id', '=', $id)->delete();
-        Db::where('id', '=', $id)->delete();
+        Db_i18n::whereDbId($id)->delete();
+        Db::whereId($id)->delete();
 
         return redirect()->route('db.index')
             ->with('successes', [\Lang::get('msg.delete data successfully')]);

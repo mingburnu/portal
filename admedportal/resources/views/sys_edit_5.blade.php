@@ -61,10 +61,24 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>@lang('ui.db display')</th>
+                                    <td>
+                                        <label>{!! Form::radio('list_db',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('list_db',false) !!}@lang('ui.false')</label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>@lang('ui.banner display')</th>
                                     <td>
                                         <label>{!! Form::radio('play',true) !!}@lang('ui.true')</label>
                                         <label>{!! Form::radio('play',false) !!}@lang('ui.false')</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>@lang('ui.ad display')</th>
+                                    <td>
+                                        <label>{!! Form::radio('list_ad',true) !!}@lang('ui.true')</label>
+                                        <label>{!! Form::radio('list_ad',false) !!}@lang('ui.false')</label>
                                     </td>
                                 </tr>
                                 <tr>

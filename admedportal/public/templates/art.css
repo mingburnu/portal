@@ -473,6 +473,18 @@ button{
 	color:#ffb337;
 	background:url(images/icon.png) -180px -240px no-repeat;
 }
+.menu .menu_J{
+	display:block;
+	margin:0 0 10px 0;
+	padding:0 0 0 25px;
+	text-decoration:none;
+	color:#ffffff;
+	background:url(images/icon.png) 0 -270px no-repeat;
+}
+.menu .menu_J:hover{
+	color:#ffb337;
+	background:url(images/icon.png) -180px -270px no-repeat;
+}
 
 .menu .menu_list{
 	display:block;
@@ -590,6 +602,9 @@ button{
 	width:130px;
 }
 .detail_box table td .banner_img{
+	width:180px;
+}
+.detail_box table td .ad_img{
 	width:180px;
 }
 .detail_box table td h3{

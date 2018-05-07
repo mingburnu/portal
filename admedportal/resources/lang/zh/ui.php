@@ -124,7 +124,14 @@ $ui = [
     'customer support email' => '服務信箱:',
     'go back previous page' => '返回上一頁',
     'single webpage' => '不設定(單一網頁)',
-    'visitors display'=>'網站訪客人數是否顯示',
+    'visitors display' => '網站訪客人數是否顯示',
+    'db display' => '查詢資料庫是否顯示',
+    'ad display' => '廣告是否顯示',
+    'ad management' => '廣告管理',
+    'ad image' => '廣告圖片',
+    'ad title' => '廣告標題',
+    'advertisement start time' => '刊登開始時間',
+    'advertisement end time' => '刊登結束時間',
 ];
 
 $doc = [

@@ -154,7 +154,8 @@ Route::group(['middleware' => 'auth'], function () {
         new \App\Http\Controllers\MenupageController(),
         new \App\Http\Controllers\BookController(),
         new \App\Http\Controllers\DbController(),
-        new \App\Http\Controllers\NewsController()
+        new \App\Http\Controllers\NewsController(),
+        new \App\Http\Controllers\AdController()
     );
 
     foreach ($controllers as $controller) {

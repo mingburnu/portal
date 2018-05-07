@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ad;
 use App\Banner;
 use App\Book;
 use App\Language;
@@ -122,10 +123,18 @@ class WebController extends Controller
 
         $banners = Banner::whereView(true)->get();
 
+        $ads = Ad::whereView(true)
+            ->where('publish_time', '<=', Carbon::now()->toDateTimeString())
+            ->where(function ($q) {
+                $q->whereEndTime(null)->orWhere('end_time', '>', Carbon::now()->toDateTimeString());
+            })
+            ->orderBy('publish_time', 'desc')->take(5)->skip(0)->get();
+
         return view('index', [
             'banners' => $banners,
             'book' => $book,
             'news' => $news,
+            'ads' => $ads,
         ]);
     }
 
